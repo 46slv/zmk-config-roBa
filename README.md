@@ -1,5 +1,7 @@
 # zmk-config-roBa
-[kumamuk-git/zmk-config-roBa](https://github.com/kumamuk-git/zmk-config-roBa)のキーマップや設定を自分用にカスタマイズしたものです。
+[kumamuk-git/zmk-config-roBa](https://github.com/kumamuk-git/zmk-config-roBa)のキーマップや設定を自分用にカスタマイズしたもの(もとはKotさんのフォーク)です。
+
+<!--
 
 また、
 
@@ -55,6 +57,10 @@
 | GitHub | <img src="https://github.com/favicon.ico" width="16" height="16"> [GitHub](https://github.com/qmk/qmk_firmware) |
 | keycodes | <img src="https://github.com/favicon.ico" width="16" height="16"> [GitHub](https://github.com/qmk/qmk_firmware/blob/master/quantum/keycodes.h) |
 | ドキュメント | <img src="https://docs.qmk.fm/favicon.ico" width="16" height="16"> [docs.qmk.fm](https://docs.qmk.fm) |
+
+
+*/
+-->
 
 ## キーマップ
 
