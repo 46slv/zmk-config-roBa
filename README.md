@@ -6,12 +6,17 @@
 
 ### Combo
 右手側
+
 ns enter 
+
 sh backspace 
+
 jb under (_) 
 
 左手側
+
 ai space 
+
 ql escape 
 
 
