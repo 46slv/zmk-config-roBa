@@ -14,24 +14,19 @@ manifest:
       url-base: https://github.com/4mplelab
     - name: kot149
       url-base: https://github.com/kot149
+    - name: kumamuk-git
+      url-base: https://github.com/kumamuk-git
   projects:
     # https://github.com/zmkfirmware/zmk
     - name: zmk
       remote: zmkfirmware
-      revision: v0.3  # ← 特定のコミットIDから安定版タグ v0.3 に変更
+      revision: v0.3
       import: app/west.yml
 
-    # # https://github.com/inorichi/zmk-pmw3610-driver
-    # - name: zmk-pmw3610-driver
-    #   remote: inorichi
-    #   revision: main
-    #   path: modules/zmk-pmw3610-driver
-
-    # https://github.com/badjeff/zmk-pmw3610-driver
+    # https://github.com/kumamuk-git/zmk-pmw3610-driver
     - name: zmk-pmw3610-driver
-      remote: badjeff
-      revision: zmk-0.3
-      path: modules/zmk-pmw3610-driver-badjeff
+      remote: kumamuk-git
+      revision: main
 
     # https://github.com/badjeff/zmk-input-processor-report-rate-limit
     - name: zmk-input-processor-report-rate-limit
