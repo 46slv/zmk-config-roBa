@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - .github/workflows/draw.yml
+      - ".github/workflows/draw.yml"
       - "config/roBa_L.keymap"
       - "config/roBa_R.keymap"
       - "config/roBa.keymap"
@@ -19,8 +19,7 @@ jobs:
     with:
       commit_message: "[Draw] ${{ github.event.head_commit.message || 'Update keymap drawing' }}"
       amend_commit: false
-      keymap_patterns: "config/*.keymap"
-      json_path: "config"
-      config_path: "keymap_drawer.config.yaml" # config file, ignored if not exists
+      keymap_patterns: "config/roBa.keymap"
+      config_path: "keymap_drawer.config.yaml"
       output_folder: "keymap-drawer"
       destination: "both"
