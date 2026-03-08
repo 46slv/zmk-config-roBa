@@ -35,6 +35,16 @@ parse_config:
     "RBRC": "{"
     "PIPE": "}"
 
+  # --- 基本記号 (JIS) ---
+    "MINUS": "-"
+    "EQUAL": "^"
+    "SLASH": "/"
+    "PERCENT": "%"
+    "ASTERISK": "("
+    "LEFT_PARENTHESIS": ")"
+    "LPAR": "("
+    "RPAR": ")"
+
     # --- キーマップに直書きされているシフト付きZMKキーコード ---
     "LS(N2)": "\""
     "LS(N3)": "#"
