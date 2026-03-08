@@ -6,9 +6,18 @@ parse_config:
   preprocess: true
   skip_unrecognized_commands: true
   
-  # ZMKの物理キーコード名からJIS印字への翻訳（全JIS記号網羅）
   zmk_keycode_map:
-    # 数字行 Shift
+    # --- 基本記号 (JIS) ---
+    "MINUS": "-"
+    "EQUAL": "^"
+    "SLASH": "/"
+    "PERCENT": "%"
+    "ASTERISK": "("
+    "LEFT_PARENTHESIS": ")"
+    "LPAR": "("
+    "RPAR": ")"
+    
+    # --- 数字行（Shiftあり）のJIS変換 ---
     "LS(N1)": "!"
     "LS(N2)": "\""
     "LS(N3)": "#"
@@ -22,78 +31,74 @@ parse_config:
     "LS(MINUS)": "="
     "LS(EQUAL)": "~"
 
-    # 記号単体 & Shift
+    # --- 記号キー単体（JIS位置） ---
     "AT": "@"
-    "LS(AT)": "`"
     "LBKT": "["
-    "LS(LBKT)": "{"
     "RBKT": "]"
-    "LS(RBKT)": "}"
     "NON_US_HASH": "]"
-    "LS(NON_US_HASH)": "}"
     "SCLN": ";"
-    "LS(SCLN)": "+"
     "QUOT": ":"
-    "LS(QUOT)": "*"
-    "COMMA": ","
-    "LS(COMMA)": "<"
-    "DOT": "."
-    "LS(DOT)": ">"
-    "SLASH": "/"
-    "LS(SLASH)": "?"
     "BSLH": "\\"
-    "LS(BSLH)": "_"
-    
-    # JIS固有物理キー (106/109)
-    "0x89": "¥"           # JP_YEN
-    "LS(0x89)": "|"      # JP_PIPE
-    "INT3": "¥"
-    "LS(INT3)": "|"
-    "0x87": "ろ"          # JP_RO / JP_UNDERSCORE
-    "LS(0x87)": "_"
     "INT1": "ろ"
-    "LS(INT1)": "_"
+    "INT2": "かな"
+    "INT3": "¥"
     "GRAVE": "半/全"
+
+    # --- 記号キー（Shiftあり / JIS位置） ---
+    "LS(AT)": "`"
+    "LS(LBKT)": "{"
+    "LS(RBKT)": "}"
+    "LS(NON_US_HASH)": "}"
+    "LS(SCLN)": "+"
+    "LS(QUOT)": "*"
+    "LS(BSLH)": "_"
+    "LS(INT1)": "_"
+    "LS(INT3)": "|"
+    "LS(COMMA)": "<"
+    "LS(DOT)": ">"
+    "LS(SLASH)": "?"
+
+    # --- 日本語106/109固有キー ---
     "INT_MUHENKAN": "無変換"
     "INT_HENKAN": "変換"
+    "INT_KANA": "かな"
     "LANGUAGE_1": "かな"
     "LANGUAGE_2": "英数"
 
-    # 特殊記号（もしマクロ等で直接呼んでいる場合用）
-    "C_AL_CALC": "Calc"
-    "PRINTSCREEN": "PrtSc"
+    # --- 修飾キー・特殊操作 ---
+    "LCTRL": "Ctrl"
+    "RCTRL": "Ctrl"
+    "LALT": "Alt"
+    "RALT": "Alt"
+    "LGUI": "Win"
+    "RGUI": "Win"
+    "LSHFT": "Shift"
+    "RSHFT": "Shift"
+    "UP": "↑"
+    "DOWN": "↓"
+    "LEFT": "←"
+    "RIGHT": "→"
+    "BSPC": "BS"
+    "DEL": "Del"
+    "RET": "Enter"
+    "ENT": "Enter"
+    "SPC": "Space"
+    "ESC": "Esc"
+    "TAB": "Tab"
 
-  # ユーザー様のカスタムBehavior（mod-morphなど）を直感的な表示に変換
+  # --- カスタム挙動（Behavior）の表示名設定 ---
   raw_binding_map:
+    "minis_morph": "- _"
+    "tilde_morph": "ー ~"
     "mod_morph_exclamation": ", !"
     "mod_morph_question": ". ?"
     "mod_morph_slash": "/ \\"
-    "tilde_morph": "ー 〜"
-    "minis_morph": "- _"
     "td_colon": ": ;"
+    "td_q_escape": "Q/Esc"
+    "td_alt_f4": "F4/AltF4"
     "td_copy_paste": "Copy/Paste"
-    "screenshot_copy": "SS Copy"
-    "screensot_save": "SS Save"
-    "windows_sleep": "Sleep"
     "JP_UNDERSCORE": "_"
-    "JP_ASTERISK": "*"
-    "JP_DQUOTE": "\""
-    "JP_QUOTE": "'"
-    "JP_PLUS": "+"
-    "JP_CARET": "^"
-    "JP_TILDE": "~"
-    "JP_PIPE": "|"
-    "JP_AT": "@"
-    "JP_COLON": ":"
-    "JP_LBRACKET": "["
-    "JP_RBRACKET": "]"
-    "JP_LPAREN": "("
-    "JP_RPAREN": ")"
-    "JP_LBRACE": "{"
-    "JP_RBRACE": "}"
-    "JP_KANA": "かな"
-    "JP_EISU": "英数"
-    "JP_HANZEN": "半/全"
+    "JP_YEN": "¥"
 
   trans_legend:
     t: "▽"
