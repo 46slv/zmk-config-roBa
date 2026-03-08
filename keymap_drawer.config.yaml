@@ -7,16 +7,14 @@ parse_config:
   skip_unrecognized_commands: true
   
   zmk_keycode_map:
-    # --- 基本記号 (JIS) ---
+    # --- 基本記号のJISマッピング補完 ---
     "MINUS": "-"
     "EQUAL": "^"
-    "SLASH": "/"
-    "PERCENT": "%"
-    "ASTERISK": "("
-    "LEFT_PARENTHESIS": ")"
-    "LPAR": "("
-    "RPAR": ")"
-    
+    "TILDE": "~"
+    "PIPE": "|"
+    "GRAVE": "半/全"
+    "TAB": "⇥"
+
     # --- 数字行（Shiftあり）のJIS変換 ---
     "LS(N1)": "!"
     "LS(N2)": "\""
@@ -27,7 +25,7 @@ parse_config:
     "LS(N7)": "'"
     "LS(N8)": "("
     "LS(N9)": ")"
-    "LS(N0)": " "
+    "LS(N0)": " " # JISではShift+0は何も印字されないか空欄
     "LS(MINUS)": "="
     "LS(EQUAL)": "~"
 
@@ -40,9 +38,8 @@ parse_config:
     "QUOT": ":"
     "BSLH": "\\"
     "INT1": "ろ"
-    "INT2": "かな"
+    "INT2": "ひらがな"
     "INT3": "¥"
-    "GRAVE": "半/全"
 
     # --- 記号キー（Shiftあり / JIS位置） ---
     "LS(AT)": "`"
@@ -65,7 +62,7 @@ parse_config:
     "LANGUAGE_1": "かな"
     "LANGUAGE_2": "英数"
 
-    # --- 修飾キー・特殊操作 ---
+    # --- 修飾キー・特殊操作の視認性向上 ---
     "LCTRL": "Ctrl"
     "RCTRL": "Ctrl"
     "LALT": "Alt"
@@ -78,27 +75,24 @@ parse_config:
     "DOWN": "↓"
     "LEFT": "←"
     "RIGHT": "→"
-    "BSPC": "BS"
+    "BSPC": "⌫"
     "DEL": "Del"
-    "RET": "Enter"
-    "ENT": "Enter"
+    "RET": "⏎"
+    "ENT": "⏎"
     "SPC": "Space"
     "ESC": "Esc"
-    "TAB": "Tab"
 
-  # --- カスタム挙動（Behavior）の表示名設定 ---
+  # --- カスタムBehaviorの直感的表示 ---
   raw_binding_map:
-    "minis_morph": "- _"
-    "tilde_morph": "ー ~"
     "mod_morph_exclamation": ", !"
     "mod_morph_question": ". ?"
     "mod_morph_slash": "/ \\"
+    "minis_morph": "- _"
+    "tilde_morph": "ー ~"
     "td_colon": ": ;"
     "td_q_escape": "Q/Esc"
-    "td_alt_f4": "F4/AltF4"
-    "td_copy_paste": "Copy/Paste"
-    "JP_UNDERSCORE": "_"
     "JP_YEN": "¥"
+    "JP_UNDERSCORE": "_"
 
   trans_legend:
     t: "▽"
