@@ -28,7 +28,7 @@ layers:
   - C
   - V
   - B
-  - LEFT SHIFT
+  - Shift
   - _
   - G
   - D
@@ -36,14 +36,14 @@ layers:
   - {t: J, h: '11'}
   - B
   - Ctrl
-  - LEFT WIN
+  - Win
   - TAB
   - '&td'
-  - LEFT CONTROL
-  - LEFT ALT
+  - Ctrl
+  - Alt
   - {t: 無変換, h: '3'}
   - {t: 変換, h: '2'}
-  - LEFT SHIFT
+  - Shift
   '1':
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -89,29 +89,29 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   '2':
-  - DOUBLE QUOTES
+  - '*'
   - KP 7
   - KP 8
   - KP 9
   - MINUS
   - '&td_alt_f4'
   - ''
-  - UP ARROW
+  - ↑
   - ''
   - ''
   - SLASH
   - KP 4
   - KP 5
   - KP 6
-  - COLON
+  - +
   - ''
   - ''
   - ''
-  - LEFT ARROW
-  - DOWN ARROW
-  - RIGHT ARROW
-  - LEFT WIN
-  - {t: KP 0, h: LEFT SHIFT}
+  - ←
+  - ↓
+  - →
+  - Win
+  - {t: KP 0, h: Shift}
   - KP 1
   - KP 2
   - KP 3
@@ -149,12 +149,12 @@ layers:
   - F8
   - F5
   - {t: ▽, type: trans}
-  - Sft+4
-  - Sft+3
+  - $
+  - '#'
   - (
   - )
   - ''''
-  - ^
+  - '~'
   - {t: ▽, type: trans}
   - F9
   - F10
@@ -163,24 +163,24 @@ layers:
   - {t: ▽, type: trans}
   - _
   - '&'
-  - '}'
-  - '|'
   - '{'
-  - Sft+INT3
+  - '}'
+  - '`'
+  - '|'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: Sft+COMMA, type: held}
-  - Sft+DOT
-  - Sft+4
+  - {t: <, type: held}
+  - '>'
+  - $
   '4':
   - '&to_kp 6 TAB'
-  - Ctl+Gui+LEFT
+  - Ctl+Gui+←
   - Gui+TAB
-  - Gui+Ctl+RIGHT
+  - Gui+Ctl+→
   - '&td_alt_f4'
   - '&td_alt_f4'
   - Ctl+W
@@ -188,9 +188,9 @@ layers:
   - Ctl+T
   - '&to_kp 6 TAB'
   - '&to_kp 7 TAB'
-  - Gui+Sft+LEFT ARROW
-  - Gui+UP ARROW
-  - Gui+Sft+RIGHT ARROW
+  - Gui+Sft+←
+  - Gui+↑
+  - Gui+Sft+→
   - F5
   - {t: ▽, type: trans}
   - VOLUME UP
@@ -199,17 +199,17 @@ layers:
   - '&kp_exit_AML UP_ARROW'
   - Ctl+PAGE DOWN
   - '&to_kp 7 TAB'
-  - Alt+Ctl+Gui+DOWN
-  - Gui+LEFT ARROW
-  - Gui+DOWN
-  - Gui+RIGHT ARROW
+  - Alt+Ctl+Gui+↓
+  - Gui+←
+  - Gui+↓
+  - Gui+→
   - {t: Alt+PRINTSCREEN, s: Alt+PRINTSCREEN}
   - '&screensot_save'
   - '&kp_exit_AML C_VOLUME_DOWN'
   - MUTE
-  - Alt+LEFT
-  - DOWN
-  - Alt+RIGHT
+  - Alt+←
+  - ↓
+  - Alt+→
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -217,7 +217,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - DELETE
+  - Del
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   '5':
@@ -233,27 +233,27 @@ layers:
   - TAB
   - Sft+TAB
   - {t: ▽, type: trans}
-  - UP
+  - ↑
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - UP
+  - ↑
   - {t: ▽, type: trans}
   - Sft+TAB
   - {t: ▽, type: trans}
-  - LEFT
-  - DOWN
-  - RIGHT
+  - ←
+  - ↓
+  - →
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - LEFT
-  - DOWN
-  - RIGHT
+  - ←
+  - ↓
+  - →
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -277,27 +277,27 @@ layers:
   - Sft+TAB
   - TAB
   - {t: ▽, type: trans}
-  - UP
+  - ↑
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - UP
+  - ↑
   - {t: ▽, type: trans}
   - TAB
   - Sft+TAB
-  - LEFT
-  - DOWN
-  - RIGHT
+  - ←
+  - ↓
+  - →
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - LEFT
-  - DOWN
-  - RIGHT
+  - ←
+  - ↓
+  - →
   - Sft+TAB
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -497,7 +497,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - UP ARROW
+  - ↑
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -507,10 +507,10 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - LEFT GUI
-  - LEFT ARROW
-  - DOWN ARROW
-  - RIGHT ARROW
+  - Win
+  - ←
+  - ↓
+  - →
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -533,10 +533,10 @@ combos:
   k: SPACE
   l: ['0']
 - p: [19, 20]
-  k: ENTER
+  k: Enter
   l: ['0', '7']
 - p: [20, 21]
-  k: BACKSPACE
+  k: BS
   l: ['0', '7']
 - p: [32, 33]
   k: _
@@ -545,7 +545,7 @@ combos:
   k: '&mkp MCLK'
   l: ['7']
 - p: [0, 1]
-  k: ESCAPE
+  k: Esc
   l: ['0']
 - p: [22, 33]
   k: '&caps_word'
