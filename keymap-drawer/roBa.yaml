@@ -4,7 +4,7 @@ layers:
   - Q
   - L
   - U
-  - {t: ',', s: EXCL}
+  - {t: COMMA, s: EXCL}
   - {t: PERIOD, s: QUESTION}
   - F
   - W
@@ -15,7 +15,7 @@ layers:
   - I
   - A
   - O
-  - {t: MINUS, s: TILDE}
+  - {t: '-', s: TILDE}
   - Sft+Gui+S
   - /
   - K
@@ -29,15 +29,15 @@ layers:
   - V
   - B
   - LEFT SHIFT
-  - _
+  - Sft+0x87
   - G
   - D
   - M
   - {t: J, h: '11'}
   - B
-  - LCTRL
+  - Ctrl
   - LEFT WIN
-  - TAB
+  - Tab
   - '&td'
   - LEFT CONTROL
   - LEFT ALT
@@ -93,7 +93,7 @@ layers:
   - KP 7
   - KP 8
   - KP 9
-  - MINUS
+  - '-'
   - '&td_alt_f4'
   - ''
   - UP ARROW
@@ -115,7 +115,7 @@ layers:
   - KP 1
   - KP 2
   - KP 3
-  - PERCENT
+  - '%'
   - {t: ▽, type: trans}
   - ''
   - ''
@@ -161,7 +161,7 @@ layers:
   - F11
   - F12
   - {t: ▽, type: trans}
-  - _
+  - Sft+0x87
   - '&'
   - '}'
   - _
@@ -178,9 +178,9 @@ layers:
   - $
   '4':
   - '&to_kp 6 TAB'
-  - Ctl+Gui+LEFT
-  - Gui+TAB
-  - Gui+Ctl+RIGHT
+  - Ctl+Gui+←
+  - Gui+Tab
+  - Gui+Ctl+→
   - '&td_alt_f4'
   - '&td_alt_f4'
   - Ctl+W
@@ -199,17 +199,17 @@ layers:
   - '&kp_exit_AML UP_ARROW'
   - Ctl+PAGE DOWN
   - '&to_kp 7 TAB'
-  - Alt+Ctl+Gui+DOWN
+  - Alt+Ctl+Gui+↓
   - Gui+LEFT ARROW
-  - Gui+DOWN
+  - Gui+↓
   - Gui+RIGHT ARROW
-  - {t: Alt+PrtSc, s: Alt+PrtSc}
+  - {t: Alt+PRINTSCREEN, s: Alt+PRINTSCREEN}
   - '&screensot_save'
   - '&kp_exit_AML C_VOLUME_DOWN'
   - MUTE
-  - Alt+LEFT
-  - DOWN
-  - Alt+RIGHT
+  - Alt+←
+  - ↓
+  - Alt+→
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -221,7 +221,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   '5':
-  - TAB
+  - Tab
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -230,30 +230,30 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - TAB
-  - Sft+TAB
+  - Tab
+  - Sft+Tab
   - {t: ▽, type: trans}
-  - UP
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ↑
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - UP
-  - {t: ▽, type: trans}
-  - Sft+TAB
-  - {t: ▽, type: trans}
-  - LEFT
-  - DOWN
-  - RIGHT
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  - ↑
+  - {t: ▽, type: trans}
+  - Sft+Tab
+  - {t: ▽, type: trans}
+  - ←
+  - ↓
+  - →
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - LEFT
-  - DOWN
-  - RIGHT
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ←
+  - ↓
+  - →
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -265,7 +265,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   '6':
-  - Sft+TAB
+  - Sft+Tab
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -274,31 +274,31 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - Sft+TAB
-  - TAB
+  - Sft+Tab
+  - Tab
   - {t: ▽, type: trans}
-  - UP
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ↑
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - UP
-  - {t: ▽, type: trans}
-  - TAB
-  - Sft+TAB
-  - LEFT
-  - DOWN
-  - RIGHT
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  - ↑
+  - {t: ▽, type: trans}
+  - Tab
+  - Sft+Tab
+  - ←
+  - ↓
+  - →
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - LEFT
-  - DOWN
-  - RIGHT
-  - Sft+TAB
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ←
+  - ↓
+  - →
+  - Sft+Tab
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -539,7 +539,7 @@ combos:
   k: BACKSPACE
   l: ['0', '7']
 - p: [32, 33]
-  k: _
+  k: Sft+0x87
   l: ['0', '7']
 - p: [18, 19]
   k: '&mkp MCLK'
