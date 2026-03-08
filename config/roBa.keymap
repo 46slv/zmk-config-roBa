@@ -1,939 +1,148 @@
-/* --- マウス・ポインティングの設定 --- */
-
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 1000 // スクロールの移動量を定義（数値が大きいほど速い）
-
-// #define ZMK_POINTING_DEFAULT_MOVE_VAL 700 // マウスカーソルの移動速度（現在はコメントアウトで無効）
-/* --- レイヤー番号の定義（名前を付けて管理しやすくする） --- */
-
-#define DEFAULT 0               // 基本の入力レイヤー
-#define LANG1_EAGER_TAP_DANCE 1 // 言語切り替え用の特殊な挙動レイヤー
-#define NUMPAD_AND_ARROWS 2     // テンキーと矢印キーのレイヤー
-#define FUNCTIONS_AND_SYMBOLS 3 // ファンクションキーと記号のレイヤー
-#define MISC 4                  // その他(Miscellaneous)のキーレイヤー
-#define ALT_TAB 5               // Alt+Tab操作用のレイヤー
-#define CTRL_TAB 6              // Ctrl+Tab操作用のレイヤー
-#define MOUSE 7                 // マウスカーソル操作レイヤー
-#define MEDIA 8                 // 音楽再生や音量調整などのメディアレイヤー
-#define EXTRA_FINCTIONS 9       // 追加機能レイヤー（スペルミス：FUNCTIONS）
-#define CONFIGURATION 10        // キーボード自体の設定（ペアリング等）レイヤー
-#define SCROLL 11               // スクロール操作専用レイヤー
-
-/* --- システム・外部ファイルの読み込み --- */
-
-#include <zephyr/dt-bindings/input/input-event-codes.h> // 標準的な入力イベント（キーコード）の定義
-#include <dt-bindings/zmk/input_transform.h>           // トラックボールなどの入力反転・回転変換
-#include <input/processors.dtsi>                       // 入力データの処理（スムージング等）
-#include <input/processors/report_rate_limit.dtsi>     // 通信の更新レート制限（バッテリー節約等）
-#include <behaviors/rgbled_widget.dtsi>                // LED表示（ウィジェット）の制御
-#include <layout_shift_kp_override.dtsi>               // シフト時のキー上書き設定
-#include <mouse-gesture.dtsi>                          // マウスジェスチャー機能
-#include <scroll-snap.dtsi>                            // スクロールを段階的に止める機能
-
-/* --- ZMKの基本機能の読み込み --- */
-
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/pointing.h>
 
-// OS設定を日本語キーボードのまま使用するための変換定義
-
-#define JP_DQUOTE       AT                // "
-#define JP_AMPERSAND    CARET             // &
-#define JP_QUOTE        AMPERSAND         // '
-#define JP_EQUAL        UNDER             // =
-#define JP_CARET        EQUAL             // ^
-#define JP_YEN          0x89              // ¥
-#define JP_PLUS         COLON             // +
-#define JP_TILDE        PLUS              // ~
-#define JP_PIPE         LS(0x89)          // |
-#define JP_AT           LEFT_BRACKET      // @
-#define JP_COLON        SINGLE_QUOTE      // :
-#define JP_ASTERISK     DOUBLE_QUOTES     // *
-#define JP_BACKQUOTE    LEFT_BRACE        // `
-#define JP_UNDERSCORE   LS(0x87)          // _
-#define JP_LBRACKET     RIGHT_BRACKET     // [
-#define JP_RBRACKET     BACKSLASH         // ]
-#define JP_LPAREN       ASTERISK          // (
-#define JP_RPAREN       LEFT_PARENTHESIS  // )
-#define JP_LBRACE       RIGHT_BRACE       // {
-#define JP_RBRACE       PIPE              // }
-#define JP_KANA         LANGUAGE_1        // かな
-#define JP_EISU         LANGUAGE_2        // 英数
-#define JP_HANZEN       GRAVE             // 半角/全角
-
-/* --- 以下設定 --- */
-// mt mod-tapとlt layer-tap
-// tapping-term-ms = 「200ミリ秒（0.2秒）」を境界線にしています。これより短いと文字入力、長いと装飾キー（Ctrl/Shift等）やレイヤー切り替えになります。
-// quick-tap-ms = 同じキーを素早く2回叩いたとき、2回目を「押しっぱなし」にしてもホールド機能を発動させず、文字の連続入力（例：aa, ss）として扱う猶予時間です。
-
 &mt {
-    tapping-term-ms = <200>;
-    quick-tap-ms = <250>;
     flavor = "balanced";
-};
-
-&lt {
-    tapping-term-ms = <200>;
-    quick-tap-ms = <250>;
-    flavor = "balanced";
-};
-
-&to { /delete-property/ locking; };
-
-&tog { /delete-property/ locking; };
-
-// この時間たつまでshiftなどが有効になる
-
-&sk { release-after-ms = <300>; };
-
-&sl { release-after-ms = <800>; };
-
-/*
-//　マウスジェスチャーの設定
-&mouse_gesture_kp {
-    tapping-term-ms = <200>;
-    quick-tap-ms = <250>;
-    flavor = "balanced";
-};
-
-&mouse_gesture_mkp {
-    tapping-term-ms = <200>;
-    quick-tap-ms = <250>;
-    flavor = "balanced";
-};
-*/
-// 自動でマウスレイヤーに切り替わる（AML）挙動の詳細設定
-
-&zip_temp_layer {
-    require-prior-idle-ms = <500>;
-
-    // キーボードを最後に打ってから500ms（0.2秒）間、何もしていない時だけ、トラックボールによるレイヤー切り替えを許可する
-
-    excluded-positions = <
-        18 // t
-    >;
+    quick-tap-ms = <0>;
 };
 
 &trackball {
-    cpi = <800>;
-    swap-xy;
-    invert-x;
-    invert-y;
+    automouse-layer = <4>;
+    scroll-layers = <5>;
 
-    // トラックボールの方向制御
-};
+    // arrows {
+    //     layers = <3>;
+    //     bindings =
+    //         <&kp RIGHT_ARROW>,
+    //         <&kp LEFT_ARROW>,
+    //         <&kp UP_ARROW>,
+    //         <&kp DOWN_ARROW>;
 
-/* マウスジェスチャー
-&zip_mouse_gesture {
-    stroke-size = <150>;
-    enable-eager-mode;
-
-    history_back {
-        pattern = <GESTURE_RIGHT>;
-        bindings = <&kp LA(LEFT)>;
-    };
-
-    history_forward {
-        pattern = <GESTURE_LEFT>;
-        bindings = <&kp LA(RIGHT)>;
-    };
-
-    close_tab {
-        pattern = <GESTURE_DOWN GESTURE_RIGHT>;
-        bindings = <&kp LC(W)>;
-    };
-
-    new_tab {
-        pattern = <GESTURE_DOWN GESTURE_LEFT>;
-        bindings = <&kp LC(T)>;
-    };
-
-    app_switcher {
-        pattern = <GESTURE_DOWN GESTURE_UP>;
-        bindings = <&kp LG(TAB)>;
-    };
-
-    virtual_desktop_prev {
-        pattern = <GESTURE_LEFT GESTURE_DOWN>;
-        bindings = <&kp LG(LC(LEFT))>;
-    };
-
-    virtual_desktop_next {
-        pattern = <GESTURE_RIGHT GESTURE_DOWN>;
-        bindings = <&kp LG(LC(RIGHT))>;
-    };
-
-    // left {
-    //     gesture = <GESTURE_LEFT>;
-    //     bindings = <&kp LEFT>;
+    //     tick = <10>;
+    //     wait-ms = <5>;
+    //     tap-ms = <5>;
     // };
-    // right {
-    //     gesture = <GESTURE_RIGHT>;
-    //     bindings = <&kp RIGHT>;
-    // };
-    // up {
-    //     gesture = <GESTURE_UP>;
-    //     bindings = <&kp UP>;
-    // };
-    // down {
-    //     gesture = <GESTURE_DOWN>;
-    //     bindings = <&kp DOWN>;
-    // };
-};
-
-*/
-// スクロールを抑制し、上下または左右の直線的な動きをつくる
-
-&zip_scroll_snap {
-    require-n-samples = <8>;
-    immediate-snap-threshold = <750>;
-    lock-duration-ms = <175>;
-    lock-for-next-n-events = <8>;
-    idle-reset-timeout-ms = <175>;
-};
-
-// trackball_listenerの設定　
-
-&trackball_listener {
-    compatible = "zmk,input-listener";
-    input-processors = <
-        &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)
-        &zip_mouse_gesture
-        &zip_report_rate_limit 15
-    >;
-
-    // 1つ目の auto-mouse-layer はそのまま
-
-    auto-mouse-layer {
-        layers = <DEFAULT MOUSE>;
-        input-processors = <&zip_temp_layer MOUSE 500>; // msマウスレイヤーにとどまる
-        process-next;
-    };
-
-    // ここで scroller を1つにまとめます
-
-    scroller {
-        // scrollレイヤーの対象レイヤーをここに並べる
-
-        layers = <EXTRA_FINCTIONS MISC MEDIA 2 11>;
-        input-processors = <
-            &zip_xy_scaler 1 2 //スクロール速度
-            &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)
-            &zip_xy_to_scroll_mapper
-            &zip_scroll_snap
-            &zip_report_rate_limit 15
-        >;
-
-        process-next;
-    };
-
-    disable-scroll-x {
-        layers = <EXTRA_FINCTIONS>;
-        input-processors = <&wheel_x_scaler 0 1>;
-        process-next;
-    };
 };
 
 / {
-    input_processors {
-        wheel_x_scaler: wheel_x_scaler {
-            compatible = "zmk,input-processor-scaler";
-            #input-processor-cells = <2>;
-            type = <INPUT_EV_REL>;
-            codes = <INPUT_REL_HWHEEL>;
-            track-remainders;
-        };
-    };
-
-    /*
-    layer_listeners {
-        compatible = "zmk,layer-listeners";
-
-        release_alt {
-            layers = <ALT_TAB>;// 1. 対象レイヤーの指定
-            bindings = <&kt_on LEFT_ALT &kt_off LEFT_ALT>;// 2. 入った時と出た時の動作
-        };
-
-        release_ctrl {
-            layers = <CTRL_TAB>;// 1. 対象レイヤーの指定
-            bindings = <&kt_on LCTRL &kt_off LCTRL>;// 2. 入った時と出た時の動作
-        };
-
-        // AML_indicator {
-        //     layers = <MOUSE>;
-        //     bindings = <&kp LS(LA(LC(LG(H)))) &kp LS(LA(LC(LG(H))))>;
-        // };
-        // AML {
-        //     layers = <MOUSE>;
-        //     bindings = <&to MOUSE &none>;
-        // };
-    };
-*/
-
     combos {
         compatible = "zmk,combos";
 
-        // --- 大西配列(old-1)用コンボ ---
-        // AI (11 12) -> SPACE
-
-        combo_ai_space {
-            bindings = <&kp SPACE>;
+        tab {
+            bindings = <&kp TAB>;
             key-positions = <11 12>;
-            layers = <0>;
-            require-prior-idle-ms = <150>;
-            timeout-ms = <80>;
         };
 
-        // NS (19 20) -> ENTER
-
-        combo_ns_enter {
-            bindings = <&kp ENTER>;
-            key-positions = <19 20>;
-            layers = <0 7>; // 7 (MOUSE) を追加
+        shift_tab {
+            bindings = <&kp LS(TAB)>;
+            key-positions = <12 13>;
         };
 
-        // SH (20 21) -> BACKSPACE
+        muhennkann {
+            bindings = <&to_layer_0 INT_MUHENKAN>;
+            key-positions = <11 10>;
+        };
 
-        combo_sh_bs {
-            bindings = <&kp BACKSPACE>;
+        double_quotation {
+            bindings = <&kp DOUBLE_QUOTES>;
             key-positions = <20 21>;
-            layers = <0 7>;      // マウスレイヤーでも発動するようにする
-            timeout-ms = <80>;   // 50から80に伸ばして判定を緩くする
         };
 
-        // SH (32 33) -> JP_UNDERSCORE
-
-        combo_jb_unsc {
-            bindings = <&kp JP_UNDERSCORE>;
-            key-positions = <32 33>;
-            layers = <0 7>;      // マウスレイヤーでも発動するようにする
-            timeout-ms = <80>;   // 50から80に伸ばして判定を緩くする
-        };
-
-        // --- kot版マウスレイヤー用コンボ (維持) ---
-
-        middle_click {
-            bindings = <&mkp MCLK>;
-            key-positions = <18 19>;
-            layers = <7>; // MOUSEレイヤー
-        };
-
-        // --- その他共通・便利コンボ ---
-
-        Escape {
-            bindings = <&kp ESCAPE>;
-            key-positions = <0 1>;
-            layers = <0>;
-            require-prior-idle-ms = <300>;
-        };
-
-        caps_word {
-            bindings = <&caps_word>;
-            key-positions = <22 33>;
-            layers = <0>;
-            require-prior-idle-ms = <300>;
+        eq {
+            bindings = <&kp EQUAL>;
+            key-positions = <24 25>;
         };
     };
-
-    /* --- macros 設定 --- */
 
     macros {
-        // 参照（使用）されていない場合にコンパイルから除外するディレクティブ
-
-        /omit-if-no-ref/
-
-        // レイヤー7（AMLレイヤーと推測）を強制的にオフにする基本マクロ
-
-        exit_AML: exit_AML {
-            compatible = "zmk,behavior-macro";
-            wait-ms = <0>;
-            tap-ms = <0>;
-            #binding-cells = <0>;
-            bindings = <&tog_off 7>;
-        };
-
-        /omit-if-no-ref/
-
-        // 1つの引数（キー）をタップし、その後レイヤー7を抜ける
-        // 例: &kp_exit_AML ENTER -> ENTERを入力してレイヤー7をオフ
-
-        kp_exit_AML: kp_exit_AML {
+        to_layer_0: to_layer_0 {
             compatible = "zmk,behavior-macro-one-param";
-            wait-ms = <0>;
-            tap-ms = <0>;
             #binding-cells = <1>;
-            bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &exit_AML>;
-        };
-
-        /omit-if-no-ref/
-
-        // 修飾キー等向け：キーを押し下げている間レイヤー7を維持し、離すとレイヤー7を抜ける
-
-        mod_exit_AML: mod_exit_AML {
-            compatible = "zmk,behavior-macro-one-param";
-            wait-ms = <0>;
-            tap-ms = <0>;
-            #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&exit_AML>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>;
-        };
-
-        /omit-if-no-ref/
-
-        // マウスクリック（mkp）用：クリックを離した後にレイヤー7を一時有効（Sticky Layer）にする
-
-        mkp_exit_AML: mkp_exit_AML {
-            compatible = "zmk,behavior-macro-one-param"; // 引数（左クリック、右クリックなど）を1つ受け取る設定
-            #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&sl 7>;
-
-            // 離した後にレイヤー7をSticky（一回使い切り）で起動
-        };
-
-        /omit-if-no-ref/
-
-        // モーメンタリレイヤー（mo）用：レイヤー切り替え中のみ有効にし、離すとレイヤー7を抜ける
-
-        mo_exit_AML: mo_exit_AML {
-            compatible = "zmk,behavior-macro-one-param";
-            wait-ms = <0>;
-            tap-ms = <0>;
-            #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&exit_AML>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
-                <&macro_tap>;
-        };
-
-        /omit-if-no-ref/
-
-        // Alt-TabやCtrl-Tab用：レイヤーを離した瞬間にレイヤー6と7を両方オフにする
-
-        mo_exit_alttab: mo_exit_alttab_ctrltab {
-            compatible = "zmk,behavior-macro-one-param";
-            wait-ms = <0>;
-            tap-ms = <0>;
-            #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&tog_off 6 &tog_off 7>;
-
-            // 終了時に6と7を確実に閉じる
-        };
-
-        /omit-if-no-ref/
-
-        // 2引数：指定キーをタップした後、指定レイヤーへ移動（to）する
-        // 例: &kp_to LALT 3
-
-        kp_to: kp_to {
-            compatible = "zmk,behavior-macro-two-param";
-            wait-ms = <0>;
-            tap-ms = <0>;
-            #binding-cells = <2>;
-            bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &macro_param_2to1 &to MACRO_PLACEHOLDER>;
-        };
-
-        /omit-if-no-ref/
-
-        // 2引数：指定レイヤーへ移動（to）した後、指定キーをタップする
-
-        to_kp: to_kp {
-            compatible = "zmk,behavior-macro-two-param";
-            #binding-cells = <2>;
-            bindings = <&macro_param_1to1 &to MACRO_PLACEHOLDER &macro_param_2to1 &kp MACRO_PLACEHOLDER>;
-        };
-
-        /omit-if-no-ref/
-
-        // ズームイン：Ctrlを押しながらマウスホイールアップ（スクロール）を送信
-
-        zoom_in: zoom_in {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kt_on LCTRL &msc SCRL_UP &kt_off LCTRL>;
-        };
-
-        /omit-if-no-ref/
-
-        // ズームアウト：Ctrlを押しながらマウスホイールダウンを送信
-
-        zoom_out: zoom_out {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kt_on LCTRL &msc SCRL_DOWN &kt_off LCTRL>;
-        };
-
-        /omit-if-no-ref/
-
-        // 高度なタップダンス：キー入力を即座に行い、離した後にレイヤー7を抜け、さらに別のSticky Layer（250ms）を起動する
-
-        eager_tap_dance: eager_tap_dance {
-            compatible = "zmk,behavior-macro-two-param";
-            #binding-cells = <2>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&exit_AML &macro_param_2to1 &sl_250 MACRO_PLACEHOLDER>;
+            bindings = <&to 0 &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
+            label = "TO_LAYER_0";
         };
     };
-
-    /* --- 以下 behaviors 設定 --- */
 
     behaviors {
-        // --- 大西配列(old-1)から移植した設定 ---
-
-        minis_morph: minis_morph {
-            compatible = "zmk,behavior-mod-morph";
-            bindings = <&kp MINUS>, <&kp UNDER>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT)>;
-        };
-
-        tilde_morph: tilde_morph {
-            compatible = "zmk,behavior-mod-morph";
-            #binding-cells = <0>;
-            bindings = <&kp MINUS>, <&kp TILDE>;
-
-            // 通常は「ー」、Shiftで「〜」
-
-            mods = <(MOD_LSFT)>;
-        };
-
-        td: tap_dance {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&kp LANGUAGE_2>, <&kp LANGUAGE_1>;
-        };
-
         lt_to_layer_0: lt_to_layer_0 {
             compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            tapping-term-ms = <200>;
-            flavor = "tap-preferred";
-            bindings = <&mo>, <&kp>;
-        };
-
-        // --- 以下、提供いただいたkot版 behaviors (維持) ---
-
-        tog_on: toggle_layer_on {
-            compatible = "zmk,behavior-toggle-layer";
-            #binding-cells = <1>;
-            display-name = "Toggle Layer On";
-            toggle-mode = "on";
-        };
-
-        tog_off: toggle_layer_off {
-            compatible = "zmk,behavior-toggle-layer";
-            #binding-cells = <1>;
-            display-name = "Toggle Layer Off";
-            toggle-mode = "off";
-        };
-
-        kt_on: key_toggle_on_only {
-            compatible = "zmk,behavior-key-toggle";
-            #binding-cells = <1>;
-            display-name = "Key Toggle On";
-            toggle-mode = "on";
-        };
-
-        kt_off: key_toggle_off_only {
-            compatible = "zmk,behavior-key-toggle";
-            #binding-cells = <1>;
-            display-name = "Key Toggle Off";
-            toggle-mode = "off";
-        };
-
-        td_colon: td_colon {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            bindings = <&kp COLON>, <&kp SEMICOLON>;
-
-            tapping-term-ms = <250>;
-        };
-
-        td_q_escape: td_q_escape {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <250>;
-            bindings = <&kp Q>, <&kp ESCAPE>;
-        };
-
-        td_ZenkakuHankaku: td_ZenkakuHankaku {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <250>;
-            bindings = <&kp LANGUAGE_2>, <&kp LANGUAGE_1>;
-        };
-
-        td_ZenkakuHankaku_exit_AML: td_ZenkakuHankaku_exit_AML {
-            wait-ms = <0>;
-            tap-ms = <0>;
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&td_ZenkakuHankaku &exit_AML>;
-        };
-
-        alt_tab: alt_tab {
-            compatible = "zmk,behavior-macro-two-param";
-            #binding-cells = <2>;
-            bindings = <&macro_param_1to1 &kt_on MACRO_PLACEHOLDER &macro_param_2to1 &kp MACRO_PLACEHOLDER &macro_param_1to1 &sk MACRO_PLACEHOLDER &macro_param_1to1 &kt_off MACRO_PLACEHOLDER>;
-        };
-
-        windows_sleep: windows_sleep {
-            compatible = "zmk,behavior-macro";
-            wait-ms = <200>;
-            tap-ms = <100>;
-            #binding-cells = <0>;
-            bindings = <&kp LG(X) &kp U &kp S>;
-        };
-
-        screensot_save: screensot_save {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp LS(F11)>;
-            label = "SCREENSOT_SAVE";
-        };
-
-        mkp_with_mod: mkp_with_mod {
-            compatible = "zmk,behavior-macro-two-param";
-            #binding-cells = <2>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER &macro_param_2to1 &mkp MACRO_PLACEHOLDER>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_2to1 &mkp MACRO_PLACEHOLDER &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
-
-            label = "MKP_WITH_MOD";
-        };
-
-        screenshot_copy: screenshot_copy {
-            compatible = "zmk,behavior-mod-morph";
-            bindings = <&kp LA(PRINTSCREEN)>, <&kp LA(PRINTSCREEN)>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT|MOD_LALT)>;
-            keep-mods = <(MOD_LALT)>;
-        };
-
-        mod_morph_exclamation: mod_morph_exclamation {
-            compatible = "zmk,behavior-mod-morph";
-            bindings = <&kp COMMA>, <&kp EXCL>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT)>;
-        };
-
-        mod_morph_question: mod_morph_question {
-            compatible = "zmk,behavior-mod-morph";
-            bindings = <&kp PERIOD>, <&kp QUESTION>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT)>;
-        };
-
-        mod_morph_slash: mod_morph_slash {
-            compatible = "zmk,behavior-mod-morph";
-            bindings = <&kp SLASH>, <&kp BACKSLASH>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT)>;
-        };
-
-        td_alt_f4: td_alt_f4 {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            bindings = <&kp F4>, <&kp LA(F4)>;
-
-            tapping-term-ms = <250>;
-        };
-
-        lt_exit_AML: lt_exit_AML {
-            compatible = "zmk,behavior-hold-tap";
-            bindings = <&mo_exit_AML>, <&kp_exit_AML>;
+            label = "LAYER_TAP_TO_0";
+            bindings = <&mo>, <&to_layer_0>;
 
             #binding-cells = <2>;
             tapping-term-ms = <200>;
-            quick-tap-ms = <200>;
-            flavor = "balanced";
-        };
-
-        lt_exit_AML_on_hold: lt_exit_AML_on_hold {
-            compatible = "zmk,behavior-hold-tap";
-            bindings = <&mo_exit_AML>, <&kp>;
-
-            #binding-cells = <2>;
-            tapping-term-ms = <200>;
-            quick-tap-ms = <200>;
-            flavor = "balanced";
-        };
-
-        lt_exit_alttab: lt_exit_alttab_ctrltab_on_hold_release {
-            compatible = "zmk,behavior-hold-tap";
-            bindings = <&mo_exit_alttab>, <&kp>;
-
-            #binding-cells = <2>;
-            tapping-term-ms = <200>;
-            quick-tap-ms = <200>;
-            flavor = "balanced";
-        };
-
-        mt_exit_AML: mt_exit_AML {
-            compatible = "zmk,behavior-hold-tap";
-            bindings = <&mod_exit_AML>, <&kp_exit_AML>;
-
-            #binding-cells = <2>;
-            tapping-term-ms = <200>;
-            flavor = "balanced";
-            quick-tap-ms = <200>;
-        };
-
-        mt_exit_AML_on_tap: mt_exit_AML_on_tap {
-            compatible = "zmk,behavior-hold-tap";
-            bindings = <&kp>, <&kp_exit_AML>;
-
-            #binding-cells = <2>;
-            tapping-term-ms = <200>;
-            flavor = "balanced";
-            quick-tap-ms = <200>;
-        };
-
-        encoder_zoom: encoder_zoom {
-            compatible = "zmk,behavior-sensor-rotate";
-            #sensor-binding-cells = <0>;
-            bindings = <&zoom_out>, <&zoom_in>;
-        };
-
-        encoder_volume: encoder_volume {
-            compatible = "zmk,behavior-sensor-rotate";
-            #sensor-binding-cells = <0>;
-            bindings = <&kp C_VOLUME_DOWN>, <&kp C_VOLUME_UP>;
-        };
-
-        lt_zoom_out: lt_zoom_out {
-            compatible = "zmk,behavior-hold-tap";
-            bindings = <&mo_exit_AML>, <&zoom_out>;
-
-            #binding-cells = <2>;
-            tapping-term-ms = <200>;
-            quick-tap-ms = <200>;
-            flavor = "balanced";
-        };
-
-        sl_250: sl_250 {
-            compatible = "zmk,behavior-sticky-key";
-            bindings = <&mo>;
-            #binding-cells = <1>;
-            release-after-ms = <250>;
-        };
-
-        td_bt_clear: td_bt_clear {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            bindings = <&none>, <&none>, <&bt BT_CLR>;
-
-            tapping-term-ms = <250>;
-        };
-
-        td_bt_clear_all: td_bt_clear_all {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <250>;
-            bindings = <&none>, <&none>, <&bt BT_CLR_ALL>;
-        };
-
-        td_copy_paste: td_copy_paste {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            bindings = <&kp_exit_AML LC(C)>, <&kp_exit_AML LC(V)>;
-
-            tapping-term-ms = <250>;
-        };
-
-        td_reset: td_reset {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            bindings = <&none>, <&sys_reset>;
-
-            tapping-term-ms = <300>;
-        };
-
-        reset_bootloader: reset_bootloader {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            bindings = <&bootloader>, <&td_reset>;
-
-            tapping-term-ms = <500>;
-            flavor = "balanced";
-        };
-
-        td_rclick_close_tab: td_rclick_close_tab {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            bindings = <&mkp RCLK>, <&kp LC(W)>;
-
-            tapping-term-ms = <250>;
-        };
-
-        td_rclick_close_tab_mouse_gesture: td_rclick_close_tab_mouse_gesture {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            bindings = <&mouse_gesture>, <&td_rclick_close_tab>;
-
-            tapping-term-ms = <150>;
-            flavor = "balanced";
         };
     };
-
-    /* --- 以下キーマップ --- */
 
     keymap {
         compatible = "zmk,keymap";
 
-        DEFAULT {
+        default_layer {
             bindings = <
-&kp Q      &kp L         &kp U    &mod_morph_exclamation  &mod_morph_question                                          &kp F             &kp W  &kp R  &kp Y     &kp P
-&kp E      &kp I         &kp A    &kp O                   &tilde_morph         &kp LS(LG(S))       &kp SLASH           &kp K             &kp T  &kp N  &lt 7 S   &kp H
-&kp Z      &kp X         &kp C    &kp V                   &kp B                &kp LEFT_SHIFT      &kp JP_UNDERSCORE   &kp G             &kp D  &kp M  &lt 11 J  &kp B
-&kp LCTRL  &kp LEFT_WIN  &kp TAB  &td                     &kp LEFT_CONTROL     &kp LEFT_ALT        &lt 3 INT_MUHENKAN  &lt 2 INT_HENKAN                          &kp LEFT_SHIFT
+&kp Q             &kp W         &kp E         &kp R                        &kp T                                                          &kp Y        &kp U  &lt 5 I    &kp O    &kp P
+&kp A             &kp S         &kp D         &kp F                        &kp G        &kp LS(LG(S))                      &kp MINUS      &kp H        &kp J  &kp K      &kp L    &kp SQT
+&mt LEFT_SHIFT Z  &kp X         &kp C         &kp V                        &kp B        &kp COLON                          &kp SEMICOLON  &kp N        &kp M  &kp COMMA  &kp DOT  &kp SLASH
+&kp LCTRL         &kp LEFT_WIN  &kp LEFT_ALT  &lt_to_layer_0 6 INT_HENKAN  &lt 2 SPACE  &lt_to_layer_0 3 INT_MUHENKAN      &kp BACKSPACE  &lt 1 ENTER                             &kp DEL
             >;
 
-            sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
+            sensor-bindings = <&inc_dec_kp PG_UP PAGE_DOWN>;
         };
 
-        LANG1_EAGER_TAP_DANCE {
+        FUNCTION {
             bindings = <
-&trans  &trans  &trans  &trans                    &trans                      &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans                    &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans                    &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &eager_tap_dance LANG1 1  &trans  &trans      &trans  &trans                          &trans
-            >;
-        };
-
-        NUMPAD_AND_ARROWS {
-            bindings = <
-&kp JP_ASTERISK             &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp MINUS                       &td_alt_f4  &none           &kp UP_ARROW    &none            &none
-&kp SLASH                   &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp JP_PLUS  &none       &none  &none       &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &kp LEFT_WIN
-&mt LEFT_SHIFT KP_NUMBER_0  &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp PERCENT  &trans      &none  &none       &kp J           &kp K           &kp L            &none
-&trans                      &trans           &trans           &trans           &trans       &trans      &none  &none                                                        &none
-            >;
-
-            sensor-bindings = <&inc_dec_kp LC(PLUS) LC(MINUS)>;
-        };
-
-        FUNCTIONS_AND_SYMBOLS {
-            bindings = <
-&to_kp 6 TAB  &kp F1  &kp F2   &kp F3   &td_alt_f4                                 &kp LBKT     &kp RBKT      &kp BSLH      &kp LS(N2)    &td_colon
-&to_kp 7 TAB  &kp F6  &kp F7   &kp F8   &kp F5      &trans      &kp LS(N4)         &kp LS(N3)   &kp LS(N8)    &kp LS(N9)    &kp LS(N7)    &kp LS(EQUAL)
-&trans        &kp F9  &kp F10  &kp F11  &kp F12     &trans      &kp JP_UNDERSCORE  &kp LS(N6)   &kp LS(RBKT)  &kp LS(BSLH)  &kp LS(LBKT)  &kp LS(INT3)
-&trans        &trans  &trans   &trans   &trans      &trans      &kp LS(COMMA)      &kp LS(DOT)                                            &kp LS(N4)
+&trans  &trans  &trans  &trans  &trans                       &kp F1  &kp F2  &kp F3  &kp F4  &kp F5
+&trans  &trans  &trans  &trans  &trans  &trans      &kp F13  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10
+&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans  &trans  &trans  &trans  &kp F11
+&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans                          &kp F12
             >;
         };
 
-        MISC {
+        NUM {
             bindings = <
-&to_kp 6 TAB          &kp LC(LG(LEFT))        &kp LG(TAB)       &kp LG(LC(RIGHT))        &td_alt_f4                                                         &td_alt_f4  &kp LC(W)                 &kp LS(LC(T))          &kp LC(T)          &to_kp 6 TAB
-&to_kp 7 TAB          &kp LG(LS(LEFT_ARROW))  &kp LG(UP_ARROW)  &kp LG(LS(RIGHT_ARROW))  &kp F5            &trans               &kp C_VOLUME_UP             &kp F5      &kp_exit_AML LC(PAGE_UP)  &kp_exit_AML UP_ARROW  &kp LC(PAGE_DOWN)  &to_kp 7 TAB
-&kp LA(LC(LG(DOWN)))  &kp LG(LEFT_ARROW)      &kp LG(DOWN)      &kp LG(RIGHT_ARROW)      &screenshot_copy  &screensot_save      &kp_exit_AML C_VOLUME_DOWN  &kp K_MUTE  &kp LA(LEFT)              &kp DOWN               &kp LA(RIGHT)      &trans
-&trans                &trans                  &trans            &trans                   &trans            &trans               &kp DELETE                  &trans                                                                          &trans
+&kp MINUS                   &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp PLUS                                                   &kp CARET         &kp AMPERSAND      &kp TILDE       &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS
+&kp SLASH                   &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp ASTERISK  &kp LC(LA(KP_NUMBER_0))      &kp UNDERSCORE  &kp EXCLAMATION   &kp AT_SIGN        &kp HASH        &kp DOLLAR            &kp PERCENT
+&mt LEFT_SHIFT KP_NUMBER_0  &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp PERIOD    &kp EQUAL                    &trans          &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp LEFT_BRACE  &kp RIGHT_BRACE       &kp BACKSLASH
+&trans                      &trans           &trans           &trans           &trans        &trans                       &trans          &trans                                                                     &kp PIPE
+            >;
+        };
+
+        ARROW {
+            bindings = <
+&kp ESCAPE      &kp LC(LS(TAB))         &kp UP_ARROW    &kp LC(TAB)              &trans                       &trans  &trans  &trans  &trans  &trans
+&kp HOME        &kp LEFT_ARROW          &kp DOWN_ARROW  &kp RIGHT_ARROW          &kp END  &trans      &trans  &trans  &trans  &trans  &trans  &trans
+&kp LEFT_SHIFT  &kp LG(LS(LEFT_ARROW))  &trans          &kp LG(LS(RIGHT_ARROW))  &trans   &trans      &trans  &trans  &trans  &trans  &trans  &trans
+&trans          &trans                  &trans          &trans                   &trans   &trans      &trans  &trans                          &trans
             >;
 
             sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
         };
 
-        ALT_TAB {
-            bindings = <
-&kp TAB      &trans    &trans    &trans     &trans                      &trans  &trans    &trans    &trans     &kp TAB
-&kp LS(TAB)  &trans    &kp UP    &trans     &trans  &trans      &trans  &trans  &trans    &kp UP    &trans     &kp LS(TAB)
-&trans       &kp LEFT  &kp DOWN  &kp RIGHT  &trans  &trans      &trans  &trans  &kp LEFT  &kp DOWN  &kp RIGHT  &trans
-&trans       &trans    &trans    &trans     &trans  &trans      &trans  &trans                                 &trans
-            >;
-        };
-
-        CTRL_TAB {
-            bindings = <
-&kp LS(TAB)  &trans    &trans    &trans     &trans                      &trans  &trans    &trans    &trans     &kp LS(TAB)
-&kp TAB      &trans    &kp UP    &trans     &trans  &trans      &trans  &trans  &trans    &kp UP    &trans     &kp TAB
-&kp LS(TAB)  &kp LEFT  &kp DOWN  &kp RIGHT  &trans  &trans      &trans  &trans  &kp LEFT  &kp DOWN  &kp RIGHT  &kp LS(TAB)
-&trans       &trans    &trans    &trans     &trans  &trans      &trans  &trans                                 &trans
-            >;
-        };
-
         MOUSE {
             bindings = <
-&trans  &trans  &trans  &trans     &trans                      &trans  &trans    &trans    &trans  &trans
-&trans  &trans  &trans  &trans     &trans  &trans      &trans  &trans  &mkp MB1  &mkp MB2  &none   &trans
-&trans  &trans  &trans  &trans     &trans  &trans      &trans  &trans  &trans    &trans    &trans  &trans
-&trans  &trans  &trans  &exit_AML  &trans  &trans      &trans  &trans                              &trans
-            >;
-        };
-
-        MEDIA {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans                      &kp C_PREV         &kp C_PLAY_PAUSE   &kp C_NEXT       &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &kp C_VOLUME_DOWN  &kp C_MUTE         &kp C_VOLUME_UP  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans             &kp LS(LA(LC(M)))  &trans           &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                                         &trans
-            >;
-        };
-
-        EXTRA_FINCTIONS {
-            bindings = <
-&trans  &trans  &trans  &trans                         &trans                      &kp F13  &kp F14  &kp F15  &kp F16  &trans
-&trans  &trans  &trans  &trans                         &trans  &trans      &trans  &kp F17  &kp F18  &kp F19  &kp F20  &trans
-&trans  &trans  &trans  &trans                         &trans  &trans      &trans  &kp F21  &kp F22  &kp F23  &kp F24  &trans
-&trans  &trans  &trans  &eager_tap_dance LANGUAGE_1 9  &trans  &trans      &trans  &trans                              &trans
-            >;
-        };
-
-        CONFIGURATION {
-            bindings = <
-&reset_bootloader 0 0  &none  &none  &none  &none                                 &none         &none         &none         &out OUT_TOG  &reset_bootloader 0 0
-&none                  &none  &none  &none  &tog_on 0   &trans      &td_bt_clear  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
-&none                  &none  &none  &none  &tog_off 0  &none       &none         &none         &none         &none         &none         &none
-&none                  &none  &none  &none  &none       &none       &none         &none                                                   &td_bt_clear_all
+&trans  &trans  &trans  &trans  &trans                      &trans  &trans    &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &mkp MB1  &mkp MB3  &mkp MB2  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans    &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                &trans
             >;
         };
 
         SCROLL {
             bindings = <
-&trans        &trans          &trans          &trans           &trans                      &trans  &trans  &trans  &trans  &trans
-&trans        &trans          &kp UP_ARROW    &trans           &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
-&kp LEFT_GUI  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
-&trans        &trans          &trans          &trans           &trans  &trans      &trans  &trans                          &trans
+&trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                          &trans
+            >;
+        };
+
+        layer_6 {
+            bindings = <
+&trans  &trans        &trans        &trans        &trans                           &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
+&trans  &trans        &trans        &trans        &trans  &trans      &trans       &trans        &trans        &trans        &trans        &trans
+&trans  &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &trans  &trans      &bootloader  &trans        &trans        &trans        &trans        &bt BT_CLR
+&trans  &trans        &trans        &trans        &trans  &trans      &trans       &trans                                                  &bt BT_CLR_ALL
             >;
         };
     };
