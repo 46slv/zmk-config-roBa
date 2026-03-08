@@ -1,0 +1,103 @@
+draw_config:
+  n_columns: 1
+  append_minus_to_type_plus: true
+
+parse_config:
+  preprocess: true
+  skip_unrecognized_commands: true
+  
+  zmk_keycode_map:
+    # --- JPマクロで定義されたZMKキーコードのJIS記号化 ---
+    "AT": "\""
+    "CARET": "&"
+    "AMPERSAND": "'"
+    "UNDER": "="
+    "EQUAL": "^"
+    "COLON": "+"
+    "PLUS": "~"
+    "LEFT_BRACKET": "@"
+    "LBKT": "@"
+    "SINGLE_QUOTE": ":"
+    "SQT": ":"
+    "DOUBLE_QUOTES": "*"
+    "DQT": "*"
+    "LEFT_BRACE": "`"
+    "LBRC": "`"
+    "RIGHT_BRACKET": "["
+    "RBKT": "["
+    "BACKSLASH": "]"
+    "BSLH": "]"
+    "ASTERISK": "("
+    "ASTRK": "("
+    "LEFT_PARENTHESIS": ")"
+    "LPAR": ")"
+    "RIGHT_BRACE": "{"
+    "RBRC": "{"
+    "PIPE": "}"
+
+  # --- 基本記号 (JIS) ---
+    "MINUS": "-"
+    "EQUAL": "^"
+    "SLASH": "/"
+    "PERCENT": "%"
+    "ASTERISK": "("
+    "LEFT_PARENTHESIS": ")"
+    "LPAR": "("
+    "RPAR": ")"
+
+    # --- キーマップに直書きされているシフト付きZMKキーコード ---
+    "LS(N2)": "\""
+    "LS(N3)": "#"
+    "LS(N4)": "$"
+    "LS(N6)": "&"
+    "LS(N7)": "'"
+    "LS(N8)": "("
+    "LS(N9)": ")"
+    "LS(EQUAL)": "~"
+    "LS(RBKT)": "{"
+    "LS(BSLH)": "}"
+    "LS(LBKT)": "`"
+    "LS(INT3)": "|"
+    "LS(0x89)": "|"
+    "LS(0x87)": "_"
+    "LS(INT1)": "_"
+    "LS(COMMA)": "<"
+    "LS(DOT)": ">"
+
+    # --- JIS固有キー ---
+    "INT_MUHENKAN": "無変換"
+    "INT_HENKAN": "変換"
+    "LANGUAGE_1": "かな"
+    "LANGUAGE_2": "英数"
+    "GRAVE": "半/全"
+    "0x87": "ろ"
+    "INT1": "ろ"
+    "0x89": "¥"
+    "INT3": "¥"
+
+    # --- 修飾キー・特殊キーの視認性向上 ---
+    "LEFT_WIN": "Win"
+    "LGUI": "Win"
+    "LEFT_GUI": "Win"
+    "LEFT_ALT": "Alt"
+    "LALT": "Alt"
+    "LEFT_CONTROL": "Ctrl"
+    "LCTRL": "Ctrl"
+    "LEFT_SHIFT": "Shift"
+    "LSHFT": "Shift"
+    "UP_ARROW": "↑"
+    "DOWN_ARROW": "↓"
+    "LEFT_ARROW": "←"
+    "RIGHT_ARROW": "→"
+    "UP": "↑"
+    "DOWN": "↓"
+    "LEFT": "←"
+    "RIGHT": "→"
+    "ESCAPE": "Esc"
+    "BACKSPACE": "BS"
+    "DELETE": "Del"
+    "ENTER": "Enter"
+
+  trans_legend:
+    t: "▽"
+    type: "trans"

@@ -28,12 +28,6 @@ manifest:
       remote: kumamuk-git
       revision: main
 
-    # https://github.com/badjeff/zmk-input-processor-report-rate-limit
-    - name: zmk-input-processor-report-rate-limit
-      remote: badjeff
-      revision: main
-      path: modules/zmk-input-processor-report-rate-limit
-
     # https://github.com/ssbb/zmk-listeners
     - name: zmk-listeners
       remote: ssbb
