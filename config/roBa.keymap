@@ -2,7 +2,6 @@
 
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 1000 // スクロールの移動量を定義（数値が大きいほど速い）
 
-// #define ZMK_POINTING_DEFAULT_MOVE_VAL 700 // マウスカーソルの移動速度（現在はコメントアウトで無効）
 /* --- レイヤー番号の定義（名前を付けて管理しやすくする） --- */
 
 #define DEFAULT 0               // 基本の入力レイヤー
@@ -117,7 +116,7 @@
 };
 
 &trackball {
-    ir-cpi = <800>;
+    // ir-cpi = <800>;
     swap-xy;
     invert-x;
     invert-y;
