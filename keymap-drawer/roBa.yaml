@@ -15,9 +15,9 @@ layers:
   - I
   - A
   - O
-  - {t: '-', s: TILDE}
+  - {t: '-', s: '~'}
   - Sft+Gui+S
-  - /
+  - SLASH
   - K
   - T
   - N
@@ -37,7 +37,7 @@ layers:
   - B
   - Ctrl
   - LEFT WIN
-  - Tab
+  - ⇥
   - '&td'
   - LEFT CONTROL
   - LEFT ALT
@@ -99,7 +99,7 @@ layers:
   - UP ARROW
   - ''
   - ''
-  - /
+  - SLASH
   - KP 4
   - KP 5
   - KP 6
@@ -115,7 +115,7 @@ layers:
   - KP 1
   - KP 2
   - KP 3
-  - '%'
+  - PERCENT
   - {t: ▽, type: trans}
   - ''
   - ''
@@ -179,7 +179,7 @@ layers:
   '4':
   - '&to_kp 6 TAB'
   - Ctl+Gui+←
-  - Gui+Tab
+  - Gui+⇥
   - Gui+Ctl+→
   - '&td_alt_f4'
   - '&td_alt_f4'
@@ -221,7 +221,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   '5':
-  - Tab
+  - ⇥
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -230,19 +230,19 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - Tab
-  - Sft+Tab
-  - {t: ▽, type: trans}
-  - ↑
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ⇥
+  - Sft+⇥
   - {t: ▽, type: trans}
   - ↑
   - {t: ▽, type: trans}
-  - Sft+Tab
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ↑
+  - {t: ▽, type: trans}
+  - Sft+⇥
   - {t: ▽, type: trans}
   - ←
   - ↓
@@ -265,7 +265,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   '6':
-  - Sft+Tab
+  - Sft+⇥
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -274,20 +274,20 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - Sft+Tab
-  - Tab
-  - {t: ▽, type: trans}
-  - ↑
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - Sft+⇥
+  - ⇥
   - {t: ▽, type: trans}
   - ↑
   - {t: ▽, type: trans}
-  - Tab
-  - Sft+Tab
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ↑
+  - {t: ▽, type: trans}
+  - ⇥
+  - Sft+⇥
   - ←
   - ↓
   - →
@@ -298,7 +298,7 @@ layers:
   - ←
   - ↓
   - →
-  - Sft+Tab
+  - Sft+⇥
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
