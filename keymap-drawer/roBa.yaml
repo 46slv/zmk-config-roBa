@@ -4,8 +4,8 @@ layers:
   - Q
   - L
   - U
-  - {t: ',', s: '!'}
-  - {t: ., s: '?'}
+  - {t: COMMA, s: EXCL}
+  - {t: PERIOD, s: QUESTION}
   - F
   - W
   - R
@@ -15,9 +15,9 @@ layers:
   - I
   - A
   - O
-  - {t: '-', s: '~'}
+  - {t: MINUS, s: TILDE}
   - Sft+Gui+S
-  - /
+  - SLASH
   - K
   - T
   - N
@@ -29,20 +29,20 @@ layers:
   - V
   - B
   - LEFT SHIFT
-  - Sft+0x87
+  - _
   - G
   - D
   - M
   - {t: J, h: '11'}
   - B
-  - LCTRL
+  - Ctrl
   - LEFT WIN
   - TAB
   - '&td'
   - LEFT CONTROL
   - LEFT ALT
-  - {t: INT MUHENKAN, h: '3'}
-  - {t: INT HENKAN, h: '2'}
+  - {t: 無変換, h: '3'}
+  - {t: 変換, h: '2'}
   - LEFT SHIFT
   '1':
   - {t: ▽, type: trans}
@@ -89,21 +89,21 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   '2':
-  - '"'
+  - DOUBLE QUOTES
   - KP 7
   - KP 8
   - KP 9
-  - '-'
+  - MINUS
   - '&td_alt_f4'
   - ''
   - UP ARROW
   - ''
   - ''
-  - /
+  - SLASH
   - KP 4
   - KP 5
   - KP 6
-  - ':'
+  - COLON
   - ''
   - ''
   - ''
@@ -115,7 +115,7 @@ layers:
   - KP 1
   - KP 2
   - KP 3
-  - '%'
+  - PERCENT
   - {t: ▽, type: trans}
   - ''
   - ''
@@ -138,10 +138,10 @@ layers:
   - F2
   - F3
   - '&td_alt_f4'
+  - '@'
   - '['
   - ']'
-  - \
-  - Sft+2
+  - '"'
   - '&td_colon'
   - '&to_kp 7 TAB'
   - F6
@@ -151,21 +151,21 @@ layers:
   - {t: ▽, type: trans}
   - Sft+4
   - Sft+3
-  - Sft+8
-  - Sft+9
-  - Sft+7
-  - Sft+=
+  - (
+  - )
+  - ''''
+  - ^
   - {t: ▽, type: trans}
   - F9
   - F10
   - F11
   - F12
   - {t: ▽, type: trans}
-  - Sft+0x87
-  - Sft+6
-  - Sft+]
-  - Sft+\
-  - Sft+[
+  - _
+  - '&'
+  - '}'
+  - '|'
+  - '{'
   - Sft+INT3
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -173,8 +173,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: 'Sft+,', type: held}
-  - Sft+.
+  - {t: Sft+COMMA, type: held}
+  - Sft+DOT
   - Sft+4
   '4':
   - '&to_kp 6 TAB'
@@ -539,7 +539,7 @@ combos:
   k: BACKSPACE
   l: ['0', '7']
 - p: [32, 33]
-  k: Sft+0x87
+  k: _
   l: ['0', '7']
 - p: [18, 19]
   k: '&mkp MCLK'
