@@ -1,87 +1,87 @@
 draw_config:
-  # 記号の上下段の表示を整理
   n_columns: 1
   append_minus_to_type_plus: true
 
 parse_config:
-  # ZMKのキーコード文字列を描画用のラベルに置換
+  preprocess: true
+  skip_unrecognized_commands: true
   raw_binding_map:
-    # --- JIS配列用の記号置換 ---
-    'Sft+2': '"'
-    'Sft+6': '&'
-    'Sft+7': "'"
-    'Sft+8': '('
-    'Sft+9': ')'
-    'Sft+=': '^'
-    'Sft+;': '+'
-    'Sft+:': '*'
-    'Sft+[': '{'
-    'Sft+]': '}'
-    'Sft+\': '|'
-    '[': '@'
-    ']': '['
-    '\': ']'
-    'NONUS_HASH': ']'
-    'SCLN': ';'
-    'QUOT': ':'
+    # --- JIS配列用の記号置換 (ダブルクォーテーションで安全に囲む) ---
+    "Sft+2": "\""
+    "Sft+6": "&"
+    "Sft+7": "'"
+    "Sft+8": "("
+    "Sft+9": ")"
+    "Sft+=": "^"
+    "Sft+;": "+"
+    "Sft+:": "*"
+    "Sft+[": "{"
+    "Sft+]": "}"
+    "Sft+\\": "|"
+    "[": "@"
+    "]": "["
+    "\\": "]"
+    "NONUS_HASH": "]"
+    "SCLN": ";"
+    "QUOT": ":"
 
     # --- 特殊キー・JIS固有キーの日本語化 ---
-    'INT_MUHENKAN': '無変換'
-    'INT_HENKAN': '変換'
-    'INT_HIRA_KATA': 'ひらがな'
-    '0x87': 'ろ'
-    'Sft+0x87': '_'
-    'LEFT_GUI': 'Win'
-    'LEFT_WIN': 'Win'
-    'LEFT_CONTROL': 'Ctrl'
-    'LCTRL': 'Ctrl'
-    'LEFT_ALT': 'Alt'
-    'LEFT_SHIFT': 'Shift'
+    "INT_MUHENKAN": "無変換"
+    "INT_HENKAN": "変換"
+    "INT_HIRA_KATA": "ひらがな"
+    "0x87": "ろ"
+    "Sft+0x87": "_"
+    "LEFT_GUI": "Win"
+    "LEFT_WIN": "Win"
+    "LEFT_CONTROL": "Ctrl"
+    "LCTRL": "Ctrl"
+    "LEFT_ALT": "Alt"
+    "LEFT_SHIFT": "Shift"
 
-  # 透過キー（▽）の表示設定
+  # 透過キーの設定
   trans_legend:
-    t: '▽'
+    t: "▽"
     type: transdraw_config:
-  # 記号の上下段の表示を整理
   n_columns: 1
   append_minus_to_type_plus: true
 
 parse_config:
-  # ZMKのキーコード文字列を描画用のラベルに置換
+  preprocess: true
+  skip_unrecognized_commands: true
   raw_binding_map:
-    # --- JIS配列用の記号置換 ---
-    'Sft+2': '"'
-    'Sft+6': '&'
-    'Sft+7': "'"
-    'Sft+8': '('
-    'Sft+9': ')'
-    'Sft+=': '^'
-    'Sft+;': '+'
-    'Sft+:': '*'
-    'Sft+[': '{'
-    'Sft+]': '}'
-    'Sft+\': '|'
-    '[': '@'
-    ']': '['
-    '\': ']'
-    'NONUS_HASH': ']'
-    'SCLN': ';'
-    'QUOT': ':'
+    # --- JIS配列用の記号置換 (ダブルクォーテーションで安全に囲む) ---
+    "Sft+2": "\""
+    "Sft+6": "&"
+    "Sft+7": "'"
+    "Sft+8": "("
+    "Sft+9": ")"
+    "Sft+=": "^"
+    "Sft+;": "+"
+    "Sft+:": "*"
+    "Sft+[": "{"
+    "Sft+]": "}"
+    "Sft+\\": "|"
+    "[": "@"
+    "]": "["
+    "\\": "]"
+    "NONUS_HASH": "]"
+    "SCLN": ";"
+    "QUOT": ":"
 
     # --- 特殊キー・JIS固有キーの日本語化 ---
-    'INT_MUHENKAN': '無変換'
-    'INT_HENKAN': '変換'
-    'INT_HIRA_KATA': 'ひらがな'
-    '0x87': 'ろ'
-    'Sft+0x87': '_'
-    'LEFT_GUI': 'Win'
-    'LEFT_WIN': 'Win'
-    'LEFT_CONTROL': 'Ctrl'
-    'LCTRL': 'Ctrl'
-    'LEFT_ALT': 'Alt'
-    'LEFT_SHIFT': 'Shift'
+    "INT_MUHENKAN": "無変換"
+    "INT_HENKAN": "変換"
+    "INT_HIRA_KATA": "ひらがな"
+    "0x87": "ろ"
+    "Sft+0x87": "_"
+    "LEFT_GUI": "Win"
+    "LEFT_WIN": "Win"
+    "LEFT_CONTROL": "Ctrl"
+    "LCTRL": "Ctrl"
+    "LEFT_ALT": "Alt"
+    "LEFT_SHIFT": "Shift"
 
-  # 透過キー（▽）の表示設定
+  # 透過キーの設定
   trans_legend:
-    t: '▽'
+    t: "▽"
     type: trans
