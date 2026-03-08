@@ -22,5 +22,4 @@ jobs:
       keymap_patterns: "config/roBa.keymap"
       config_path: "keymap_drawer.config.yaml"
       output_folder: "keymap-drawer"
-      parse_args: "roBa:--zmk-node 'keymap'" # roBaのノードを明示的に指定
       destination: "both"
