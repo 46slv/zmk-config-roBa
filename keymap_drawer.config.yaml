@@ -7,14 +7,6 @@ parse_config:
   skip_unrecognized_commands: true
   
   zmk_keycode_map:
-    # --- 基本記号のJISマッピング補完 ---
-    "MINUS": "-"
-    "EQUAL": "^"
-    "TILDE": "~"
-    "PIPE": "|"
-    "GRAVE": "半/全"
-    "TAB": "⇥"
-
     # --- 数字行（Shiftあり）のJIS変換 ---
     "LS(N1)": "!"
     "LS(N2)": "\""
@@ -40,6 +32,7 @@ parse_config:
     "INT1": "ろ"
     "INT2": "ひらがな"
     "INT3": "¥"
+    "GRAVE": "半/全"
 
     # --- 記号キー（Shiftあり / JIS位置） ---
     "LS(AT)": "`"
@@ -75,24 +68,12 @@ parse_config:
     "DOWN": "↓"
     "LEFT": "←"
     "RIGHT": "→"
-    "BSPC": "⌫"
+    "BSPC": "BS"
     "DEL": "Del"
-    "RET": "⏎"
-    "ENT": "⏎"
+    "RET": "Enter"
+    "ENT": "Enter"
     "SPC": "Space"
     "ESC": "Esc"
-
-  # --- カスタムBehaviorの直感的表示 ---
-  raw_binding_map:
-    "mod_morph_exclamation": ", !"
-    "mod_morph_question": ". ?"
-    "mod_morph_slash": "/ \\"
-    "minis_morph": "- _"
-    "tilde_morph": "ー ~"
-    "td_colon": ": ;"
-    "td_q_escape": "Q/Esc"
-    "JP_YEN": "¥"
-    "JP_UNDERSCORE": "_"
 
   trans_legend:
     t: "▽"
