@@ -20,9 +20,7 @@ ai space
 ql escape 
 
 
-
-
-
+## keymap drawer
 keymap drawerの描画を、
 keymap_drawer.config.yamlで上書きして、jis対応描写させています。
 
