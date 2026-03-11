@@ -204,7 +204,7 @@ layers:
   - Gui+↓
   - Gui+→
   - {t: Alt+PRINTSCREEN, s: Alt+PRINTSCREEN}
-  - '&screensot_save'
+  - '&screenshot_save'
   - '&kp_exit_AML C_VOLUME_DOWN'
   - MUTE
   - Alt+←
