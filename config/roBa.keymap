@@ -1,35 +1,31 @@
 /* --- マウス・ポインティングの設定 --- */
 
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 1000 // スクロールの移動量を定義（数値が大きいほど速い）
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 1000 
 
-/* --- レイヤー番号の定義（名前を付けて管理しやすくする） --- */
+/* --- レイヤー番号の定義 --- */
 
-#define DEFAULT 0               // 基本の入力レイヤー
-#define LANG1_EAGER_TAP_DANCE 1 // 言語切り替え用の特殊な挙動レイヤー
-#define NUMPAD_AND_ARROWS 2     // テンキーと矢印キーのレイヤー
-#define FUNCTIONS_AND_SYMBOLS 3 // ファンクションキーと記号のレイヤー
-#define MISC 4                  // その他(Miscellaneous)のキーレイヤー
-#define ALT_TAB 5               // Alt+Tab操作用のレイヤー
+#define DEFAULT 0               
+#define LANG1_EAGER_TAP_DANCE 1 
+#define NUMPAD_AND_ARROWS 2     
+#define FUNCTIONS_AND_SYMBOLS 3 
+#define MISC 4                  
+#define ALT_TAB 5               
 #define CTRL_TAB 6             
-// Ctrl+Tab操作用のレイヤー
-#define MOUSE 7                 // マウスカーソル操作レイヤー
-#define MEDIA 8                 // 音楽再生や音量調整などのメディアレイヤー
-#define EXTRA_FUNCTIONS 9       // 追加機能レイヤー
-#define CONFIGURATION 10        // キーボード自体の設定（ペアリング等）レイヤー
-#define SCROLL 11               // スクロール操作専用レイヤー
+#define MOUSE 7                 
+#define MEDIA 8                 
+#define EXTRA_FUNCTIONS 9       
+#define CONFIGURATION 10        
+#define SCROLL 11               
 
 /* --- システム・外部ファイルの読み込み --- */
 
-#include <zephyr/dt-bindings/input/input-event-codes.h> // 標準的な入力イベント（キーコード）の定義
+#include <zephyr/dt-bindings/input/input-event-codes.h> 
 #include <dt-bindings/zmk/input_transform.h>           
-// トラックボールなどの入力反転・回転変換
-#include <input/processors.dtsi>                       // 入力データの処理（スムージング等）
-// #include <input/processors/report_rate_limit.dtsi>     // 通信の更新レート制限（バッテリー節約等）
-#include <behaviors/rgbled_widget.dtsi>                // LED表示（ウィジェット）の制御
-#include <layout_shift_kp_override.dtsi>               // シフト時のキー上書き設定
-#include <mouse-gesture.dtsi>                          // マウスジェスチャー機能
+#include <input/processors.dtsi>                       
+#include <behaviors/rgbled_widget.dtsi>                
+#include <layout_shift_kp_override.dtsi>               
+#include <mouse-gesture.dtsi>                          
 #include <scroll-snap.dtsi>  
-// スクロールを段階的に止める機能
 
 /* --- ZMKの基本機能の読み込み --- */
 
@@ -39,36 +35,30 @@
 #include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/pointing.h>
 
-// OS設定を日本語キーボードのまま使用するための変換定義
-
-#define JP_DQUOTE       AT                // "
-#define JP_AMPERSAND    CARET             // &
-#define JP_QUOTE        AMPERSAND         // '
-#define JP_EQUAL        UNDER             // =
-#define JP_CARET        EQUAL             // ^
-#define JP_YEN          0x89              // ¥
-#define JP_PLUS         COLON             // +
-#define JP_TILDE        PLUS              // ~
-#define JP_PIPE         LS(0x89)          // |
-#define JP_AT           LEFT_BRACKET      // @
-#define JP_COLON        SINGLE_QUOTE      // :
-#define JP_ASTERISK     DOUBLE_QUOTES     // *
-#define JP_BACKQUOTE    LEFT_BRACE        // `
-#define JP_UNDERSCORE   LS(0x87)          // _
-#define JP_LBRACKET     RIGHT_BRACKET     // [
-#define JP_RBRACKET     BACKSLASH         // ]
-#define JP_LPAREN       ASTERISK          // (
-#define JP_RPAREN       LEFT_PARENTHESIS  // )
-#define JP_LBRACE       RIGHT_BRACE       // {
-#define JP_RBRACE       PIPE              // }
-#define JP_KANA         LANGUAGE_1        // かな
-#define JP_EISU         LANGUAGE_2        // 英数
-#define JP_HANZEN       GRAVE             // 半角/全角
-
-/* --- 以下設定 --- */
-// mt mod-tapとlt layer-tap
-// tapping-term-ms = 「200ミリ秒（0.2秒）」を境界線にしています。
-// quick-tap-ms = 同じキーを素早く2回叩いたときの設定です。
+// 日本語キーボード用定義
+#define JP_DQUOTE       AT                
+#define JP_AMPERSAND    CARET             
+#define JP_QUOTE        AMPERSAND         
+#define JP_EQUAL        UNDER             
+#define JP_CARET        EQUAL             
+#define JP_YEN          0x89              
+#define JP_PLUS         COLON             
+#define JP_TILDE        PLUS              
+#define JP_PIPE         LS(0x89)          
+#define JP_AT           LEFT_BRACKET      
+#define JP_COLON        SINGLE_QUOTE      
+#define JP_ASTERISK     DOUBLE_QUOTES     
+#define JP_BACKQUOTE    LEFT_BRACE        
+#define JP_UNDERSCORE   LS(0x87)          
+#define JP_LBRACKET     RIGHT_BRACKET     
+#define JP_RBRACKET     BACKSLASH         
+#define JP_LPAREN       ASTERISK          
+#define JP_RPAREN       LEFT_PARENTHESIS  
+#define JP_LBRACE       RIGHT_BRACE       
+#define JP_RBRACE       PIPE              
+#define JP_KANA         LANGUAGE_1        
+#define JP_EISU         LANGUAGE_2        
+#define JP_HANZEN       GRAVE             
 
 &mt {
     tapping-term-ms = <200>;
@@ -83,21 +73,13 @@
 };
 
 &to { /delete-property/ locking; };
-
 &tog { /delete-property/ locking; };
-
 &sk { release-after-ms = <300>; };
-
 &sl { release-after-ms = <800>; };
-
-// 自動でマウスレイヤーに切り替わる（AML）挙動の詳細設定
 
 &zip_temp_layer {
     require-prior-idle-ms = <500>;
-
-    excluded-positions = <
-        18 // t
-    >;
+    excluded-positions = <18>; 
 };
 
 &trackball {
@@ -105,8 +87,6 @@
     automouse-layer = <7>;
     scroll-layers = <11>;
 };
-
-// スクロールを抑制し、上下または左右の直線的な動きをつくる
 
 &zip_scroll_snap {
     require-n-samples = <8>;
@@ -116,13 +96,11 @@
     idle-reset-timeout-ms = <175>;
 };
 
-// trackball_listenerの設定　
-
 &trackball_listener {
     compatible = "zmk,input-listener";
     input-processors = <
-        /* 移動時の回転設定：右移動が下に行く問題を解決するためDEFAULT（無変換）に設定 */
-        <&zip_xy_transform (INPUT_TRANSFORM_XY_DEFAULT)>,
+        /* 移動方向の修正：右移動が下に行く問題をXY_SWAPで解決 */
+        <&zip_xy_transform INPUT_TRANSFORM_XY_SWAP>,
         &zip_mouse_gesture
     >;
     auto-mouse-layer {
@@ -134,7 +112,8 @@
         layers = <EXTRA_FUNCTIONS MISC MEDIA 2 11>;
         input-processors = <
             &zip_xy_scaler 1 2 
-            <&zip_xy_transform (INPUT_TRANSFORM_XY_DEFAULT)>, 
+            /* スクロールは合っているため無変換(0)に設定 */
+            <&zip_xy_transform 0>, 
             &zip_xy_to_scroll_mapper,
             &zip_scroll_snap
         >;
@@ -161,7 +140,6 @@
 
     combos {
         compatible = "zmk,combos";
-
         combo_ai_space {
             bindings = <&kp SPACE>;
             key-positions = <11 12>;
@@ -169,40 +147,34 @@
             require-prior-idle-ms = <150>;
             timeout-ms = <80>;
         };
-
         combo_ns_enter {
             bindings = <&kp ENTER>;
             key-positions = <19 20>;
             layers = <0 7>; 
         };
-
         combo_sh_bs {
             bindings = <&kp BACKSPACE>;
             key-positions = <20 21>;
             layers = <0 7>;      
             timeout-ms = <80>;
         };
-
         combo_jb_unsc {
             bindings = <&kp JP_UNDERSCORE>;
             key-positions = <32 33>;
             layers = <0 7>;      
             timeout-ms = <80>;
         };
-
         middle_click {
             bindings = <&mkp MCLK>;
             key-positions = <18 19>;
             layers = <7>; 
         };
-
         Escape {
             bindings = <&kp ESCAPE>;
             key-positions = <0 1>;
             layers = <0>;
             require-prior-idle-ms = <300>;
         };
-        
         caps_word {
             bindings = <&caps_word>;
             key-positions = <22 33>;
@@ -212,7 +184,6 @@
     };
 
     macros {
-        /omit-if-no-ref/
         exit_AML: exit_AML {
             compatible = "zmk,behavior-macro";
             wait-ms = <0>;
@@ -220,122 +191,55 @@
             #binding-cells = <0>;
             bindings = <&tog_off 7>;
         };
-        
-        /omit-if-no-ref/
         kp_exit_AML: kp_exit_AML {
             compatible = "zmk,behavior-macro-one-param";
-            wait-ms = <0>;
-            tap-ms = <0>;
             #binding-cells = <1>;
             bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &exit_AML>;
         };
-        
-        /omit-if-no-ref/
         mod_exit_AML: mod_exit_AML {
             compatible = "zmk,behavior-macro-one-param";
-            wait-ms = <0>;
-            tap-ms = <0>;
             #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&exit_AML>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>;
+            bindings = <&macro_press>, <&macro_param_1to1 &kp MACRO_PLACEHOLDER>, <&macro_tap>, <&exit_AML>, <&macro_pause_for_release>, <&macro_release>, <&macro_param_1to1 &kp MACRO_PLACEHOLDER>;
         };
-
-        /omit-if-no-ref/
         mkp_exit_AML: mkp_exit_AML {
             compatible = "zmk,behavior-macro-one-param";
             #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&sl 7>;
+            bindings = <&macro_press>, <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>, <&macro_pause_for_release>, <&macro_release>, <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>, <&macro_tap>, <&sl 7>;
         };
-        
-        /omit-if-no-ref/
         mo_exit_AML: mo_exit_AML {
             compatible = "zmk,behavior-macro-one-param";
-            wait-ms = <0>;
-            tap-ms = <0>;
             #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&exit_AML>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
-                <&macro_tap>;
+            bindings = <&macro_press>, <&macro_param_1to1 &mo MACRO_PLACEHOLDER>, <&macro_tap>, <&exit_AML>, <&macro_pause_for_release>, <&macro_release>, <&macro_param_1to1 &mo MACRO_PLACEHOLDER>;
         };
-
-        /omit-if-no-ref/
         mo_exit_alttab: mo_exit_alttab_ctrltab {
             compatible = "zmk,behavior-macro-one-param";
-            wait-ms = <0>;
-            tap-ms = <0>;
             #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&tog_off 6 &tog_off 7>;
+            bindings = <&macro_press>, <&macro_param_1to1 &mo MACRO_PLACEHOLDER>, <&macro_tap>, <&macro_pause_for_release>, <&macro_release>, <&macro_param_1to1 &mo MACRO_PLACEHOLDER>, <&tog_off 6 &tog_off 7>;
         };
-        
-        /omit-if-no-ref/
         kp_to: kp_to {
             compatible = "zmk,behavior-macro-two-param";
-            wait-ms = <0>;
-            tap-ms = <0>;
             #binding-cells = <2>;
             bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &macro_param_2to1 &to MACRO_PLACEHOLDER>;
         };
-        
-        /omit-if-no-ref/
         to_kp: to_kp {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
             bindings = <&macro_param_1to1 &to MACRO_PLACEHOLDER &macro_param_2to1 &kp MACRO_PLACEHOLDER>;
         };
-        
-        /omit-if-no-ref/
         zoom_in: zoom_in {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&kt_on LCTRL &msc SCRL_UP &kt_off LCTRL>;
         };
-        
-        /omit-if-no-ref/
         zoom_out: zoom_out {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&kt_on LCTRL &msc SCRL_DOWN &kt_off LCTRL>;
         };
-        
-        /omit-if-no-ref/
         eager_tap_dance: eager_tap_dance {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&exit_AML &macro_param_2to1 &sl_250 MACRO_PLACEHOLDER>;
+            bindings = <&macro_press>, <&macro_param_1to1 &kp MACRO_PLACEHOLDER>, <&macro_pause_for_release>, <&macro_release>, <&macro_param_1to1 &kp MACRO_PLACEHOLDER>, <&macro_tap>, <&exit_AML &macro_param_2to1 &sl_250 MACRO_PLACEHOLDER>;
         };
     };
 
@@ -346,21 +250,18 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
-        
         tilde_morph: tilde_morph {
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
             bindings = <&kp MINUS>, <&kp TILDE>;
             mods = <(MOD_LSFT)>;
         };
-
         td: tap_dance {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&kp LANGUAGE_2>, <&kp LANGUAGE_1>;
         };
-        
         lt_to_layer_0: lt_to_layer_0 {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -368,70 +269,54 @@
             flavor = "tap-preferred";
             bindings = <&mo>, <&kp>;
         };
-
         tog_on: toggle_layer_on {
             compatible = "zmk,behavior-toggle-layer";
             #binding-cells = <1>;
-            display-name = "Toggle Layer On";
             toggle-mode = "on";
         };
-        
         tog_off: toggle_layer_off {
             compatible = "zmk,behavior-toggle-layer";
             #binding-cells = <1>;
-            display-name = "Toggle Layer Off";
             toggle-mode = "off";
         };
-
         kt_on: key_toggle_on_only {
             compatible = "zmk,behavior-key-toggle";
             #binding-cells = <1>;
-            display-name = "Key Toggle On";
             toggle-mode = "on";
         };
-        
         kt_off: key_toggle_off_only {
             compatible = "zmk,behavior-key-toggle";
             #binding-cells = <1>;
-            display-name = "Key Toggle Off";
             toggle-mode = "off";
         };
-
         td_colon: td_colon {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             bindings = <&kp COLON>, <&kp SEMICOLON>;
             tapping-term-ms = <250>;
         };
-        
         td_q_escape: td_q_escape {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <250>;
             bindings = <&kp Q>, <&kp ESCAPE>;
         };
-        
         td_ZenkakuHankaku: td_ZenkakuHankaku {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <250>;
             bindings = <&kp LANGUAGE_2>, <&kp LANGUAGE_1>;
         };
-        
         td_ZenkakuHankaku_exit_AML: td_ZenkakuHankaku_exit_AML {
-            wait-ms = <0>;
-            tap-ms = <0>;
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&td_ZenkakuHankaku &exit_AML>;
         };
-        
         alt_tab: alt_tab {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
             bindings = <&macro_param_1to1 &kt_on MACRO_PLACEHOLDER &macro_param_2to1 &kp MACRO_PLACEHOLDER &macro_param_1to1 &sk MACRO_PLACEHOLDER &macro_param_1to1 &kt_off MACRO_PLACEHOLDER>;
         };
-        
         windows_sleep: windows_sleep {
             compatible = "zmk,behavior-macro";
             wait-ms = <200>;
@@ -439,26 +324,17 @@
             #binding-cells = <0>;
             bindings = <&kp LG(X) &kp U &kp S>;
         };
-        
         screenshot_save: screenshot_save {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&kp LS(F11)>;
             label = "SCREENSHOT_SAVE";
         };
-
         mkp_with_mod: mkp_with_mod {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER &macro_param_2to1 &mkp MACRO_PLACEHOLDER>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_2to1 &mkp MACRO_PLACEHOLDER &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
-            label = "MKP_WITH_MOD";
+            bindings = <&macro_press>, <&macro_param_1to1 &kp MACRO_PLACEHOLDER &macro_param_2to1 &mkp MACRO_PLACEHOLDER>, <&macro_pause_for_release>, <&macro_release>, <&macro_param_2to1 &mkp MACRO_PLACEHOLDER &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
         };
-
         screenshot_copy: screenshot_copy {
             compatible = "zmk,behavior-mod-morph";
             bindings = <&kp LA(PRINTSCREEN)>, <&kp LA(PRINTSCREEN)>;
@@ -466,35 +342,30 @@
             mods = <(MOD_LSFT|MOD_LALT)>;
             keep-mods = <(MOD_LALT)>;
         };
-        
         mod_morph_exclamation: mod_morph_exclamation {
             compatible = "zmk,behavior-mod-morph";
             bindings = <&kp COMMA>, <&kp EXCL>;
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
-        
         mod_morph_question: mod_morph_question {
             compatible = "zmk,behavior-mod-morph";
             bindings = <&kp PERIOD>, <&kp QUESTION>;
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
-        
         mod_morph_slash: mod_morph_slash {
             compatible = "zmk,behavior-mod-morph";
             bindings = <&kp SLASH>, <&kp BACKSLASH>;
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
-        
         td_alt_f4: td_alt_f4 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             bindings = <&kp F4>, <&kp LA(F4)>;
             tapping-term-ms = <250>;
         };
-        
         lt_exit_AML: lt_exit_AML {
             compatible = "zmk,behavior-hold-tap";
             bindings = <&mo_exit_AML>, <&kp_exit_AML>;
@@ -503,7 +374,6 @@
             quick-tap-ms = <200>;
             flavor = "balanced";
         };
-        
         lt_exit_AML_on_hold: lt_exit_AML_on_hold {
             compatible = "zmk,behavior-hold-tap";
             bindings = <&mo_exit_AML>, <&kp>;
@@ -512,7 +382,6 @@
             quick-tap-ms = <200>;
             flavor = "balanced";
         };
-        
         lt_exit_alttab: lt_exit_alttab_ctrltab_on_hold_release {
             compatible = "zmk,behavior-hold-tap";
             bindings = <&mo_exit_alttab>, <&kp>;
@@ -521,7 +390,6 @@
             quick-tap-ms = <200>;
             flavor = "balanced";
         };
-        
         mt_exit_AML: mt_exit_AML {
             compatible = "zmk,behavior-hold-tap";
             bindings = <&mod_exit_AML>, <&kp_exit_AML>;
@@ -530,7 +398,6 @@
             flavor = "balanced";
             quick-tap-ms = <200>;
         };
-        
         mt_exit_AML_on_tap: mt_exit_AML_on_tap {
             compatible = "zmk,behavior-hold-tap";
             bindings = <&kp>, <&kp_exit_AML>;
@@ -539,19 +406,16 @@
             flavor = "balanced";
             quick-tap-ms = <200>;
         };
-        
         encoder_zoom: encoder_zoom {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
             bindings = <&zoom_out>, <&zoom_in>;
         };
-
         encoder_volume: encoder_volume {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
             bindings = <&kp C_VOLUME_DOWN>, <&kp C_VOLUME_UP>;
         };
-        
         lt_zoom_out: lt_zoom_out {
             compatible = "zmk,behavior-hold-tap";
             bindings = <&mo_exit_AML>, <&zoom_out>;
@@ -560,42 +424,36 @@
             quick-tap-ms = <200>;
             flavor = "balanced";
         };
-        
         sl_250: sl_250 {
             compatible = "zmk,behavior-sticky-key";
             bindings = <&mo>;
             #binding-cells = <1>;
             release-after-ms = <250>;
         };
-
         td_bt_clear: td_bt_clear {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             bindings = <&none>, <&none>, <&bt BT_CLR>;
             tapping-term-ms = <250>;
         };
-        
         td_bt_clear_all: td_bt_clear_all {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <250>;
             bindings = <&none>, <&none>, <&bt BT_CLR_ALL>;
         };
-        
         td_copy_paste: td_copy_paste {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             bindings = <&kp_exit_AML LC(C)>, <&kp_exit_AML LC(V)>;
             tapping-term-ms = <250>;
         };
-        
         td_reset: td_reset {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             bindings = <&none>, <&sys_reset>;
             tapping-term-ms = <300>;
         };
-
         reset_bootloader: reset_bootloader {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -603,14 +461,12 @@
             tapping-term-ms = <500>;
             flavor = "balanced";
         };
-        
         td_rclick_close_tab: td_rclick_close_tab {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             bindings = <&mkp RCLK>, <&kp LC(W)>;
             tapping-term-ms = <250>;
         };
-        
         td_rclick_close_tab_mouse_gesture: td_rclick_close_tab_mouse_gesture {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -619,8 +475,6 @@
             flavor = "balanced";
         };
     };
-
-    /* --- 以下キーマップ --- */
 
     keymap {
         compatible = "zmk,keymap";
