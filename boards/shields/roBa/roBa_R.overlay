@@ -15,10 +15,19 @@
 };
 
 / {
+    /* 1. XY軸（およびスクロール軸）を入れ替えるためのノード定義 */
+    zip_xy_swap: zip_xy_swap {
+        compatible = "zmk,input-processor-xy-swap";
+        #input-processor-cells = <0>;
+    };
+
     trackball_listener {
         status = "okay";
         compatible = "zmk,input-listener";
         device = <&trackball>;
+        
+        /* 2. 定義したスワップ機能を適用。これによりX(水平)スクロールがY(垂直)に変換されます */
+        input-processors = <&zip_xy_swap>;
     };
 };
 
