@@ -198,6 +198,44 @@
 &trackball_listener {
     compatible = "zmk,input-listener";
     input-processors = <
+        /* 1. ここは「移動」だけに効く回転設定 */
+        <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)>,
+        &zip_mouse_gesture
+    >;
+
+    auto-mouse-layer {
+        layers = <DEFAULT MOUSE>;
+        input-processors = <&zip_temp_layer MOUSE 500>;
+        process-next;
+    };
+
+    scroller {
+        layers = <EXTRA_FINCTIONS MISC MEDIA 2 11>;
+        input-processors = <
+            &zip_xy_scaler 1 2 
+            /* 2. ここが重要！スクロール用の回転設定を「なし（または打ち消し）」にする */
+            /* スクロールが現状で正しいなら、以下の transform 行を削除するか、設定をリセットします */
+            <&zip_xy_transform (INPUT_TRANSFORM_XY_DEFAULT)>, 
+            &zip_xy_to_scroll_mapper,
+            &zip_scroll_snap
+        >;
+
+        process-next;
+    };
+
+    disable-scroll-x {
+        layers = <EXTRA_FINCTIONS>;
+        input-processors = <&wheel_x_scaler 0 1>;
+        process-next;
+    };
+};
+
+*/ 一旦おふ
+
+// trackball_listenerの設定　
+&trackball_listener {
+    compatible = "zmk,input-listener";
+    input-processors = <
         &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)
         &zip_mouse_gesture
         // &zip_report_rate_limit 15
@@ -234,6 +272,9 @@
         process-next;
     };
 };
+
+/*
+
 
 / {
     input_processors {
