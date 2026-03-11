@@ -203,15 +203,12 @@
         // &zip_report_rate_limit 15
     >;
 
-    // 1つ目の auto-mouse-layer はそのまま
-
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
         input-processors = <&zip_temp_layer MOUSE 500>; // msマウスレイヤーにとどまる
         process-next;
     };
 
-    // ここで scroller を1つにまとめます
 
     scroller {
         // scrollレイヤーの対象レイヤーをここに並べる
@@ -311,6 +308,12 @@
             timeout-ms = <80>;   // 50から80に伸ばして判定を緩くする
         };
 
+        combo_pair_brackets {
+            bindings = <&pair_brackets>;
+            key-positions = <7 8>;
+            layers = <0 1>;
+        };
+
         // --- kot版マウスレイヤー用コンボ (維持) ---
 
         middle_click {
@@ -384,6 +387,13 @@
                 <&macro_release>,
                 <&macro_param_1to1 &kp MACRO_PLACEHOLDER>;
         };
+        
+        pair_brackets: pair_brackets {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_BRACKET &kp RIGHT_BRACKET &kp LEFT_ARROW>;
+        };
+
 
         /omit-if-no-ref/
 
