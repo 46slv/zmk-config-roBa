@@ -90,8 +90,7 @@
 
 // この時間たつまでshiftなどが有効になる
 
-&sk { release-after-ms = <300>;
- };
+&sk { release-after-ms = <300>; };
 
 &sl { release-after-ms = <800>; };
 
@@ -111,7 +110,7 @@
  */
 // 自動でマウスレイヤーに切り替わる（AML）挙動の詳細設定
 
-&mkp_input_listener { input-processors = <&zip_temp_layer MOUSE 3000>; }; // 3秒に変更
+&mkp_input_listener { input-processors = <&zip_temp_layer MOUSE 800>; }; 
 
 &zip_temp_layer {
     require-prior-idle-ms = <600>; // 振動での誤作動を減らすため500から600に少し延長
@@ -166,21 +165,21 @@
         pattern = <GESTURE_RIGHT GESTURE_DOWN>;
         bindings = <&kp LG(LC(RIGHT))>;
     };
- // left {
+    // left {
     //     gesture = <GESTURE_LEFT>;
- //     bindings = <&kp LEFT>;
+    //     bindings = <&kp LEFT>;
     // };
- // right {
+    // right {
     //     gesture = <GESTURE_RIGHT>;
- //     bindings = <&kp RIGHT>;
+    //     bindings = <&kp RIGHT>;
     // };
- // up {
+    // up {
     //     gesture = <GESTURE_UP>;
- //     bindings = <&kp UP>;
+    //     bindings = <&kp UP>;
     // };
- // down {
+    // down {
     //     gesture = <GESTURE_DOWN>;
- //     bindings = <&kp DOWN>;
+    //     bindings = <&kp DOWN>;
     // };
 };
  */
