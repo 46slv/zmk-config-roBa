@@ -211,9 +211,7 @@
 
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
-        input-processors = <
-            &zip_xy_scaler 1 2             // ←ここを追加（1/2倍に減速）
-            &zip_temp_layer MOUSE 500
+        input-processors = <&zip_xy_scaler 1 2>, <&zip_temp_layer MOUSE 500>;
         // input-processors = <&zip_temp_layer MOUSE 500>; // msマウスレイヤーにとどまる
         process-next;
     };
