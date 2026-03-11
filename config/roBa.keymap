@@ -287,7 +287,7 @@
 
         // NS (19 20) -> ENTER
 
-        combo_ns_enter {
+        ns_enter {
             bindings = <&kp ENTER>;
             key-positions = <19 20>;
             layers = <0 7>; // 7 (MOUSE) を追加
@@ -295,7 +295,7 @@
 
         // SH (20 21) -> BACKSPACE
 
-        combo_sh_bs {
+        sh_bs {
             bindings = <&kp BACKSPACE>;
             key-positions = <20 21>;
             layers = <0 7>;      // マウスレイヤーでも発動するようにする
@@ -304,7 +304,7 @@
 
         // SH (32 33) -> JP_UNDERSCORE
 
-        combo_jb_unsc {
+        jb_unsc {
             bindings = <&kp JP_UNDERSCORE>;
             key-positions = <32 33>;
             layers = <0 7>;      // マウスレイヤーでも発動するようにする
@@ -339,6 +339,12 @@
             key-positions = <22 33>;
             layers = <0>;
             require-prior-idle-ms = <300>;
+        };
+
+        ao_prbrkt {
+            bindings = <&pair_brackets>;
+            key-positions = <13 12>;
+            layers = <0 1>;
         };
     };
 
