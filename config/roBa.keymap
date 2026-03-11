@@ -10,8 +10,10 @@
 #define FUNCTIONS_AND_SYMBOLS 3 // ファンクションキーと記号のレイヤー
 #define MISC 4                  // その他(Miscellaneous)のキーレイヤー
 #define ALT_TAB 5               // Alt+Tab操作用のレイヤー
-#define CTRL_TAB 6             
- // Ctrl+Tab操作用のレイヤー
+#define CTRL_TAB 6
+
+// Ctrl+Tab操作用のレイヤー
+
 #define MOUSE 7                 // マウスカーソル操作レイヤー
 #define MEDIA 8                 // 音楽再生や音量調整などのメディアレイヤー
 #define EXTRA_FINCTIONS 9       // 追加機能レイヤー（スペルミス：FUNCTIONS）
@@ -21,8 +23,10 @@
 /* --- システム・外部ファイルの読み込み --- */
 
 #include <zephyr/dt-bindings/input/input-event-codes.h> // 標準的な入力イベント（キーコード）の定義
-#include <dt-bindings/zmk/input_transform.h>           
- // トラックボールなどの入力反転・回転変換
+#include <dt-bindings/zmk/input_transform.h>
+
+// トラックボールなどの入力反転・回転変換
+
 #include <input/processors.dtsi>                       // 入力データの処理（スムージング等）
 
 // #include <input/processors/report_rate_limit.dtsi>     // 通信の更新レート制限（バッテリー節約等）
@@ -30,9 +34,9 @@
 #include <behaviors/rgbled_widget.dtsi>                // LED表示（ウィジェット）の制御
 #include <layout_shift_kp_override.dtsi>               // シフト時のキー上書き設定
 #include <mouse-gesture.dtsi>                          // マウスジェスチャー機能
-#include <scroll-snap.dtsi>  
-                           // スクロールを段階的に止める機能
+#include <scroll-snap.dtsi>
 
+// スクロールを段階的に止める機能
 /* --- ZMKの基本機能の読み込み --- */
 
 #include <behaviors.dtsi>
@@ -74,14 +78,14 @@
 
 &mt {
     tapping-term-ms = <200>;
- quick-tap-ms = <250>;
+    quick-tap-ms = <250>;
     flavor = "balanced";
 };
 
 &lt {
     tapping-term-ms = <200>;
     quick-tap-ms = <250>;
- flavor = "balanced";
+    flavor = "balanced";
 };
 
 &to { /delete-property/ locking; };
@@ -110,17 +114,17 @@
  */
 // 自動でマウスレイヤーに切り替わる（AML）挙動の詳細設定
 
-&mkp_input_listener { input-processors = <&zip_temp_layer MOUSE 800>; }; 
+&mkp_input_listener { input-processors = <&zip_temp_layer MOUSE 800>; };
 
 &zip_temp_layer {
     require-prior-idle-ms = <600>; // 振動での誤作動を減らすため500から600に少し延長
- // キーボードを最後に打ってから間、何もしていない時だけ、トラックボールによるレイヤー切り替えを許可する
+    // キーボードを最後に打ってから間、何もしていない時だけ、トラックボールによるレイヤー切り替えを許可する
 
     excluded-positions = <
         18 // t
         19 // n
     >;
- };
+};
 
 &trackball {
     status = "okay";
@@ -128,7 +132,7 @@
     /* レイヤー遷移の設定だけを書く（これがkumamuk版の強み） */
 
     automouse-layer = <7>;
- scroll-layers = <11>;
+    scroll-layers = <11>;
 
     /* ここの中に swap-xy や invert は書かない！ */
 };
@@ -190,57 +194,63 @@
     immediate-snap-threshold = <750>;
     lock-duration-ms = <175>;
     lock-for-next-n-events = <8>;
- idle-reset-timeout-ms = <175>;
+    idle-reset-timeout-ms = <175>;
 };
 
 // trackball_listenerの設定　
 
 &trackball_listener {
     compatible = "zmk,input-listener";
- input-processors = <
+    input-processors = <
         // &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)
         &zip_mouse_gesture
         // &zip_report_rate_limit 15
     >;
- auto-mouse-layer {
+
+    auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
- input-processors = <&zip_xy_scaler 1 2>, <&zip_temp_layer MOUSE 3000>; // 3000msに変更
+        input-processors = <&zip_xy_scaler 1 2>, <&zip_temp_layer MOUSE 3000>;
+ // 3000msに変更
         // input-processors = <&zip_temp_layer MOUSE 500>;
- // msマウスレイヤーにとどまる
+        // msマウスレイヤーにとどまる
+
         process-next;
     };
- scroller {
+
+    scroller {
         // scrollレイヤーの対象レイヤーをここに並べる
 
         layers = <EXTRA_FINCTIONS MISC MEDIA 2 11>;
- input-processors = <
+        input-processors = <
             &zip_xy_scaler 2 3 //スクロール速度
             &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)
             &zip_xy_to_scroll_mapper
             &zip_scroll_snap
             // &zip_report_rate_limit 15
         >;
- process-next;
+
+        process-next;
     };
 
     disable-scroll-x {
         layers = <EXTRA_FINCTIONS>;
         input-processors = <&wheel_x_scaler 0 1>;
         process-next;
- };
+    };
 };
 
 / {
     input_processors {
         wheel_x_scaler: wheel_x_scaler {
             compatible = "zmk,input-processor-scaler";
- #input-processor-cells = <2>;
+            #input-processor-cells = <2>;
             type = <INPUT_EV_REL>;
             codes = <INPUT_REL_HWHEEL>;
             track-remainders;
         };
     };
- /*
+
+    /*
     layer_listeners {
         compatible = "zmk,layer-listeners";
  release_alt {
@@ -264,76 +274,86 @@
 
     combos {
         compatible = "zmk,combos";
- // --- 大西配列(old-1)用コンボ ---
+
+        // --- 大西配列(old-1)用コンボ ---
         // AI (11 12) -> SPACE
 
         combo_ai_space {
             bindings = <&kp SPACE>;
- key-positions = <11 12>;
+            key-positions = <11 12>;
             layers = <0>;
             require-prior-idle-ms = <150>;
             timeout-ms = <120>;
         };
- // NS (19 20) -> ENTER
+
+        // NS (19 20) -> ENTER
 
         ns_enter {
             bindings = <&kp ENTER>;
- key-positions = <19 20>;
+            key-positions = <19 20>;
             layers = <0 7>; // 7 (MOUSE) を追加
         };
- // SH (20 21) -> BACKSPACE
+
+        // SH (20 21) -> BACKSPACE
 
         sh_bs {
             bindings = <&kp BACKSPACE>;
- key-positions = <20 21>;
+            key-positions = <20 21>;
             layers = <0 7>;      // マウスレイヤーでも発動するようにする
             timeout-ms = <80>;
- // 50から80に伸ばして判定を緩くする
+
+            // 50から80に伸ばして判定を緩くする
         };
- // SH (32 33) -> JP_UNDERSCORE
+
+        // SH (32 33) -> JP_UNDERSCORE
 
         jb_unsc {
             bindings = <&kp JP_UNDERSCORE>;
- key-positions = <32 33>;
+            key-positions = <32 33>;
             layers = <0 7>;      // マウスレイヤーでも発動するようにする
             timeout-ms = <80>;
- // 50から80に伸ばして判定を緩くする
+
+            // 50から80に伸ばして判定を緩くする
         };
- combo_pair_brackets {
+
+        combo_pair_brackets {
             bindings = <&pair_brackets>;
             key-positions = <17 18>;
- layers = <0 1>;
+            layers = <0 1>;
         };
 
         // --- kot版マウスレイヤー用コンボ (維持) ---
 
         middle_click {
             bindings = <&mkp MCLK>;
- key-positions = <18 19>;
+            key-positions = <18 19>;
             layers = <7>; // MOUSEレイヤー
         };
- // --- その他共通・便利コンボ ---
+
+        // --- その他共通・便利コンボ ---
 
         Escape {
             bindings = <&kp ESCAPE>;
- key-positions = <0 1>;
+            key-positions = <0 1>;
             layers = <0>;
             require-prior-idle-ms = <300>;
         };
- caps_word {
+
+        caps_word {
             bindings = <&caps_word>;
             key-positions = <22 33>;
- layers = <0>;
+            layers = <0>;
             require-prior-idle-ms = <300>;
         };
 
         ao_prbrkt {
             bindings = <&pair_brackets>;
- key-positions = <13 12>;
+            key-positions = <13 12>;
             layers = <0 1>;
         };
     };
- /* --- macros 設定 --- */
+
+    /* --- macros 設定 --- */
 
     macros {
         // 参照（使用）されていない場合にコンパイルから除外するディレクティブ
@@ -349,7 +369,8 @@
             #binding-cells = <0>;
             bindings = <&to DEFAULT &tog_off 7>; // 確実にDEFAULTに戻るように変更
         };
- /omit-if-no-ref/
+
+        /omit-if-no-ref/
 
         // 1つの引数（キー）をタップし、その後レイヤー7を抜ける
         // 例: &kp_exit_AML ENTER -> ENTERを入力してレイヤー7をオフ
@@ -361,7 +382,8 @@
             #binding-cells = <1>;
             bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &exit_AML>;
         };
- /omit-if-no-ref/
+
+        /omit-if-no-ref/
 
         // 修飾キー等向け：キーを押し下げている間レイヤー7を維持し、離すとレイヤー7を抜ける
 
@@ -376,36 +398,39 @@
                 <&macro_tap>,
                 <&exit_AML>,
                 <&macro_pause_for_release>,
-        
-         <&macro_release>,
+                <&macro_release>,
                 <&macro_param_1to1 &kp MACRO_PLACEHOLDER>;
- };
+        };
 
         pair_brackets: pair_brackets {
             compatible = "zmk,behavior-macro";
- #binding-cells = <0>;
+            #binding-cells = <0>;
             bindings = <&kp LEFT_BRACKET &kp RIGHT_BRACKET &kp LEFT_ARROW>;
         };
- /omit-if-no-ref/
+
+        /omit-if-no-ref/
 
         // マウスクリック（mkp）用：クリックを離した後にレイヤー7を一時有効（Sticky Layer）にする
 
         mkp_exit_AML: mkp_exit_AML {
             compatible = "zmk,behavior-macro-one-param";
- // 引数（左クリック、右クリックなど）を1つ受け取る設定
+
+            // 引数（左クリック、右クリックなど）を1つ受け取る設定
+
             #binding-cells = <1>;
- bindings =
+            bindings =
                 <&macro_press>,
                 <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
                 <&macro_pause_for_release>,
                 <&macro_release>,
                 <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
-               
-  <&macro_tap>,
+                <&macro_tap>,
                 <&sl 7>;
- // 離した後にレイヤー7をSticky（一回使い切り）で起動
+
+            // 離した後にレイヤー7をSticky（一回使い切り）で起動
         };
- /omit-if-no-ref/
+
+        /omit-if-no-ref/
 
         // モーメンタリレイヤー（mo）用：レイヤー切り替え中のみ有効にし、離すとレイヤー7を抜ける
 
@@ -420,11 +445,10 @@
                 <&macro_tap>,
                 <&exit_AML>,
                 <&macro_pause_for_release>,
-        
-         <&macro_release>,
+                <&macro_release>,
                 <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
                 <&macro_tap>;
- };
+        };
 
         /omit-if-no-ref/
 
@@ -441,13 +465,14 @@
                 <&macro_tap>,
                 <&macro_pause_for_release>,
                 <&macro_release>,
-        
-         <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
+                <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
                 <&macro_tap>,
                 <&tog_off 6 &tog_off 7>;
- // 終了時に6と7を確実に閉じる
+
+            // 終了時に6と7を確実に閉じる
         };
- /omit-if-no-ref/
+
+        /omit-if-no-ref/
 
         // 2引数：指定キーをタップした後、指定レイヤーへ移動（to）する
         // 例: &kp_to LALT 3
@@ -459,50 +484,53 @@
             #binding-cells = <2>;
             bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &macro_param_2to1 &to MACRO_PLACEHOLDER>;
         };
- /omit-if-no-ref/
+
+        /omit-if-no-ref/
 
         // 2引数：指定レイヤーへ移動（to）した後、指定キーをタップする
 
         to_kp: to_kp {
             compatible = "zmk,behavior-macro-two-param";
- #binding-cells = <2>;
+            #binding-cells = <2>;
             bindings = <&macro_param_1to1 &to MACRO_PLACEHOLDER &macro_param_2to1 &kp MACRO_PLACEHOLDER>;
         };
- /omit-if-no-ref/
+
+        /omit-if-no-ref/
 
         // ズームイン：Ctrlを押しながらマウスホイールアップ（スクロール）を送信
 
         zoom_in: zoom_in {
             compatible = "zmk,behavior-macro";
- #binding-cells = <0>;
+            #binding-cells = <0>;
             bindings = <&kt_on LCTRL &msc SCRL_UP &kt_off LCTRL>;
         };
- /omit-if-no-ref/
+
+        /omit-if-no-ref/
 
         // ズームアウト：Ctrlを押しながらマウスホイールダウンを送信
 
         zoom_out: zoom_out {
             compatible = "zmk,behavior-macro";
- #binding-cells = <0>;
+            #binding-cells = <0>;
             bindings = <&kt_on LCTRL &msc SCRL_DOWN &kt_off LCTRL>;
         };
- /omit-if-no-ref/
+
+        /omit-if-no-ref/
 
         // 高度なタップダンス：キー入力を即座に行い、離した後にレイヤー7を抜け、さらに別のSticky Layer（250ms）を起動する
 
         eager_tap_dance: eager_tap_dance {
             compatible = "zmk,behavior-macro-two-param";
- #binding-cells = <2>;
+            #binding-cells = <2>;
             bindings =
                 <&macro_press>,
                 <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
                 <&macro_pause_for_release>,
                 <&macro_release>,
                 <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-            
-     <&macro_tap>,
+                <&macro_tap>,
                 <&exit_AML &macro_param_2to1 &sl_250 MACRO_PLACEHOLDER>;
- };
+        };
     };
 
     /* --- 以下 behaviors 設定 --- */
@@ -512,309 +540,345 @@
 
         minis_morph: minis_morph {
             compatible = "zmk,behavior-mod-morph";
- bindings = <&kp MINUS>, <&kp UNDER>;
+            bindings = <&kp MINUS>, <&kp UNDER>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
- tilde_morph: tilde_morph {
+
+        tilde_morph: tilde_morph {
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
- bindings = <&kp MINUS>, <&kp TILDE>;
+            bindings = <&kp MINUS>, <&kp TILDE>;
 
             // 通常は「ー」、Shiftで「〜」
 
             mods = <(MOD_LSFT)>;
- };
+        };
 
         td: tap_dance {
             compatible = "zmk,behavior-tap-dance";
- #binding-cells = <0>;
+            #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&kp LANGUAGE_2>, <&kp LANGUAGE_1>;
         };
- lt_to_layer_0: lt_to_layer_0 {
+
+        lt_to_layer_0: lt_to_layer_0 {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
- tapping-term-ms = <200>;
+            tapping-term-ms = <200>;
             flavor = "tap-preferred";
             bindings = <&mo>, <&kp>;
         };
- // --- 以下、提供いただいたkot版 behaviors (維持) ---
+
+        // --- 以下、提供いただいたkot版 behaviors (維持) ---
 
         tog_on: toggle_layer_on {
             compatible = "zmk,behavior-toggle-layer";
- #binding-cells = <1>;
+            #binding-cells = <1>;
             display-name = "Toggle Layer On";
             toggle-mode = "on";
         };
- tog_off: toggle_layer_off {
+
+        tog_off: toggle_layer_off {
             compatible = "zmk,behavior-toggle-layer";
             #binding-cells = <1>;
- display-name = "Toggle Layer Off";
+            display-name = "Toggle Layer Off";
             toggle-mode = "off";
         };
 
         kt_on: key_toggle_on_only {
             compatible = "zmk,behavior-key-toggle";
- #binding-cells = <1>;
+            #binding-cells = <1>;
             display-name = "Key Toggle On";
             toggle-mode = "on";
         };
- kt_off: key_toggle_off_only {
+
+        kt_off: key_toggle_off_only {
             compatible = "zmk,behavior-key-toggle";
             #binding-cells = <1>;
- display-name = "Key Toggle Off";
+            display-name = "Key Toggle Off";
             toggle-mode = "off";
         };
 
         td_colon: td_colon {
             compatible = "zmk,behavior-tap-dance";
- #binding-cells = <0>;
+            #binding-cells = <0>;
             bindings = <&kp COLON>, <&kp SEMICOLON>;
 
             tapping-term-ms = <250>;
         };
- td_q_escape: td_q_escape {
+
+        td_q_escape: td_q_escape {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
- tapping-term-ms = <250>;
+            tapping-term-ms = <250>;
             bindings = <&kp Q>, <&kp ESCAPE>;
         };
- td_ZenkakuHankaku: td_ZenkakuHankaku {
+
+        td_ZenkakuHankaku: td_ZenkakuHankaku {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
- tapping-term-ms = <250>;
+            tapping-term-ms = <250>;
             bindings = <&kp LANGUAGE_2>, <&kp LANGUAGE_1>;
         };
- td_ZenkakuHankaku_exit_AML: td_ZenkakuHankaku_exit_AML {
+
+        td_ZenkakuHankaku_exit_AML: td_ZenkakuHankaku_exit_AML {
             wait-ms = <0>;
             tap-ms = <0>;
- compatible = "zmk,behavior-macro";
+            compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&td_ZenkakuHankaku &exit_AML>;
         };
- alt_tab: alt_tab {
+
+        alt_tab: alt_tab {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
- bindings = <&macro_param_1to1 &kt_on MACRO_PLACEHOLDER &macro_param_2to1 &kp MACRO_PLACEHOLDER &macro_param_1to1 &sk MACRO_PLACEHOLDER &macro_param_1to1 &kt_off MACRO_PLACEHOLDER>;
+            bindings = <&macro_param_1to1 &kt_on MACRO_PLACEHOLDER &macro_param_2to1 &kp MACRO_PLACEHOLDER &macro_param_1to1 &sk MACRO_PLACEHOLDER &macro_param_1to1 &kt_off MACRO_PLACEHOLDER>;
         };
- windows_sleep: windows_sleep {
+
+        windows_sleep: windows_sleep {
             compatible = "zmk,behavior-macro";
             wait-ms = <200>;
- tap-ms = <100>;
+            tap-ms = <100>;
             #binding-cells = <0>;
             bindings = <&kp LG(X) &kp U &kp S>;
         };
- screensot_save: screensot_save {
+
+        screensot_save: screensot_save {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
- bindings = <&kp LS(F11)>;
+            bindings = <&kp LS(F11)>;
             label = "SCREENSOT_SAVE";
         };
 
         mkp_with_mod: mkp_with_mod {
             compatible = "zmk,behavior-macro-two-param";
- #binding-cells = <2>;
+            #binding-cells = <2>;
             bindings =
                 <&macro_press>,
                 <&macro_param_1to1 &kp MACRO_PLACEHOLDER &macro_param_2to1 &mkp MACRO_PLACEHOLDER>,
                 <&macro_pause_for_release>,
                 <&macro_release>,
                 <&macro_param_2to1 &mkp MACRO_PLACEHOLDER &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
- label = "MKP_WITH_MOD";
+
+            label = "MKP_WITH_MOD";
         };
 
         screenshot_copy: screenshot_copy {
             compatible = "zmk,behavior-mod-morph";
- bindings = <&kp LA(PRINTSCREEN)>, <&kp LA(PRINTSCREEN)>;
+            bindings = <&kp LA(PRINTSCREEN)>, <&kp LA(PRINTSCREEN)>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT|MOD_LALT)>;
             keep-mods = <(MOD_LALT)>;
         };
- mod_morph_exclamation: mod_morph_exclamation {
+
+        mod_morph_exclamation: mod_morph_exclamation {
             compatible = "zmk,behavior-mod-morph";
- bindings = <&kp COMMA>, <&kp EXCL>;
+            bindings = <&kp COMMA>, <&kp EXCL>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
- mod_morph_question: mod_morph_question {
+
+        mod_morph_question: mod_morph_question {
             compatible = "zmk,behavior-mod-morph";
- bindings = <&kp PERIOD>, <&kp QUESTION>;
+            bindings = <&kp PERIOD>, <&kp QUESTION>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
- mod_morph_slash: mod_morph_slash {
+
+        mod_morph_slash: mod_morph_slash {
             compatible = "zmk,behavior-mod-morph";
- bindings = <&kp SLASH>, <&kp BACKSLASH>;
+            bindings = <&kp SLASH>, <&kp BACKSLASH>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
- td_alt_f4: td_alt_f4 {
+
+        td_alt_f4: td_alt_f4 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
- bindings = <&kp F4>, <&kp LA(F4)>;
+            bindings = <&kp F4>, <&kp LA(F4)>;
 
             tapping-term-ms = <250>;
         };
- lt_exit_AML: lt_exit_AML {
+
+        lt_exit_AML: lt_exit_AML {
             compatible = "zmk,behavior-hold-tap";
- bindings = <&mo_exit_AML>, <&kp_exit_AML>;
+            bindings = <&mo_exit_AML>, <&kp_exit_AML>;
 
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             quick-tap-ms = <200>;
             flavor = "balanced";
         };
- lt_exit_AML_on_hold: lt_exit_AML_on_hold {
+
+        lt_exit_AML_on_hold: lt_exit_AML_on_hold {
             compatible = "zmk,behavior-hold-tap";
- bindings = <&mo_exit_AML>, <&kp>;
+            bindings = <&mo_exit_AML>, <&kp>;
 
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             quick-tap-ms = <200>;
             flavor = "balanced";
         };
- lt_exit_alttab: lt_exit_alttab_ctrltab_on_hold_release {
+
+        lt_exit_alttab: lt_exit_alttab_ctrltab_on_hold_release {
             compatible = "zmk,behavior-hold-tap";
- bindings = <&mo_exit_alttab>, <&kp>;
+            bindings = <&mo_exit_alttab>, <&kp>;
 
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             quick-tap-ms = <200>;
             flavor = "balanced";
         };
- mt_exit_AML: mt_exit_AML {
+
+        mt_exit_AML: mt_exit_AML {
             compatible = "zmk,behavior-hold-tap";
- bindings = <&mod_exit_AML>, <&kp_exit_AML>;
+            bindings = <&mod_exit_AML>, <&kp_exit_AML>;
 
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             flavor = "balanced";
             quick-tap-ms = <200>;
         };
- mt_exit_AML_on_tap: mt_exit_AML_on_tap {
+
+        mt_exit_AML_on_tap: mt_exit_AML_on_tap {
             compatible = "zmk,behavior-hold-tap";
- bindings = <&kp>, <&kp_exit_AML>;
+            bindings = <&kp>, <&kp_exit_AML>;
 
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             flavor = "balanced";
             quick-tap-ms = <200>;
         };
- encoder_zoom: encoder_zoom {
+
+        encoder_zoom: encoder_zoom {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
- bindings = <&zoom_out>, <&zoom_in>;
+            bindings = <&zoom_out>, <&zoom_in>;
         };
 
         encoder_volume: encoder_volume {
             compatible = "zmk,behavior-sensor-rotate";
- #sensor-binding-cells = <0>;
+            #sensor-binding-cells = <0>;
             bindings = <&kp C_VOLUME_DOWN>, <&kp C_VOLUME_UP>;
         };
- lt_zoom_out: lt_zoom_out {
+
+        lt_zoom_out: lt_zoom_out {
             compatible = "zmk,behavior-hold-tap";
- bindings = <&mo_exit_AML>, <&zoom_out>;
+            bindings = <&mo_exit_AML>, <&zoom_out>;
 
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             quick-tap-ms = <200>;
             flavor = "balanced";
         };
- sl_250: sl_250 {
+
+        sl_250: sl_250 {
             compatible = "zmk,behavior-sticky-key";
             bindings = <&mo>;
- #binding-cells = <1>;
+            #binding-cells = <1>;
             release-after-ms = <250>;
         };
 
         td_bt_clear: td_bt_clear {
             compatible = "zmk,behavior-tap-dance";
- #binding-cells = <0>;
+            #binding-cells = <0>;
             bindings = <&none>, <&none>, <&bt BT_CLR>;
 
             tapping-term-ms = <250>;
         };
- td_bt_clear_all: td_bt_clear_all {
+
+        td_bt_clear_all: td_bt_clear_all {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
- tapping-term-ms = <250>;
+            tapping-term-ms = <250>;
             bindings = <&none>, <&none>, <&bt BT_CLR_ALL>;
         };
- td_copy_paste: td_copy_paste {
+
+        td_copy_paste: td_copy_paste {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
- bindings = <&kp_exit_AML LC(C)>, <&kp_exit_AML LC(V)>;
+            bindings = <&kp_exit_AML LC(C)>, <&kp_exit_AML LC(V)>;
 
             tapping-term-ms = <250>;
         };
- td_reset: td_reset {
+
+        td_reset: td_reset {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
- bindings = <&none>, <&sys_reset>;
+            bindings = <&none>, <&sys_reset>;
 
             tapping-term-ms = <300>;
         };
 
         reset_bootloader: reset_bootloader {
             compatible = "zmk,behavior-hold-tap";
- #binding-cells = <2>;
+            #binding-cells = <2>;
             bindings = <&bootloader>, <&td_reset>;
 
             tapping-term-ms = <500>;
             flavor = "balanced";
         };
- td_rclick_close_tab: td_rclick_close_tab {
+
+        td_rclick_close_tab: td_rclick_close_tab {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
- bindings = <&mkp RCLK>, <&kp LC(W)>;
+            bindings = <&mkp RCLK>, <&kp LC(W)>;
 
             tapping-term-ms = <250>;
         };
- td_rclick_close_tab_mouse_gesture: td_rclick_close_tab_mouse_gesture {
+
+        td_rclick_close_tab_mouse_gesture: td_rclick_close_tab_mouse_gesture {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
- bindings = <&mouse_gesture>, <&td_rclick_close_tab>;
+            bindings = <&mouse_gesture>, <&td_rclick_close_tab>;
 
             tapping-term-ms = <150>;
             flavor = "balanced";
         };
     };
- /* --- 以下キーマップ --- */
 
-keymap {
+    /* --- 以下キーマップ --- */
+
+    keymap {
         compatible = "zmk,keymap";
+
         DEFAULT {
             bindings = <
-&kp Q         &kp L         &kp U    &mod_morph_exclamation  &mod_morph_question                                          &kp F             &kp W   &kp R  &kp Y     &kp P
-&kp E         &kp I         &kp A    &kp O                   &tilde_morph         &kp LS(LG(S))       &kp SLASH           &kp K             &kp T   &kp N  &lt 7 S   &kp H
-&kp Z         &kp X         &kp C    &kp V                   &kp B                &kp LEFT_SHIFT      &kp JP_UNDERSCORE   &kp G             &kp D   &kp M  &lt 11 J  &kp B
+&kp Q         &kp L         &kp U    &mod_morph_exclamation  &mod_morph_question                                          &kp F             &kp W  &kp R  &kp Y     &kp P
+&kp E         &kp I         &kp A    &kp O                   &tilde_morph         &kp LS(LG(S))       &kp SLASH           &kp K             &kp T  &kp N  &lt 7 S   &kp H
+&kp Z         &kp X         &kp C    &kp V                   &kp B                &kp LEFT_SHIFT      &kp JP_UNDERSCORE   &kp G             &kp D  &kp M  &lt 11 J  &kp B
 &kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td                     &kp LEFT_CONTROL     &kp LEFT_ALT        &lt 3 INT_MUHENKAN  &lt 2 INT_HENKAN                          &kp LEFT_SHIFT
             >;
+
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
         };
+
         LANG1_EAGER_TAP_DANCE {
             bindings = <
 &trans  &trans  &trans  &trans                    &trans                      &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans                    &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans                    &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &eager_tap_dance LANG1 1  &trans  &trans      &trans  &trans                  &trans
+&trans  &trans  &trans  &eager_tap_dance LANG1 1  &trans  &trans      &trans  &trans                          &trans
             >;
         };
+
         NUMPAD_AND_ARROWS {
             bindings = <
 &kp JP_ASTERISK             &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp MINUS                       &td_alt_f4  &none           &kp UP_ARROW    &none            &none
 &kp SLASH                   &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp JP_PLUS  &none       &none  &none       &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &kp LEFT_WIN
 &mt LEFT_SHIFT KP_NUMBER_0  &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp PERCENT  &trans      &none  &none       &kp J           &kp K           &kp L            &none
-&trans                      &trans           &trans           &trans           &trans       &trans      &none  &none                                       &none
+&trans                      &trans           &trans           &trans           &trans       &trans      &none  &none                                                        &none
             >;
+
             sensor-bindings = <&inc_dec_kp LC(PLUS) LC(MINUS)>;
         };
+
         FUNCTIONS_AND_SYMBOLS {
             bindings = <
 &to_kp 6 TAB  &kp F1  &kp F2   &kp F3   &td_alt_f4                                 &kp LBKT     &kp RBKT      &kp BSLH      &kp LS(N2)    &td_colon
@@ -823,47 +887,54 @@ keymap {
 &trans        &trans  &trans   &trans   &trans      &trans      &kp LS(COMMA)      &kp LS(DOT)                                            &kp LS(N4)
             >;
         };
+
         MISC {
             bindings = <
-&to_kp 6 TAB          &kp LC(LG(LEFT))        &kp LG(TAB)       &kp LG(LC(RIGHT))        &td_alt_f4                                              &td_alt_f4  &kp LC(W)                 &kp LS(LC(T))          &kp LC(T)          &to_kp 6 TAB
-&to_kp 7 TAB          &kp LG(LS(LEFT_ARROW))  &kp LG(UP_ARROW)  &kp LG(LS(RIGHT_ARROW))  &kp F5            &trans           &kp C_VOLUME_UP             &kp F5      &kp_exit_AML LC(PAGE_UP)  &kp_exit_AML UP_ARROW  &kp LC(PAGE_DOWN)  &to_kp 7 TAB
+&to_kp 6 TAB          &kp LC(LG(LEFT))        &kp LG(TAB)       &kp LG(LC(RIGHT))        &td_alt_f4                                                         &td_alt_f4  &kp LC(W)                 &kp LS(LC(T))          &kp LC(T)          &to_kp 6 TAB
+&to_kp 7 TAB          &kp LG(LS(LEFT_ARROW))  &kp LG(UP_ARROW)  &kp LG(LS(RIGHT_ARROW))  &kp F5            &trans               &kp C_VOLUME_UP             &kp F5      &kp_exit_AML LC(PAGE_UP)  &kp_exit_AML UP_ARROW  &kp LC(PAGE_DOWN)  &to_kp 7 TAB
 &kp LA(LC(LG(DOWN)))  &kp LG(LEFT_ARROW)      &kp LG(DOWN)      &kp LG(RIGHT_ARROW)      &screenshot_copy  &screensot_save      &kp_exit_AML C_VOLUME_DOWN  &kp K_MUTE  &kp LA(LEFT)              &kp DOWN               &kp LA(RIGHT)      &trans
-&trans                &trans                  &trans            &trans                   &trans            &trans           &kp DELETE                  &trans                                                                          &trans
+&trans                &trans                  &trans            &trans                   &trans            &trans               &kp DELETE                  &trans                                                                          &trans
             >;
+
             sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
         };
+
         ALT_TAB {
             bindings = <
 &kp TAB      &trans    &trans    &trans     &trans                      &trans  &trans    &trans    &trans     &kp TAB
 &kp LS(TAB)  &trans    &kp UP    &trans     &trans  &trans      &trans  &trans  &trans    &kp UP    &trans     &kp LS(TAB)
 &trans       &kp LEFT  &kp DOWN  &kp RIGHT  &trans  &trans      &trans  &trans  &kp LEFT  &kp DOWN  &kp RIGHT  &trans
-&trans       &trans    &trans    &trans     &trans  &trans      &trans  &trans                  &trans
+&trans       &trans    &trans    &trans     &trans  &trans      &trans  &trans                                 &trans
             >;
         };
+
         CTRL_TAB {
             bindings = <
 &kp LS(TAB)  &trans    &trans    &trans     &trans                      &trans  &trans    &trans    &trans     &kp LS(TAB)
 &kp TAB      &trans    &kp UP    &trans     &trans  &trans      &trans  &trans  &trans    &kp UP    &trans     &kp TAB
 &kp LS(TAB)  &kp LEFT  &kp DOWN  &kp RIGHT  &trans  &trans      &trans  &trans  &kp LEFT  &kp DOWN  &kp RIGHT  &kp LS(TAB)
-&trans       &trans    &trans    &trans     &trans  &trans      &trans  &trans                  &trans
+&trans       &trans    &trans    &trans     &trans  &trans      &trans  &trans                                 &trans
             >;
         };
+
         MOUSE {
             bindings = <
-&trans  &trans  &trans  &trans                       &trans                                           &trans  &trans    &trans    &trans  &trans
-&trans  &trans  &trans  &trans                       &trans  &trans      &trans                       &trans  &mkp MB1  &mkp MB2  &none   &trans
-&trans  &trans  &trans  &trans                       &trans  &trans      &trans                       &trans  &trans    &trans    &trans  &trans
-&trans  &trans  &trans  &td_ZenkakuHankaku_exit_AML  &trans  &trans      &lt_exit_AML 3 INT_MUHENKAN  &lt_exit_AML 2 INT_HENKAN           &trans
+&trans  &trans  &trans  &trans                       &trans                                           &trans                     &trans    &trans    &trans  &trans
+&trans  &trans  &trans  &trans                       &trans  &trans      &trans                       &trans                     &mkp MB1  &mkp MB2  &trans  &trans
+&trans  &trans  &trans  &trans                       &trans  &trans      &trans                       &trans                     &trans    &trans    &trans  &trans
+&trans  &trans  &trans  &td_ZenkakuHankaku_exit_AML  &trans  &trans      &lt_exit_AML 3 INT_MUHENKAN  &lt_exit_AML 2 INT_HENKAN                              &trans
             >;
         };
+
         MEDIA {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                      &kp C_PREV         &kp C_PLAY_PAUSE   &kp C_NEXT       &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans  &kp C_VOLUME_DOWN  &kp C_MUTE         &kp C_VOLUME_UP  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans             &kp LS(LA(LC(M)))  &trans           &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                                 &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                                         &trans
             >;
         };
+
         EXTRA_FINCTIONS {
             bindings = <
 &trans  &trans  &trans  &trans                         &trans                      &kp F13  &kp F14  &kp F15  &kp F16  &trans
@@ -872,6 +943,7 @@ keymap {
 &trans  &trans  &trans  &eager_tap_dance LANGUAGE_1 9  &trans  &trans      &trans  &trans                              &trans
             >;
         };
+
         CONFIGURATION {
             bindings = <
 &reset_bootloader 0 0  &none  &none  &none  &none                                 &none         &none         &none         &out OUT_TOG  &reset_bootloader 0 0
@@ -880,6 +952,7 @@ keymap {
 &none                  &none  &none  &none  &none       &none       &none         &none                                                   &td_bt_clear_all
             >;
         };
+
         SCROLL {
             bindings = <
 &trans        &trans          &trans          &trans           &trans                      &trans  &trans  &trans  &trans  &trans
