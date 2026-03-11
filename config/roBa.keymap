@@ -285,7 +285,7 @@
             key-positions = <11 12>;
             layers = <0>;
             require-prior-idle-ms = <150>;
-            timeout-ms = <80>;
+            timeout-ms = <120>;
         };
 
         // NS (19 20) -> ENTER
