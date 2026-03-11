@@ -204,7 +204,7 @@
 &trackball_listener {
     compatible = "zmk,input-listener";
     input-processors = <
-        &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)
+        // &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)
         &zip_mouse_gesture
         // &zip_report_rate_limit 15
     >;
