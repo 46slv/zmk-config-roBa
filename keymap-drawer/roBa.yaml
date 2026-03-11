@@ -553,3 +553,6 @@ combos:
 - p: [22, 33]
   k: '&caps_word'
   l: ['0']
+- p: [13, 12]
+  k: '&pair_brackets'
+  l: ['0', '1']

@@ -342,6 +342,10 @@ path.combo {
 <rect rx="6" ry="6" x="364" y="162" width="28" height="26" class="combo"/>
 <text x="378" y="175" class="combo tap"><tspan style="font-size: 70%">&amp;caps_word</tspan></text>
 </g>
+<g class="combo combopos-7">
+<rect rx="6" ry="6" x="154" y="75" width="28" height="26" class="combo"/>
+<text x="168" y="88" class="combo tap"><tspan style="font-size: 64%">&amp;pair_brac…</tspan></text>
+</g>
 </g>
 </g>
 <g transform="translate(30, 339)" class="layer-1">
@@ -524,6 +528,10 @@ path.combo {
 <g class="combo combopos-0">
 <rect rx="6" ry="6" x="518" y="82" width="28" height="26" class="combo"/>
 <text x="532" y="95" class="combo tap"><tspan style="font-size: 64%">&amp;pair_brac…</tspan></text>
+</g>
+<g class="combo combopos-1">
+<rect rx="6" ry="6" x="154" y="75" width="28" height="26" class="combo"/>
+<text x="168" y="88" class="combo tap"><tspan style="font-size: 64%">&amp;pair_brac…</tspan></text>
 </g>
 </g>
 </g>
