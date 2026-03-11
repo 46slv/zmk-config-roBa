@@ -346,11 +346,11 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - '&exit_AML'
+  - '&td_ZenkakuHankaku_exit_AML'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - {t: '&kp_exit_AML INT_MUHENKAN', h: '&mo_exit_AML 3'}
+  - {t: '&kp_exit_AML INT_HENKAN', h: '&mo_exit_AML 2'}
   - {t: ▽, type: trans}
   '8':
   - {t: ▽, type: trans}
