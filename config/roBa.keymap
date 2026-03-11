@@ -107,6 +107,8 @@
 */
 // 自動でマウスレイヤーに切り替わる（AML）挙動の詳細設定
 
+&mkp_input_listener { input-processors = <&zip_temp_layer MOUSE 10000>; };
+
 &zip_temp_layer {
     require-prior-idle-ms = <500>;
 
