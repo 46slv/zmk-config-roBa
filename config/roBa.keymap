@@ -215,7 +215,7 @@
 
         layers = <EXTRA_FINCTIONS MISC MEDIA 2 11>;
  input-processors = <
-            &zip_xy_scaler 1 2 //スクロール速度
+            &zip_xy_scaler 2 3 //スクロール速度
             &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)
             &zip_xy_to_scroll_mapper
             &zip_scroll_snap
