@@ -86,7 +86,7 @@
 
 &trackball {
     cpi = <800>;
-    swap-xy;
+    // swap-xy;
     // invert-x;
     // invert-y;
 };
