@@ -19,6 +19,9 @@
         status = "okay";
         compatible = "zmk,input-listener";
         device = <&trackball>;
+        
+        /* スクロール方向を90度回転（XY入れ替え）し、必要に応じて反転 */
+        input-processors = <&zip_scroll_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_Y_INVERT)>;
     };
 };
 
@@ -44,6 +47,8 @@
 &xiao_serial { status = "disabled"; };
 
 #include <zephyr/dt-bindings/input/input-event-codes.h>
+/* ZMKの入力トランスフォーム用定義をインクルード */
+#include <dt-bindings/zmk/input_transform.h>
 
 &spi0 {
     status = "okay";
