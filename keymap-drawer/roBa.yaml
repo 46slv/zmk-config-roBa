@@ -35,7 +35,7 @@ layers:
   - M
   - {t: J, h: '11'}
   - B
-  - Ctrl
+  - Win
   - Win
   - TAB
   - '&td'
@@ -541,7 +541,7 @@ combos:
 - p: [32, 33]
   k: _
   l: ['0', '7']
-- p: [7, 8]
+- p: [17, 18]
   k: '&pair_brackets'
   l: ['0', '1']
 - p: [18, 19]
