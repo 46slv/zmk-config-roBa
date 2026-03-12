@@ -1,4 +1,5 @@
 #include "roBa.dtsi"
+#include <input/processors.dtsi>
 
 &default_transform {
     col-offset = <6>;
@@ -14,21 +15,35 @@
         ;
 };
 
+/* 1. 軸を入れ替えるための「道具（ノード）」を定義 */
 / {
-    /* 1. XY軸（およびスクロール軸）を入れ替えるためのノード定義 */
     zip_xy_swap: zip_xy_swap {
         compatible = "zmk,input-processor-xy-swap";
         #input-processor-cells = <0>;
     };
+};
 
-//    trackball_listener {
-//        status = "okay";
-//        compatible = "zmk,input-listener";
-//        device = <&trackball>;
-//        
-//        /* 2. 定義したスワップ機能を適用。これによりX(水平)スクロールがY(垂直)に変換されます */
-//        input-processors = <&zip_xy_swap>;
-//    };
+/* 2. オートレイヤー（AML）の挙動詳細設定 */
+&zip_temp_layer {
+    /* マウス操作中に押しても解除されないキー（18:T, 19:N） */
+    excluded-positions = <18 19>; 
+    /* 打鍵直後の誤爆防止（200ms） */
+    require-prior-idle-ms = <200>; 
+};
+
+/* 3. トラックボールの挙動を一括管理（ここが重要） */
+&trackball_listener {
+    status = "okay";
+    compatible = "zmk,input-listener";
+    device = <&trackball>;
+
+    /* 実行順序が重要です：
+       ①軸を入れ替える → ②感度を2倍にする → ③レイヤー7を3秒間起動する 
+    */
+    input-processors = 
+        <&zip_xy_swap>, 
+        <&zip_xy_scaler 1 2>, 
+        <&zip_temp_layer 7 3000>;
 };
 
 &pinctrl {
