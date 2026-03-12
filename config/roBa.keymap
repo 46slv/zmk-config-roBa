@@ -77,14 +77,8 @@
 &sk { release-after-ms = <300>; };
 &sl { release-after-ms = <800>; };
 
-&zip_temp_layer {
-    require-prior-idle-ms = <500>;
-    excluded-positions = <18>; 
-};
-
 &trackball {
     status = "okay";
-    automouse-layer = <7>;
     scroll-layers = <11>;
 };
 
@@ -98,13 +92,12 @@
 
 &trackball_listener {
     compatible = "zmk,input-listener";
-    input-processors = <
-        /* 移動方向の修正：右移動が下に行く問題をXY_SWAPで解決 */
+input-processors = 
         <&zip_xy_transform INPUT_TRANSFORM_XY_SWAP>,
-        &zip_mouse_gesture
-    >;
+        <&zip_mouse_gesture>;
+
     auto-mouse-layer {
-        layers = <DEFAULT MOUSE>;
+        layers = <0>;
         input-processors = <&zip_temp_layer 7 500>;
         process-next;
     };
