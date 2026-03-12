@@ -107,21 +107,14 @@
 */
 // 自動でマウスレイヤーに切り替わる（AML）挙動の詳細設定
 
-&mkp_input_listener { input-processors = <&zip_temp_layer MOUSE 10000>; };
-
-&zip_temp_layer {
-    require-prior-idle-ms = <500>;
-    excluded-positions = <
-        18 // t
-    >;
-};
+// &mkp_input_listener { input-processors = <&zip_temp_layer MOUSE 10000>; };
 
 &trackball {
     status = "okay";
 
     /* レイヤー遷移の設定だけを書く（これがkumamuk版の強み） */
 
-    automouse-layer = <7>;
+    // automouse-layer = <7>;
     scroll-layers = <11>;
 
     /* ここの中に swap-xy や invert は書かない！ */
