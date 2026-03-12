@@ -2,10 +2,10 @@ name: Build
 on:
   workflow_dispatch:
   pull_request:
-  # push:
-  #   paths:
-  #     - config/**
-  #     - build.yaml
+  push:
+   paths:
+      - config/**
+      - build.yaml
 
 jobs:
   build:
