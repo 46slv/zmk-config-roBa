@@ -207,6 +207,24 @@
     };
 
     macros {
+        exit_AML: exit_AML {
+            compatible = "zmk,behavior-macro";
+            wait-ms = <0>;
+            tap-ms = <0>;
+            #binding-cells = <0>;
+            bindings = <&tog_off MOUSE>;
+            label = "exit_AML";
+        };
+
+        kp_exit_AML: kp_exit_AML {
+            compatible = "zmk,behavior-macro-one-param";
+            wait-ms = <0>;
+            tap-ms = <0>;
+            #binding-cells = <1>;
+            bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &exit_AML>;
+            label = "KP_exit_AML";
+        };
+
         pair_brackets: pair_brackets {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -287,11 +305,34 @@
             display-name = "Toggle Layer On";
             toggle-mode = "on";
         };
+
         tog_off: toggle_layer_off {
             compatible = "zmk,behavior-toggle-layer";
             #binding-cells = <1>;
             display-name = "Toggle Layer Off";
             toggle-mode = "off";
+        };
+
+        // ホールドでレイヤー、タップで「キー＋AML解除」
+        lt_exit_AML_on_tap: lt_exit_AML_on_tap {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LT_EXIT_AML_ON_TAP";
+            bindings = <&mo>, <&kp_exit_AML>;
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "balanced";
+            quick-tap-ms = <200>;
+        };
+
+        // 上記を組み合わせたTap-Dance
+        td_muhenkan_henkan: td_muhenkan_henkan {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TD_MUHENKAN_HENKAN";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = 
+                <&lt_exit_AML_on_tap 3 INT_MUHENKAN>, 
+                <&lt_exit_AML_on_tap 2 INT_HENKAN>;
         };
 
         kt_on: key_toggle_on_only {
@@ -465,7 +506,7 @@
 &kp Q         &kp L         &kp U    &mod_morph_exclamation  &mod_morph_question                                          &kp F             &kp W  &kp R  &kp Y     &kp P
 &kp E         &kp I         &kp A    &kp O                   &tilde_morph         &kp LS(LG(S))       &kp SLASH           &kp K             &kp T  &kp N  &lt 7 S   &kp H
 &kp Z         &kp X         &kp C    &kp V                   &kp B                &kp LEFT_SHIFT      &kp JP_UNDERSCORE   &kp G             &kp D  &kp M  &lt 11 J  &kp B
-&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td                     &kp LEFT_CONTROL     &kp LEFT_ALT        &lt 3 INT_MUHENKAN  &lt 2 INT_HENKAN                          &kp LEFT_SHIFT
+&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td_muhenkan_henkan     &kp LEFT_CONTROL     &kp LEFT_ALT        &lt 3 INT_MUHENKAN  &lt 2 INT_HENKAN                          &kp LEFT_SHIFT
             >;
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
         };
