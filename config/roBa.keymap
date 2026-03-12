@@ -10,8 +10,7 @@
 #define FUNCTIONS_AND_SYMBOLS 3 // ファンクションキーと記号のレイヤー
 #define MISC 4                  // その他(Miscellaneous)のキーレイヤー
 #define ALT_TAB 5               // Alt+Tab操作用のレイヤー
-#define CTRL_TAB 6             
- // Ctrl+Tab操作用のレイヤー
+#define CTRL_TAB 6              // Ctrl+Tab操作用のレイヤー
 #define MOUSE 7                 // マウスカーソル操作レイヤー
 #define MEDIA 8                 // 音楽再生や音量調整などのメディアレイヤー
 #define EXTRA_FINCTIONS 9       // 追加機能レイヤー（スペルミス：FUNCTIONS）
@@ -21,8 +20,7 @@
 /* --- システム・外部ファイルの読み込み --- */
 
 #include <zephyr/dt-bindings/input/input-event-codes.h> // 標準的な入力イベント（キーコード）の定義
-#include <dt-bindings/zmk/input_transform.h>           
- // トラックボールなどの入力反転・回転変換
+#include <dt-bindings/zmk/input_transform.h>           // トラックボールなどの入力反転・回転変換
 #include <input/processors.dtsi>                       // 入力データの処理（スムージング等）
 
 // #include <input/processors/report_rate_limit.dtsi>     // 通信の更新レート制限（バッテリー節約等）
@@ -30,8 +28,7 @@
 #include <behaviors/rgbled_widget.dtsi>                // LED表示（ウィジェット）の制御
 #include <layout_shift_kp_override.dtsi>               // シフト時のキー上書き設定
 #include <mouse-gesture.dtsi>                          // マウスジェスチャー機能
-#include <scroll-snap.dtsi>  
-                           // スクロールを段階的に止める機能
+#include <scroll-snap.dtsi>                            // スクロールを段階的に止める機能
 
 /* --- ZMKの基本機能の読み込み --- */
 
@@ -45,14 +42,12 @@
 
 #define JP_DQUOTE       AT                // "
 #define JP_AMPERSAND    CARET             // &
-#define JP_QUOTE        AMPERSAND         // 
- '
+#define JP_QUOTE        AMPERSAND         // '
 #define JP_EQUAL        UNDER             // =
 #define JP_CARET        EQUAL             // ^
 #define JP_YEN          0x89              // ¥
 #define JP_PLUS         COLON             // +
-#define JP_TILDE   
-      PLUS              // ~
+#define JP_TILDE        PLUS              // ~
 #define JP_PIPE         LS(0x89)          // |
 #define JP_AT           LEFT_BRACKET      // @
 #define JP_COLON        SINGLE_QUOTE      // :
@@ -60,15 +55,13 @@
 #define JP_BACKQUOTE    LEFT_BRACE        // `
 #define JP_UNDERSCORE   LS(0x87)          // _
 #define JP_LBRACKET     RIGHT_BRACKET     // [
-#define JP_RBRACKET     BACKSLASH      
-   // ]
+#define JP_RBRACKET     BACKSLASH         // ]
 #define JP_LPAREN       ASTERISK          // (
 #define JP_RPAREN       LEFT_PARENTHESIS  // )
 #define JP_LBRACE       RIGHT_BRACE       // {
 #define JP_RBRACE       PIPE              // }
 #define JP_KANA         LANGUAGE_1        // かな
-#define JP_EISU       
-  LANGUAGE_2        // 英数
+#define JP_EISU         LANGUAGE_2        // 英数
 #define JP_HANZEN       GRAVE             // 半角/全角
 
 /* --- 以下設定 --- */
