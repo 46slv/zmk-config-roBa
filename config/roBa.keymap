@@ -97,14 +97,14 @@ input-processors =
         <&zip_mouse_gesture>;
 
     auto-mouse-layer {
-        layers = <0>;
-        input-processors = <&zip_temp_layer 7 500>;
+        layers = <DEFAULT MOUSE>;
+        input-processors = <&zip_temp_layer MOUSE 500>;
         process-next;
     };
     scroller {
         layers = <EXTRA_FUNCTIONS MISC MEDIA 2 11>;
         input-processors = <
-            &zip_xy_scaler 1 2 
+            &zip_xy_scaler 1 2,
             /* スクロールは合っているため無変換(0)に設定 */
             <&zip_xy_transform 0>, 
             &zip_xy_to_scroll_mapper,
