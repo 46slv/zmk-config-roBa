@@ -1,4 +1,5 @@
 #include "roBa.dtsi"
+#include <input/processors.dtsi> // 変更点：追加
 
 &default_transform {
     col-offset = <6>;
@@ -14,11 +15,19 @@
             ;
 };
 
+/* 変更点：新しい挙動ルールを定義 */
+&zip_temp_layer {
+    require-prior-idle-ms = <200>; // 打鍵後200msは発動させない
+    excluded-positions = <18 19>; // 18(T), 19(N) 以外を押したらマウスレイヤーを解除
+};
+
 / {
     trackball_listener {
         status = "okay";
         compatible = "zmk,input-listener";
         device = <&trackball>;
+        /* 変更点：レイヤー7を3000ms（3秒）有効にする設定を紐付け */
+        input-processors = <&zip_temp_layer 7 3000>;
     };
 };
 
