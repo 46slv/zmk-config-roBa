@@ -32,19 +32,18 @@
 };
 
 /* 3. トラックボールの挙動を一括管理（ここが重要） */
+/* --- ここから削除 --- 
 &trackball_listener {
     status = "okay";
     compatible = "zmk,input-listener";
     device = <&trackball>;
 
-    /* 実行順序が重要です：
-       ①軸を入れ替える → ②感度を2倍にする → ③レイヤー7を3秒間起動する 
-    */
     input-processors = 
         <&zip_xy_swap>, 
         <&zip_xy_scaler 1 2>, 
         <&zip_temp_layer 7 3000>;
 };
+--- ここまで削除 --- */
 
 &pinctrl {
     spi0_default: spi0_default {
