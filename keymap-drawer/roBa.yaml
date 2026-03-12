@@ -38,7 +38,7 @@ layers:
   - Win
   - Win
   - TAB
-  - '&td'
+  - '&td_muhenkan_henkan'
   - Ctrl
   - Alt
   - {t: 無変換, h: '3'}
