@@ -4,8 +4,8 @@ layers:
   - Q
   - L
   - U
-  - {t: COMMA, s: EXCL}
-  - {t: PERIOD, s: QUESTION}
+  - COMMA
+  - DOT
   - F
   - W
   - R
@@ -94,7 +94,7 @@ layers:
   - KP 8
   - KP 9
   - '-'
-  - '&td_alt_f4'
+  - ''
   - ''
   - ↑
   - ''
@@ -110,46 +110,46 @@ layers:
   - ←
   - ↓
   - →
-  - Win
-  - {t: KP 0, h: Shift}
+  - ''
+  - Shift
   - KP 1
   - KP 2
   - KP 3
   - '%'
-  - {t: ▽, type: trans}
   - ''
   - ''
-  - J
-  - K
-  - L
+  - ''
+  - ''
+  - ''
+  - ''
   - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ''
   - ''
   - {type: held}
   - ''
   '3':
-  - '&to_kp 6 TAB'
+  - TAB
   - F1
   - F2
   - F3
-  - '&td_alt_f4'
+  - F4
   - '@'
   - '['
   - ']'
   - '"'
-  - '&td_colon'
-  - '&to_kp 7 TAB'
+  - SEMI
+  - ESC
   - F6
   - F7
   - F8
   - F5
   - {t: ▽, type: trans}
-  - $
+  - {t: ▽, type: trans}
   - '#'
   - (
   - )
@@ -161,55 +161,55 @@ layers:
   - F11
   - F12
   - {t: ▽, type: trans}
-  - _
+  - {t: ▽, type: trans}
   - '&'
   - '{'
   - '}'
   - '`'
-  - '|'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: <, type: held}
-  - '>'
-  - $
+  - {t: ▽, type: trans}
+  - {type: held}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   '4':
-  - '&to_kp 6 TAB'
+  - {t: ▽, type: trans}
   - Ctl+Gui+←
   - Gui+TAB
   - Gui+Ctl+→
-  - '&td_alt_f4'
-  - '&td_alt_f4'
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - Ctl+W
   - Sft+Ctl+T
   - Ctl+T
-  - '&to_kp 6 TAB'
-  - '&to_kp 7 TAB'
-  - Gui+Sft+←
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - Gui+↑
-  - Gui+Sft+→
+  - {t: ▽, type: trans}
   - F5
   - {t: ▽, type: trans}
-  - VOLUME UP
+  - {t: ▽, type: trans}
   - F5
-  - '&kp_exit_AML LC(PAGE_UP)'
-  - '&kp_exit_AML UP_ARROW'
-  - Ctl+PAGE DOWN
-  - '&to_kp 7 TAB'
-  - Alt+Ctl+Gui+↓
+  - PG UP
+  - ↑
+  - PG DN
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - Gui+←
   - Gui+↓
   - Gui+→
-  - {t: Alt+PRINTSCREEN, s: Alt+PRINTSCREEN}
-  - '&screensot_save'
-  - '&kp_exit_AML C_VOLUME_DOWN'
-  - MUTE
-  - Alt+←
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ←
   - ↓
-  - Alt+→
+  - →
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -217,7 +217,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - Del
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   '5':
@@ -346,11 +346,11 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - '&td_ZenkakuHankaku_exit_AML'
+  - '&exit_AML'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: '&kp_exit_AML INT_MUHENKAN', h: '&mo_exit_AML 3'}
-  - {t: '&kp_exit_AML INT_HENKAN', h: '&mo_exit_AML 2'}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   '8':
   - {t: ▽, type: trans}
@@ -359,7 +359,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - PREV
-  - PLAY PAUSE
+  - PP
   - NEXT
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -370,9 +370,9 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - VOLUME DOWN
+  - VOL DN
   - MUTE
-  - VOLUME UP
+  - VOL UP
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -383,7 +383,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - Meh+M
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -434,14 +434,14 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - '&eager_tap_dance LANGUAGE_1 9'
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   '10':
-  - {t: '&td_reset', h: '&bootloader'}
+  - '&bootloader'
   - ''
   - ''
   - ''
@@ -450,14 +450,14 @@ layers:
   - ''
   - ''
   - OUT TOG
-  - {t: '&td_reset', h: '&bootloader'}
+  - '&bootloader'
   - ''
   - ''
   - ''
   - ''
-  - '&tog_on'
+  - ''
   - {t: ▽, type: trans}
-  - '&td_bt_clear'
+  - BT CLR
   - {t: BT, h: '0'}
   - {t: BT, h: '1'}
   - {t: BT, h: '2'}
@@ -467,7 +467,6 @@ layers:
   - ''
   - ''
   - ''
-  - '&tog_off'
   - ''
   - ''
   - ''
@@ -483,7 +482,8 @@ layers:
   - ''
   - ''
   - ''
-  - '&td_bt_clear_all'
+  - ''
+  - BT CLR ALL
   '11':
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -507,7 +507,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - Win
+  - {t: ▽, type: trans}
   - ←
   - ↓
   - →
@@ -550,9 +550,3 @@ combos:
 - p: [0, 1]
   k: Esc
   l: ['0']
-- p: [22, 33]
-  k: '&caps_word'
-  l: ['0']
-- p: [13, 12]
-  k: '&pair_brackets'
-  l: ['0', '1']
