@@ -87,7 +87,7 @@
 /* --- AML (Auto Mouse Layer) 制御 --- */
 
 &zip_temp_layer {
-    require-prior-idle-ms = <200>; // トラックボール操作時の遊び（タイピング直後は反応しない）
+    require-prior-idle-ms = <800>; // キー入力から一定時間はAMLを発動しない
     excluded-positions = <
         18 // T (MB1: 左クリック)
         19 // N (MB2: 右クリック)
@@ -95,7 +95,7 @@
 };
 
 &mkp_input_listener { 
-    input-processors = <&zip_temp_layer MOUSE 3000>; 
+    input-processors = <&zip_temp_layer MOUSE 500>; 
 };
 
 &trackball {
