@@ -25,25 +25,10 @@
 
 /* 2. オートレイヤー（AML）の挙動詳細設定 */
 &zip_temp_layer {
-    /* マウス操作中に押しても解除されないキー（18:T, 19:N） */
     excluded-positions = <18 19>; 
-    /* 打鍵直後の誤爆防止（200ms） */
     require-prior-idle-ms = <200>; 
 };
 
-/* 3. トラックボールの挙動を一括管理（ここが重要） */
-/* --- ここから削除 --- 
-&trackball_listener {
-    status = "okay";
-    compatible = "zmk,input-listener";
-    device = <&trackball>;
-
-    input-processors = 
-        <&zip_xy_swap>, 
-        <&zip_xy_scaler 1 2>, 
-        <&zip_temp_layer 7 3000>;
-};
---- ここまで削除 --- */
 
 &pinctrl {
     spi0_default: spi0_default {
