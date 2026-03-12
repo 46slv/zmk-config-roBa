@@ -1,4 +1,5 @@
 #include "roBa.dtsi"
+#include <input/processors.dtsi> // 追加
 
 &default_transform {
     col-offset = <6>;
@@ -14,11 +15,21 @@
         ;
 };
 
+/* AMLの挙動設定 */
+&zip_temp_layer {
+    /* 変換(41)・無変換(40)を押した時にマウスレイヤーを即解除する設定 */
+    excluded-positions = <40 41>; 
+    /* 打鍵中（200ms以内）はトラックボールの反応でレイヤーが飛ばないように制限 */
+    require-prior-idle-ms = <200>; 
+};
+
 / {
-    trackball_listener {
+    trackball_listener: trackball_listener {
         status = "okay";
         compatible = "zmk,input-listener";
         device = <&trackball>;
+        /* マウス感度調整と、レイヤー7を3秒間有効にする設定を統合 */
+        input-processors = <&zip_xy_scaler 1 2>, <&zip_temp_layer 7 3000>;
     };
 };
 
@@ -59,5 +70,6 @@
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        /* 古い方式のAML設定は、Input Processorと競合するため削除 */
     };
 };
