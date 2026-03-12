@@ -101,7 +101,7 @@
 &trackball {
     status = "okay";
     scroll-layers = <11>;
-    cpi = <800>;
+    // cpi = <800>;
 };
 
 &zip_scroll_snap {
