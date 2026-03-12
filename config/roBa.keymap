@@ -93,12 +93,12 @@
 &trackball_listener {
     compatible = "zmk,input-listener";
 input-processors = 
+　　　　  <&zip_temp_layer 7 10000>;
         <&zip_xy_transform INPUT_TRANSFORM_XY_SWAP>,
         <&zip_mouse_gesture>;
 
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
-        input-processors = <&zip_temp_layer MOUSE 500>;
         process-next;
     };
     scroller {
