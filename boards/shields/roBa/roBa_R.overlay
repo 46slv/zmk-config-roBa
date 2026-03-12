@@ -1,5 +1,4 @@
 #include "roBa.dtsi"
-#include <input/processors.dtsi>
 
 &default_transform {
     col-offset = <6>;
@@ -13,20 +12,6 @@
         , <&xiao_d 7 GPIO_ACTIVE_HIGH>
         , <&gpio0 10 GPIO_ACTIVE_HIGH>
         ;
-};
-
-/* 1. 軸を入れ替えるための「道具（ノード）」を定義 */
-/ {
-    zip_xy_swap: zip_xy_swap {
-        compatible = "zmk,input-processor-xy-swap";
-        #input-processor-cells = <0>;
-    };
-};
-
-/* 2. オートレイヤー（AML）の挙動詳細設定 */
-&zip_temp_layer {
-    excluded-positions = <18 19>; 
-    require-prior-idle-ms = <200>; 
 };
 
 
