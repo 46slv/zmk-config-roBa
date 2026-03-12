@@ -41,8 +41,8 @@ layers:
   - '&td_muhenkan_henkan'
   - Ctrl
   - Alt
-  - {t: 無変換, h: '3'}
-  - {t: 変換, h: '2'}
+  - {t: '&kp_exit_AML INT_MUHENKAN', h: '3'}
+  - {t: '&kp_exit_AML INT_HENKAN', h: '2'}
   - Shift
   '1':
   - {t: ▽, type: trans}
