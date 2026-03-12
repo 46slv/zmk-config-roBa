@@ -21,14 +21,14 @@
         #input-processor-cells = <0>;
     };
 
-    trackball_listener {
-        status = "okay";
-        compatible = "zmk,input-listener";
-        device = <&trackball>;
-        
-        /* 2. 定義したスワップ機能を適用。これによりX(水平)スクロールがY(垂直)に変換されます */
-        input-processors = <&zip_xy_swap>;
-    };
+//    trackball_listener {
+//        status = "okay";
+//        compatible = "zmk,input-listener";
+//        device = <&trackball>;
+//        
+//        /* 2. 定義したスワップ機能を適用。これによりX(水平)スクロールがY(垂直)に変換されます */
+//        input-processors = <&zip_xy_swap>;
+//    };
 };
 
 &pinctrl {
