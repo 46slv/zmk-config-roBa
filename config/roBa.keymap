@@ -245,6 +245,29 @@
             bindings = <&macro_param_1to1 &to MACRO_PLACEHOLDER &macro_param_2to1 &kp MACRO_PLACEHOLDER>;
         };
 
+        macros {
+            // [] を入力して中に戻る
+            mc_sq_brkt: mc_sq_brkt {
+                compatible = "zmk,behavior-macro";
+                #binding-cells = <0>;
+                bindings = <&kp LBKT &kp RBKT &kp LEFT>;
+            };
+
+            // () を入力して中に戻る
+            mc_par_brkt: mc_par_brkt {
+                compatible = "zmk,behavior-macro";
+                #binding-cells = <0>;
+                bindings = <&kp LS(N8) &kp LS(N9) &kp LEFT>;
+            };
+
+            // {} を入力して中に戻る
+            mc_cur_brkt: mc_cur_brkt {
+                compatible = "zmk,behavior-macro";
+                #binding-cells = <0>;
+                bindings = <&kp LS(N7) &kp LS(N0) &kp LEFT>;
+            };
+        };
+
         zoom_in: zoom_in {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
