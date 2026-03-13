@@ -213,19 +213,19 @@
         wr_sq_brkt {
             bindings = <&mc_sq_brkt>;
             key-positions = <6 7>;
-            layers = <0 1>;
+            layers = <0>;
         };
 
         tn_par_brkt {
             bindings = <&mc_par_brkt>;
             key-positions = <18 19>;
-            layers = <0 1>;
+            layers = <0>;
         };
 
         dm_cur_brkt {
             bindings = <&mc_cur_brkt>;
             key-positions = <30 31>;
-            layers = <0 1>;
+            layers = <0>;
         };
 
         ei_tab {
