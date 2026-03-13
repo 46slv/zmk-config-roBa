@@ -97,9 +97,15 @@ parse_config:
     "BACKSPACE": "BS"
     "DELETE": "Del"
     "ENTER": "Enter"
-    "mc_par_brkt":"[]"
-    "mc_par_brkt":"()"
-    "mc_cur_brkt":"{}"
+# --- カスタムマクロ（Combo用表示名） ---
+    "mc_sq_brkt": "「」"
+    "mc_par_brkt": "（）"
+    "mc_cur_brkt": "｛｝"
+    "td_muhenkan_henkan": "無/変"
+    "td_lang_chenge": "かな/英"
+    "td_ZenkakuHankaku": "半/全"
+    "td_copy_paste": "コピー/貼付"
+    "td_alt_f4": "F4/閉"
 
   trans_legend:
     t: "▽"
