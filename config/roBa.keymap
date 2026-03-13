@@ -651,10 +651,10 @@
 
         FUNCTIONS_AND_SYMBOLS {
             bindings = <
-&trans  &kp F1  &kp F2   &kp F3   &td_alt_f4                                 &kp LBKT    &kp RBKT      &kp BSLH      &kp LS(N2)    &td_colon
-&trans  &kp F6  &kp F7   &kp F8   &kp F5      &trans      &kp LS(N4)         &kp LS(N3)  &kp LS(N8)    &kp LS(N9)    &kp LS(N7)    &kp LS(EQUAL)
-&trans  &kp F9  &kp F10  &kp F11  &kp F12     &trans      &kp JP_UNDERSCORE  &kp LS(N6)  &kp LS(RBKT)  &kp LS(BSLH)  &kp LS(LBKT)  &kp LS(INT3)
-&trans  &trans  &trans   &trans   &trans      &trans      &trans             &trans                                                &kp LS(N4)
+&trans  &kp F1  &kp F2   &kp F3   &td_alt_f4                                 &kp LBKT    &kp RBKT      &kp BSLH      &kp LS(N2)         &td_colon
+&trans  &kp F6  &kp F7   &kp F8   &kp F5      &trans      &kp LS(N4)         &kp LS(N3)  &kp LS(N8)    &kp LS(N9)    &kp LESS_THAN      &kp GREATER_THAN
+&trans  &kp F9  &kp F10  &kp F11  &kp F12     &trans      &kp JP_UNDERSCORE  &kp LS(N6)  &kp LS(RBKT)  &kp LS(BSLH)  &kp DOUBLE_QUOTES  &kp SINGLE_QUOTE
+&trans  &trans  &trans   &trans   &trans      &trans      &trans             &trans                                                     &kp LS(N4)
             >;
         };
 
