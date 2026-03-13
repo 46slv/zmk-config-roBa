@@ -27,7 +27,7 @@ layers:
   - X
   - C
   - V
-  - ''
+  - Sft+Ctrl
   - Shift
   - _
   - G
@@ -106,7 +106,7 @@ layers:
   - +
   - ''
   - ''
-  - ''
+  - Gui+Sft+S
   - ←
   - ↓
   - →
@@ -122,7 +122,7 @@ layers:
   - J
   - K
   - L
-  - ''
+  - Alt
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -561,3 +561,9 @@ combos:
   l: ['0', '1']
 - p: [11, 10]
   k: '&kp_exit_AML TAB'
+- p: [30, 31]
+  k: Ctl+C
+  l: ['2']
+- p: [32, 31]
+  k: Ctl+V
+  l: ['2']
