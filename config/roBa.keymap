@@ -297,7 +297,7 @@
         mc_par_brkt: mc_par_brkt {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp LS(N8) &kp LS(N9) &kp LEFT>;
+            bindings = <&kp LS(N3) &kp LS(N8) &kp LEFT>;
         };
 
         // {} を入力して中に戻る
@@ -305,7 +305,7 @@
         mc_cur_brkt: mc_cur_brkt {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp LS(N7) &kp LS(N0) &kp LEFT>;
+            bindings = <&kp LS(N6) &kp LS(RBKT) &kp LEFT>;
         };
 
         thumb_henkan_master: thumb_henkan_master {
