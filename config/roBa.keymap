@@ -177,8 +177,8 @@
             layers = <0 7>;      
             timeout-ms = <80>;
         };
-        combo_pair_brackets {
-            bindings = <&pair_brackets>;
+        combo_pair_bracket {
+            bindings = <&mc_sq_brkt>;
             key-positions = <17 18>;
             layers = <0 1>;
         };
