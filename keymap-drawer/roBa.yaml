@@ -531,7 +531,7 @@ layers:
 combos:
 - p: [11, 12]
   k: SPACE
-  l: ['0']
+  l: ['0', '7']
 - p: [19, 20]
   k: Enter
   l: ['0', '7']
@@ -546,21 +546,18 @@ combos:
   l: ['7']
 - p: [0, 1]
   k: Esc
-  l: ['0']
+  l: ['0', '7']
 - p: [22, 33]
   k: '&caps_word'
   l: ['0']
-- p: [13, 12]
-  k: '&pair_brackets'
-  l: ['0', '1']
 - p: [6, 7]
   k: '&mc_sq_brkt'
   l: ['0', '1']
-- p: [30, 31]
-  k: '&mc_cur_brkt'
-  l: ['0']
 - p: [18, 19]
   k: '&mc_par_brkt'
+  l: ['0', '1']
+- p: [30, 31]
+  k: '&mc_cur_brkt'
   l: ['0', '1']
 - p: [11, 10]
   k: '&kp_exit_AML TAB'
