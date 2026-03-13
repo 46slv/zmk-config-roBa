@@ -344,18 +344,10 @@
     };
 
     behaviors {
-        minis_morph: minis_morph {
-            compatible = "zmk,behavior-mod-morph";
-            bindings = <&kp MINUS>, <&kp UNDER>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT)>;
-        };
-
         mm_minus_tilde: mm_minus_tilde {
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
-            bindings = <&kp MINUS>, <&kp TILDE>;
+            bindings = <&kp MINUS>, <&kp JP_TILDE>;
 
             mods = <(MOD_LSFT|MOD_RSFT)>;
         };
@@ -406,7 +398,7 @@
             compatible = "zmk,behavior-hold-tap";
             label = "LT_HENKAN_TO_0";
             bindings = <&thumb_henkan_master>, <&kp_exit_AML>;
- // ホールドでマクロ、タップで変換+AML解除 [cite: 45]
+            // ホールドでマクロ、タップで変換+AML解除
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             flavor = "balanced";
