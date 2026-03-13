@@ -99,7 +99,7 @@ layers:
   - ↑
   - ''
   - ''
-  - /
+  - KP SLASH
   - KP 4
   - KP 5
   - KP 6
@@ -173,8 +173,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: <, type: held}
-  - '>'
+  - {type: held}
+  - {t: ▽, type: trans}
   - $
   '4':
   - '&to_kp 6 TAB'
