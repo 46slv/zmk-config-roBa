@@ -325,15 +325,14 @@
             mods = <(MOD_LSFT)>;
         };
 
-        tilde_morph: tilde_morph {
+        mm_minus_tilde: mm_minus_tilde {
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
             bindings = <&kp MINUS>, <&kp TILDE>;
-
-            mods = <(MOD_LSFT)>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
         };
 
-        td: tap_dance {
+        td_lang_chenge: td_lang_chenge {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
@@ -466,7 +465,7 @@
             keep-mods = <(MOD_LALT)>;
         };
 
-        mod_morph_exclamation: mod_morph_exclamation {
+        mm_exclamation: mm_exclamation {
             compatible = "zmk,behavior-mod-morph";
             bindings = <&kp COMMA>, <&kp EXCL>;
 
@@ -474,7 +473,7 @@
             mods = <(MOD_LSFT)>;
         };
 
-        mod_morph_question: mod_morph_question {
+        mm_question: mm_question {
             compatible = "zmk,behavior-mod-morph";
             bindings = <&kp PERIOD>, <&kp QUESTION>;
 
@@ -482,7 +481,7 @@
             mods = <(MOD_LSFT)>;
         };
 
-        mod_morph_slash: mod_morph_slash {
+        mm_slash: mm_slash {
             compatible = "zmk,behavior-mod-morph";
             bindings = <&kp SLASH>, <&kp BACKSLASH>;
 
@@ -582,9 +581,9 @@
 
         DEFAULT {
             bindings = <
-&kp Q         &kp L         &kp U    &mod_morph_exclamation  &mod_morph_question                                                          &kp F                             &kp W  &kp R  &kp Y     &kp P
-&kp E         &kp I         &kp A    &kp O                   &tilde_morph         &kp LS(LG(S))       &kp SLASH                           &kp K                             &kp T  &kp N  &lt 7 S   &kp H
-&kp Z         &kp X         &kp C    &kp V                   &kp B                &kp LEFT_SHIFT      &kp JP_UNDERSCORE                   &kp G                             &kp D  &kp M  &lt 11 J  &kp B
+&kp Q         &kp L         &kp U    &mm_exclamation  &mm_question                                                          &kp F                             &kp W  &kp R  &kp Y     &kp P
+&kp E         &kp I         &kp A    &kp O                   &mm_minus_tilde      &kp LS(LG(S))       &kp SLASH                           &kp K                             &kp T  &kp N  &lt 7 S   &kp H
+&kp Z         &kp X         &kp C    &kp V                   &none                &kp LEFT_SHIFT      &kp JP_UNDERSCORE                   &kp G                             &kp D  &kp M  &lt 11 J  &kp B
 &kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td_muhenkan_henkan     &kp LEFT_CONTROL     &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &lt_exit_AML_on_tap 2 INT_HENKAN                          &kp LEFT_SHIFT
             >;
 
