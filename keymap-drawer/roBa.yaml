@@ -542,7 +542,7 @@ combos:
   k: _
   l: ['0', '7']
 - p: [17, 18]
-  k: '&pair_brackets'
+  k: '&mc_sq_brkt'
   l: ['0', '1']
 - p: [18, 19]
   k: '&mkp MCLK'
