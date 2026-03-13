@@ -127,6 +127,7 @@
     mouse-speed-boost {
         layers = <MOUSE>;
         input-processors = <&zip_xy_scaler 5 1>;
+    };
 
     scroller {
         layers = <11>;
