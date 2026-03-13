@@ -97,6 +97,9 @@ parse_config:
     "BACKSPACE": "BS"
     "DELETE": "Del"
     "ENTER": "Enter"
+    "mc_par_brkt":"[]"
+    "mc_par_brkt":"()"
+    "mc_cur_brkt":"{}"
 
   trans_legend:
     t: "▽"
