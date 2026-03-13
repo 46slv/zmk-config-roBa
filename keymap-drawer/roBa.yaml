@@ -153,8 +153,8 @@ layers:
   - '#'
   - (
   - )
-  - ''''
-  - '~'
+  - LESS THAN
+  - GREATER THAN
   - {t: ▽, type: trans}
   - F9
   - F10
@@ -165,8 +165,8 @@ layers:
   - '&'
   - '{'
   - '}'
-  - '`'
-  - '|'
+  - '*'
+  - ':'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -552,13 +552,13 @@ combos:
   l: ['0']
 - p: [6, 7]
   k: '&mc_sq_brkt'
-  l: ['0', '1']
+  l: ['0']
 - p: [18, 19]
   k: '&mc_par_brkt'
-  l: ['0', '1']
+  l: ['0']
 - p: [30, 31]
   k: '&mc_cur_brkt'
-  l: ['0', '1']
+  l: ['0']
 - p: [11, 10]
   k: '&kp_exit_AML TAB'
 - p: [30, 31]
