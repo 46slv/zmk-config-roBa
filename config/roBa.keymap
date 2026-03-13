@@ -244,6 +244,11 @@
             key-positions = <32 31>;
             layers = <2>;
         };
+
+        mj_slash {
+            bindings = <&kp SLASH>;
+            key-positions = <31 32>;
+        };
     };
 
     macros {
@@ -314,7 +319,8 @@
                 <&mo 2>,
                 <&macro_tap>,
                 <&to 0 &exit_AML>;
- // レイヤー0へ強制帰還 + AML解除 
+
+            // レイヤー0へ強制帰還 + AML解除 
         };
 
         zoom_in: zoom_in {
@@ -398,7 +404,9 @@
             compatible = "zmk,behavior-hold-tap";
             label = "LT_HENKAN_TO_0";
             bindings = <&thumb_henkan_master>, <&kp_exit_AML>;
+
             // ホールドでマクロ、タップで変換+AML解除
+
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             flavor = "balanced";
