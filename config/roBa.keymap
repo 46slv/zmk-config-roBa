@@ -122,7 +122,9 @@
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
         input-processors = <&zip_xy_scaler 1 2>, <&zip_temp_layer MOUSE 3000>;
- // 3秒待機
+
+        // 3秒待機
+
         process-next;
     };
 
@@ -213,22 +215,27 @@
             layers = <0 1>;
         };
 
-        sq_brkt {
+        wr_sq_brkt {
             bindings = <&mc_sq_brkt>;
-            key-positions = <5 6>;
+            key-positions = <6 7>;
             layers = <0 1>;
         };
 
-        cur_brkt {
+        dm_cur_brkt {
             bindings = <&mc_cur_brkt>;
-            key-positions = <29 30>;
+            key-positions = <30 31>;
             layers = <0>;
         };
 
-        par_brkt {
+        tn_par_brkt {
             bindings = <&mc_par_brkt>;
-            key-positions = <17 18>;
+            key-positions = <18 19>;
             layers = <0 1>;
+        };
+
+        ei_tab {
+            bindings = <&kp_exit_AML TAB>;
+            key-positions = <11 10>;
         };
     };
 
@@ -271,10 +278,9 @@
             bindings = <&macro_param_1to1 &to MACRO_PLACEHOLDER &macro_param_2to1 &kp MACRO_PLACEHOLDER>;
         };
 
-
         // [] を入力して中に戻る
 
-        mc_sq_brkt: mc_sq_brkt {            
+        mc_sq_brkt: mc_sq_brkt {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&kp LBKT &kp RBKT &kp LEFT>;
