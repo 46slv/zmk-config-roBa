@@ -13,7 +13,7 @@
 #define CTRL_TAB 6              // Ctrl+Tab操作用のレイヤー
 #define MOUSE 7                 // マウスカーソル操作レイヤー
 #define MEDIA 8                 // 音楽再生や音量調整などのメディアレイヤー
-#define EXTRA_FINCTIONS 9       // 追加機能レイヤー（スペルミス：FUNCTIONS）
+#define EXTRA_FUNCTIONS 9       // 追加機能レイヤー（スペルミス：FUNCTIONS）
 #define CONFIGURATION 10        // キーボード自体の設定（ペアリング等）レイヤー
 #define SCROLL 11               // スクロール操作専用レイヤー
 
@@ -141,7 +141,7 @@
     };
 
     disable-scroll-x {
-        layers = <EXTRA_FINCTIONS>;
+        layers = <EXTRA_FUNCTIONS>;
         input-processors = <&wheel_x_scaler 0 1>;
         process-next;
     };
@@ -705,7 +705,7 @@
             >;
         };
 
-        EXTRA_FINCTIONS {
+        EXTRA_FUNCTIONS {
             bindings = <
 &trans  &trans  &trans  &trans                         &trans                      &kp F13  &kp F14  &kp F15  &kp F16  &trans
 &trans  &trans  &trans  &trans                         &trans  &trans      &trans  &kp F17  &kp F18  &kp F19  &kp F20  &trans
