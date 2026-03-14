@@ -117,7 +117,7 @@
 
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
-        input-processors = <&zip_xy_scaler 1 5>, <&zip_temp_layer MOUSE 3000>;
+        input-processors = <&zip_xy_scaler 1 5>, <&zip_temp_layer MOUSE 50000>;
 
         process-next;
     };
