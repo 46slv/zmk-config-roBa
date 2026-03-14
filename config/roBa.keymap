@@ -10,7 +10,8 @@
 #define FUNCTIONS_AND_SYMBOLS 3 // ファンクションキーと記号のレイヤー
 #define MISC 4                  // その他(Miscellaneous)のキーレイヤー
 #define ALT_TAB 5               // Alt+Tab操作用のレイヤー
-#define CTRL_TAB 6              // Ctrl+Tab操作用のレイヤー
+#define CTRL_TAB 6             
+ // Ctrl+Tab操作用のレイヤー
 #define MOUSE 7                 // マウスカーソル操作レイヤー
 #define MEDIA 8                 // 音楽再生や音量調整などのメディアレイヤー
 #define EXTRA_FINCTIONS 9       // 追加機能レイヤー（スペルミス：FUNCTIONS）
@@ -20,7 +21,8 @@
 /* --- システム・外部ファイルの読み込み --- */
 
 #include <zephyr/dt-bindings/input/input-event-codes.h> // 標準的な入力イベント（キーコード）の定義
-#include <dt-bindings/zmk/input_transform.h>           // トラックボールなどの入力反転・回転変換
+#include <dt-bindings/zmk/input_transform.h>           
+// トラックボールなどの入力反転・回転変換
 #include <input/processors.dtsi>                       // 入力データの処理（スムージング等）
 
 // #include <input/processors/report_rate_limit.dtsi>     // 通信の更新レート制限（バッテリー節約等）
@@ -28,7 +30,8 @@
 #include <behaviors/rgbled_widget.dtsi>                // LED表示（ウィジェット）の制御
 #include <layout_shift_kp_override.dtsi>               // シフト時のキー上書き設定
 #include <mouse-gesture.dtsi>                          // マウスジェスチャー機能
-#include <scroll-snap.dtsi>                            // スクロールを段階的に止める機能
+#include <scroll-snap.dtsi>  
+                          // スクロールを段階的に止める機能
 
 /* --- ZMKの基本機能の読み込み --- */
 
@@ -42,12 +45,14 @@
 
 #define JP_DQUOTE       AT                // "
 #define JP_QUOTE        AMPERSAND         // '
-#define JP_AMPERSAND    CARET             // &
+#define JP_AMPERSAND    CARET             // 
+&
 #define JP_EQUAL        UNDER             // =
 #define JP_CARET        EQUAL             // ^
 #define JP_YEN          0x89              // ¥
 #define JP_PLUS         COLON             // +
-#define JP_TILDE        PLUS              // ~
+#define JP_TILDE   
+     PLUS              // ~
 #define JP_PIPE         LS(0x89)          // |
 #define JP_AT           LEFT_BRACKET      // @
 #define JP_COLON        SINGLE_QUOTE      // :
@@ -55,13 +60,15 @@
 #define JP_BACKQUOTE    LEFT_BRACE        // `
 #define JP_UNDERSCORE   LS(0x87)          // _
 #define JP_LBRACKET     RIGHT_BRACKET     // [
-#define JP_RBRACKET     BACKSLASH         // ]
+#define JP_RBRACKET     BACKSLASH      
+   // ]
 #define JP_LPAREN       ASTERISK          // (
 #define JP_RPAREN       LEFT_PARENTHESIS  // )
 #define JP_LBRACE       RIGHT_BRACE       // {
 #define JP_RBRACE       PIPE              // }
 #define JP_KANA         LANGUAGE_1        // かな
-#define JP_EISU         LANGUAGE_2        // 英数
+#define JP_EISU       
+  LANGUAGE_2        // 英数
 #define JP_HANZEN       GRAVE             // 半角/全角
 
 /* --- 以下設定 --- */
@@ -83,13 +90,13 @@
 &tog { /delete-property/ locking; };
 
 &sk { release-after-ms = <300>; };
-
 &sl { release-after-ms = <800>; };
 
 /* --- AML (Auto Mouse Layer) 制御 --- */
 
 &zip_temp_layer {
-    require-prior-idle-ms = <800>; // キー入力から一定時間はAMLを発動しない
+    require-prior-idle-ms = <800>;
+// キー入力から一定時間はAMLを発動しない
     excluded-positions = <
         18 // T (MB1: 左クリック)
         19 // N (MB2: 右クリック)
@@ -114,18 +121,15 @@
 &trackball_listener {
     compatible = "zmk,input-listener";
     input-processors = <&zip_mouse_gesture>;
-
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
         input-processors = <&zip_xy_scaler 1 5>, <&zip_temp_layer MOUSE 50000>;
         process-next;
     };
-
     mouse-speed-boost {
         layers = <MOUSE 11>;
         input-processors = <&zip_xy_scaler 5 1>;
     };
-
     scroller {
         layers = <11>;
         input-processors = <
@@ -135,7 +139,6 @@
             &wheel_x_scaler 3 2
             &zip_scroll_snap
         >;
-
         process-next;
     };
 
@@ -156,10 +159,8 @@
             track-remainders;
         };
     };
-
     combos {
         compatible = "zmk,combos";
-
         ai_space {
             bindings = <&kp SPACE>;
             key-positions = <11 12>;
@@ -167,7 +168,6 @@
             require-prior-idle-ms = <80>;
             timeout-ms = <80>;
         };
-
         ns_enter {
             bindings = <&kp ENTER>;
             key-positions = <19 20>;
@@ -180,14 +180,12 @@
             layers = <0 7>;
             timeout-ms = <80>;
         };
-
         jb_unsc {
             bindings = <&kp JP_UNDERSCORE>;
             key-positions = <32 33>;
             layers = <0 7>;
             timeout-ms = <80>;
         };
-
         middle_click {
             bindings = <&mkp MCLK>;
             key-positions = <18 19>;
@@ -200,7 +198,6 @@
             layers = <0 7>;
             require-prior-idle-ms = <300>;
         };
-
         caps_word {
             bindings = <&caps_word>;
             key-positions = <22 33>;
@@ -258,7 +255,6 @@
             bindings = <&tog_off MOUSE>;
             label = "exit_AML";
         };
-
         kp_exit_AML: kp_exit_AML {
             compatible = "zmk,behavior-macro-one-param";
             wait-ms = <0>;
@@ -267,7 +263,6 @@
             bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &exit_AML>;
             label = "KP_exit_AML";
         };
-
         kp_to: kp_to {
             compatible = "zmk,behavior-macro-two-param";
             wait-ms = <0>;
@@ -275,7 +270,6 @@
             #binding-cells = <2>;
             bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &macro_param_2to1 &to MACRO_PLACEHOLDER>;
         };
-
         to_kp: to_kp {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
@@ -289,7 +283,6 @@
             #binding-cells = <0>;
             bindings = <&kp JP_LBRACKET &kp JP_RBRACKET &kp LEFT>;
         };
-
         // () を入力して中に戻る
 
         mc_par_brkt: mc_par_brkt {
@@ -297,7 +290,6 @@
             #binding-cells = <0>;
             bindings = <&kp JP_LPAREN &kp JP_RPAREN &kp LEFT>;
         };
-
         // {} を入力して中に戻る
 
         mc_cur_brkt: mc_cur_brkt {
@@ -305,7 +297,6 @@
             #binding-cells = <0>;
             bindings = <&kp JP_LBRACE &kp JP_RBRACE &kp LEFT>;
         };
-
         thumb_henkan_master: thumb_henkan_master {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -318,10 +309,8 @@
                 <&mo 2>,
                 <&macro_tap>,
                 <&to 0 &exit_AML>;
-
             // レイヤー0へ強制帰還 + AML解除 
         };
-
         thumb_muhenkan_master: thumb_muhenkan_master {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -333,9 +322,9 @@
                 <&macro_release>,
                 <&mo 3>,
                 <&macro_tap>,
-                <&to 0 &kp_exit_AML>; // 離した時にL0帰還＋AML解除
+                <&to 0 &kp_exit_AML>;
+            // 離した時にL0帰還＋AML解除
         };
-
         zoom_in: zoom_in {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -347,7 +336,6 @@
             #binding-cells = <0>;
             bindings = <&kt_on LCTRL &msc SCRL_DOWN &kt_off LCTRL>;
         };
-
         eager_tap_dance: eager_tap_dance {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
@@ -370,14 +358,12 @@
 
             mods = <(MOD_LSFT|MOD_RSFT)>;
         };
-
         td_lang_chenge: td_lang_chenge {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&kp LANGUAGE_2>, <&kp LANGUAGE_1>;
         };
-
         lt_to_layer_0: lt_to_layer_0 {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -385,7 +371,6 @@
             flavor = "tap-preferred";
             bindings = <&mo>, <&kp>;
         };
-
         tog_on: toggle_layer_on {
             compatible = "zmk,behavior-toggle-layer";
             #binding-cells = <1>;
@@ -399,7 +384,6 @@
             display-name = "Toggle Layer Off";
             toggle-mode = "off";
         };
-
         // ホールドでレイヤー、タップで「キー＋AML解除」
 
         lt_exit_AML_on_tap: lt_exit_AML_on_tap {
@@ -412,7 +396,6 @@
             flavor = "balanced";
             quick-tap-ms = <200>;
         };
-
         lt_henkan_to_0: lt_henkan_to_0 {
             compatible = "zmk,behavior-hold-tap";
             label = "LT_HENKAN_TO_0";
@@ -425,7 +408,6 @@
             flavor = "balanced";
             quick-tap-ms = <200>;
         };
-
         lt_muhenkan_to_0: lt_muhenkan_to_0 {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -434,7 +416,6 @@
             quick-tap-ms = <200>;
             bindings = <&thumb_muhenkan_master>, <&kp_exit_AML>;
         };
-
         // 上記を組み合わせたTap-Dance
 
         td_muhenkan_henkan: td_muhenkan_henkan {
@@ -453,7 +434,6 @@
             display-name = "Key Toggle On";
             toggle-mode = "on";
         };
-
         kt_off: key_toggle_off_only {
             compatible = "zmk,behavior-key-toggle";
             #binding-cells = <1>;
@@ -468,27 +448,23 @@
 
             tapping-term-ms = <250>;
         };
-
         td_q_escape: td_q_escape {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <250>;
             bindings = <&kp Q>, <&kp ESCAPE>;
         };
-
         td_ZenkakuHankaku: td_ZenkakuHankaku {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <250>;
             bindings = <&kp LANGUAGE_2>, <&kp LANGUAGE_1>;
         };
-
         alt_tab: alt_tab {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
             bindings = <&macro_param_1to1 &kt_on MACRO_PLACEHOLDER &macro_param_2to1 &kp MACRO_PLACEHOLDER &macro_param_1to1 &sk MACRO_PLACEHOLDER &macro_param_1to1 &kt_off MACRO_PLACEHOLDER>;
         };
-
         windows_sleep: windows_sleep {
             compatible = "zmk,behavior-macro";
             wait-ms = <200>;
@@ -496,7 +472,6 @@
             #binding-cells = <0>;
             bindings = <&kp LG(X) &kp U &kp S>;
         };
-
         screensot_save: screensot_save {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -513,7 +488,6 @@
                 <&macro_pause_for_release>,
                 <&macro_release>,
                 <&macro_param_2to1 &mkp MACRO_PLACEHOLDER &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
-
             label = "MKP_WITH_MOD";
         };
 
@@ -525,7 +499,6 @@
             mods = <(MOD_LSFT|MOD_LALT)>;
             keep-mods = <(MOD_LALT)>;
         };
-
         mm_exclamation: mm_exclamation {
             compatible = "zmk,behavior-mod-morph";
             bindings = <&kp COMMA>, <&kp EXCL>;
@@ -533,7 +506,6 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
-
         mm_question: mm_question {
             compatible = "zmk,behavior-mod-morph";
             bindings = <&kp PERIOD>, <&kp QUESTION>;
@@ -541,7 +513,6 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
-
         mm_slash: mm_slash {
             compatible = "zmk,behavior-mod-morph";
             bindings = <&kp SLASH>, <&kp BACKSLASH>;
@@ -549,7 +520,6 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
-
         td_alt_f4: td_alt_f4 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
@@ -557,7 +527,6 @@
 
             tapping-term-ms = <250>;
         };
-
         encoder_zoom: encoder_zoom {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
@@ -569,7 +538,6 @@
             #sensor-binding-cells = <0>;
             bindings = <&kp C_VOLUME_DOWN>, <&kp C_VOLUME_UP>;
         };
-
         sl_250: sl_250 {
             compatible = "zmk,behavior-sticky-key";
             bindings = <&mo>;
@@ -584,14 +552,12 @@
 
             tapping-term-ms = <250>;
         };
-
         td_bt_clear_all: td_bt_clear_all {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <250>;
             bindings = <&none>, <&none>, <&bt BT_CLR_ALL>;
         };
-
         td_copy_paste: td_copy_paste {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
@@ -599,7 +565,6 @@
 
             tapping-term-ms = <250>;
         };
-
         td_reset: td_reset {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
@@ -616,7 +581,6 @@
             tapping-term-ms = <500>;
             flavor = "balanced";
         };
-
         td_rclick_close_tab: td_rclick_close_tab {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
@@ -624,7 +588,6 @@
 
             tapping-term-ms = <250>;
         };
-
         td_rclick_close_tab_mouse_gesture: td_rclick_close_tab_mouse_gesture {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
