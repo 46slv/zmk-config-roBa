@@ -334,7 +334,7 @@
                 <&macro_release>,
                 <&mo 3>,
                 <&macro_tap>,
-                <&to 0 &kp_exit_AML>;
+                <&to 0 &exit_AML>;
             // 離した時にL0帰還＋AML解除
         };
 
