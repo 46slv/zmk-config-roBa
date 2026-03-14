@@ -118,7 +118,6 @@
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
         input-processors = <&zip_xy_scaler 1 5>, <&zip_temp_layer MOUSE 50000>;
-
         process-next;
     };
 
@@ -323,6 +322,17 @@
             // レイヤー0へ強制帰還 + AML解除 
         };
 
+        thumb_muhenkan_master: thumb_muhenkan_master {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = 
+                <&macro_tap &exit_AML>,       // 押し始めにマウスレイヤーを解除
+                <&macro_press &mo 3>, 
+                <&macro_pause_for_release>, 
+               <&macro_release &mo 3>, 
+               <&macro_tap &to 0 &kp_exit_AML>; // 離した時にL0帰還＋AML解除
+        };
+
         zoom_in: zoom_in {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -411,6 +421,15 @@
             tapping-term-ms = <200>;
             flavor = "balanced";
             quick-tap-ms = <200>;
+        };
+
+        lt_muhenkan_to_0: lt_muhenkan_to_0 {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <200>;
+            bindings = <&thumb_muhenkan_master>, <&kp_exit_AML>;
         };
 
         // 上記を組み合わせたTap-Dance
@@ -623,7 +642,7 @@
 &kp Q         &kp L         &kp U    &mm_exclamation      &mm_question                                                              &kp F                         &kp W  &kp R  &kp Y     &kp P
 &kp E         &kp I         &kp A    &kp O                &mm_minus_tilde   &kp LS(LG(S))       &kp SLASH                           &kp K                         &kp T  &kp N  &lt 7 S   &kp H
 &kp Z         &kp X         &kp C    &kp V                &kp LS(LCTRL)     &kp LEFT_SHIFT      &kp JP_UNDERSCORE                   &kp G                         &kp D  &kp M  &lt 11 J  &kp B
-&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td_muhenkan_henkan  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &lt_henkan_to_0 2 INT_HENKAN                          &kp LEFT_SHIFT
+&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td_muhenkan_henkan  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_muhenkan_to_0 3 INT_MUHENKAN    &lt_henkan_to_0 2 INT_HENKAN                          &kp LEFT_SHIFT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
