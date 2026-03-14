@@ -166,7 +166,7 @@
             key-positions = <11 12>;
             layers = <0 7>;
             require-prior-idle-ms = <150>;
-            timeout-ms = <120>;
+            timeout-ms = <80>;
         };
 
         ns_enter {
