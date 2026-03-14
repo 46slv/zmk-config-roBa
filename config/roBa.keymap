@@ -323,6 +323,21 @@
             // レイヤー0へ強制帰還 + AML解除 
         };
 
+        thumb_muhenkan_master: thumb_muhenkan_master {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = 
+                <&macro_tap &exit_AML>,       // 押し始めにマウスレイヤーを解除
+                <&macro_press>, 
+                <&mo 3>,
+                <&macro_pause_for_release>, 
+                <&macro_release>,
+                <&mo 3>,
+                <&macro_tap>,
+                <&to 0 &kp_exit_AML>;
+            // 離した時にL0帰還＋AML解除
+        };
+
         zoom_in: zoom_in {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
