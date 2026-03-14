@@ -15,7 +15,7 @@ layers:
   - I
   - A
   - O
-  - '-'
+  - {t: '-', s: '~'}
   - Sft+Gui+S
   - /
   - K
