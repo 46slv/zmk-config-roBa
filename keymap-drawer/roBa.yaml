@@ -41,7 +41,7 @@ layers:
   - '&td_muhenkan_henkan'
   - Ctrl
   - Alt
-  - {t: '&kp_exit_AML INT_MUHENKAN', h: '3'}
+  - '&lt_muhenkan_to_0 3 INT_MUHENKAN'
   - {t: '&kp_exit_AML INT_HENKAN', h: '&thumb_henkan_master 2'}
   - Shift
   '1':
@@ -173,7 +173,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {type: held}
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - $
   '4':
