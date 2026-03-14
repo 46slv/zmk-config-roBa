@@ -111,6 +111,14 @@
     idle-reset-timeout-ms = <175>;
 };
 
+&zip_scroll_x_scaler {
+    compatible = "zmk,input-processor-scaler";
+    #input-processor-cells = <2>;
+    type = <INPUT_EV_REL>;
+    codes = <INPUT_REL_HWHEEL>;
+    track-remainders;
+};
+
 &trackball_listener {
     compatible = "zmk,input-listener";
     input-processors = <&zip_mouse_gesture>;
@@ -133,6 +141,7 @@
             &zip_xy_scaler 8 1
             &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)
             &zip_xy_to_scroll_mapper
+            &zip_scroll_x_scaler 3 2
             &zip_scroll_snap
         >;
 
