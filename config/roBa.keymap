@@ -13,7 +13,7 @@
 #define CTRL_TAB 6              // Ctrl+Tab操作用のレイヤー
 #define MOUSE 7                 // マウスカーソル操作レイヤー
 #define MEDIA 8                 // 音楽再生や音量調整などのメディアレイヤー
-#define EXTRA_FUNCTIONS 9       // 追加機能レイヤー（スペルミス：FUNCTIONS）
+#define EXTRA_FINCTIONS 9       // 追加機能レイヤー（スペルミス：FUNCTIONS）
 #define CONFIGURATION 10        // キーボード自体の設定（ペアリング等）レイヤー
 #define SCROLL 11               // スクロール操作専用レイヤー
 
@@ -141,7 +141,7 @@
     };
 
     disable-scroll-x {
-        layers = <EXTRA_FUNCTIONS>;
+        layers = <EXTRA_FINCTIONS>;
         input-processors = <&wheel_x_scaler 0 1>;
         process-next;
     };
@@ -623,7 +623,7 @@
 &kp Q         &kp L         &kp U    &mm_exclamation      &mm_question                                                              &kp F                         &kp W  &kp R  &kp Y     &kp P
 &kp E         &kp I         &kp A    &kp O                &mm_minus_tilde   &kp LS(LG(S))       &kp SLASH                           &kp K                         &kp T  &kp N  &lt 7 S   &kp H
 &kp Z         &kp X         &kp C    &kp V                &kp LS(LCTRL)     &kp LEFT_SHIFT      &kp JP_UNDERSCORE                   &kp G                         &kp D  &kp M  &lt 11 J  &kp B
-&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td_muhenkan_henkan  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_muhenkan_to_0 3 INT_MUHENKAN  &lt_henkan_to_0 2 INT_HENKAN                            &kp LEFT_SHIFT
+&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td_muhenkan_henkan  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &lt_henkan_to_0 2 INT_HENKAN                          &kp LEFT_SHIFT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
@@ -705,7 +705,7 @@
             >;
         };
 
-        EXTRA_FUNCTIONS {
+        EXTRA_FINCTIONS {
             bindings = <
 &trans  &trans  &trans  &trans                         &trans                      &kp F13  &kp F14  &kp F15  &kp F16  &trans
 &trans  &trans  &trans  &trans                         &trans  &trans      &trans  &kp F17  &kp F18  &kp F19  &kp F20  &trans
