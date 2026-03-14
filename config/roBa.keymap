@@ -443,7 +443,7 @@
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings =
-                <&lt_exit_AML_on_tap 3 INT_MUHENKAN>,
+                <&lt_exit_AML_on_tap 3 INT_MUHENKAN>;
                 <&lt_exit_AML_on_tap 2 INT_HENKAN>;
         };
 
