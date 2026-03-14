@@ -323,6 +323,20 @@
             // レイヤー0へ強制帰還 + AML解除 
         };
 
+        // 1回タップ（変換）用マクロ
+        macro_henkan_tap: macro_henkan_tap {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp INT_HENKAN>, <&exit_AML>;
+        };
+
+        // 2回タップ（英数）用マクロ
+        macro_eisuu_tap: macro_eisuu_tap {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LANGUAGE_2>, <&exit_AML>;
+        };
+
         zoom_in: zoom_in {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -411,6 +425,32 @@
             tapping-term-ms = <200>;
             flavor = "balanced";
             quick-tap-ms = <200>;
+        };
+        // 変換キー用：タップダンス（1回:変換/2回:英数）とホールドマクロを統合
+        lt_td_henkan_to_0: lt_td_henkan_to_0 {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <0>; // 引数なしに変更
+            flavor = "balanced";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <200>;
+            bindings = <&thumb_henkan_master>, <&td_henkan_eisuu>;
+        };
+
+        // 無変換キー用：ホールドマクロと単押し挙動を統合
+        lt_muhenkan_to_0: lt_muhenkan_to_0 {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <0>; // 引数なしに変更
+            flavor = "balanced";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <200>;
+            bindings = <&thumb_muhenkan_master>, <&kp_exit_AML>;
+        };
+
+        td_henkan_eisuu: td_henkan_eisuu {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&macro_henkan_tap>, <&macro_eisuu_tap>;
         };
 
         // 上記を組み合わせたTap-Dance
@@ -623,7 +663,7 @@
 &kp Q         &kp L         &kp U    &mm_exclamation      &mm_question                                                              &kp F                         &kp W  &kp R  &kp Y     &kp P
 &kp E         &kp I         &kp A    &kp O                &mm_minus_tilde   &kp LS(LG(S))       &kp SLASH                           &kp K                         &kp T  &kp N  &lt 7 S   &kp H
 &kp Z         &kp X         &kp C    &kp V                &kp LS(LCTRL)     &kp LEFT_SHIFT      &kp JP_UNDERSCORE                   &kp G                         &kp D  &kp M  &lt 11 J  &kp B
-&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td_muhenkan_henkan  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &lt_henkan_to_0 2 INT_HENKAN                          &kp LEFT_SHIFT
+&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td_muhenkan_henkan  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &lt_td_henkan_to_0                                    &kp LEFT_SHIFT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
