@@ -141,7 +141,7 @@ layers:
   - '@'
   - '['
   - ']'
-  - '"'
+  - ':'
   - '&td_colon'
   - {t: ▽, type: trans}
   - F6
