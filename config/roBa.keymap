@@ -192,7 +192,7 @@
         middle_click {
             bindings = <&mkp MCLK>;
             key-positions = <18 19>;
-            layers = <7>;
+            layers = <7 11>;
         };
 
         ql_escape {
@@ -247,6 +247,12 @@
         mj_slash {
             bindings = <&kp SLASH>;
             key-positions = <31 32>;
+        };
+
+        zx_ctrl_z {
+            bindings = <&kp LC(Z)>;
+            key-positions = <22 23>;
+            layers = <0>;
         };
     };
 
