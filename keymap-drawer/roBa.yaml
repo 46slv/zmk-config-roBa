@@ -93,7 +93,7 @@ layers:
   - KP 7
   - KP 8
   - KP 9
-  - '-'
+  - KP MINUS
   - '&td_alt_f4'
   - ''
   - ↑
@@ -125,13 +125,13 @@ layers:
   - {t: '3', h: toggle}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  - KP EQUAL
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - ''
+  - {t: '4', h: toggle}
   '3':
   - {t: ▽, type: trans}
   - F1
