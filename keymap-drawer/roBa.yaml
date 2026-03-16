@@ -42,7 +42,7 @@ layers:
   - Ctrl
   - Alt
   - {t: '&kp_exit_AML INT_MUHENKAN', h: '3'}
-  - '&lt_td_henkan_to_0'
+  - {t: '&kp_exit_AML INT_HENKAN', h: '&thumb_henkan_master 2'}
   - Shift
   '1':
   - {t: ▽, type: trans}
