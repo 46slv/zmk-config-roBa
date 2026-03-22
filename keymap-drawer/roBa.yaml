@@ -122,7 +122,7 @@ layers:
   - J
   - K
   - L
-  - {t: '3', h: toggle}
+  - '&to_nl 3'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - KP EQUAL
@@ -131,7 +131,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: '4', h: toggle}
+  - '&to_nl 4'
   '3':
   - {t: ▽, type: trans}
   - F1
