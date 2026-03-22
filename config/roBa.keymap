@@ -427,17 +427,17 @@
         };
 
         // 1. タップダンス（単押し、2度押しの定義）
-        td_henkan_eisu_tap: td_henkan_eisu_tap {
+        td_henkan_muhenkan_tap: td_henkan_muhenkan_tap {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
-            tapping-term-ms = <150>;
+            tapping-term-ms = <200>;
             bindings = <&kp_exit_AML INT_HENKAN>, <&kp_exit_AML INT_MUHENKAN>;
         };
 
         td_muhenkan_henkan_tap: td_muhenkan_henkan_tap {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
-            tapping-term-ms = <150>;
+            tapping-term-ms = <200>;
             bindings = <&kp_exit_AML INT_MUHENKAN>, <&kp_exit_AML INT_HENKAN>;
         };
 
@@ -447,7 +447,7 @@
             #binding-cells = <1>;
             wait-ms = <0>;
             tap-ms = <0>;
-            bindings = <&td_henkan_eisu_tap>; 
+            bindings = <&td_henkan_muhenkan_tap>; 
         };
 
         td_muhenkan_wrapper: td_muhenkan_wrapper {
@@ -459,19 +459,19 @@
         };
 
         // 3. ホールド側ラッパー（引数1でレイヤーを起動し、離した時にAML解除）
-        hold_henkan_wrapper: hold_henkan_wrapper {
-            compatible = "zmk,behavior-macro-one-param";
-            #binding-cells = <1>;
+         hold_henkan_wrapper: hold_henkan_wrapper {
+            compatible = "zmk,behavior-macro"; // one-paramをやめてシンプルにする
+            #binding-cells = <0>;             // 引数を受け取らない設定
+            wait-ms = <0>;
+            tap-ms = <0>;
             bindings
-                = <&macro_param_1to1>,
-                  <&macro_press>,
-                  <&mo 0>,
-                  <&macro_pause_for_release>,
-                  <&macro_release>,
-                  <&macro_param_1to1>,
-                  <&mo 0>,
-                  <&macro_tap>,
-                  <&to 0>, <&exit_AML> // 強制帰還
+                = <&macro_press>
+                , <&mo 2>             // 直接レイヤー2を指定
+                , <&macro_pause_for_release>
+                , <&macro_release>
+                , <&mo 2>             // 離した時
+                , <&macro_tap>
+                , <&to 0>, <&exit_AML> // 強制帰還ロジック
                 ;
         };
 
@@ -484,11 +484,10 @@
         // 4. 外殻：Hold-Tap本体
         ht_layer2_henkan: ht_layer2_henkan {
             compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
+            #binding-cells = <0>; // 0にする
             tapping-term-ms = <150>;
             flavor = "tap-unless-interrupted";
-            quick-tap-ms = <0>;
-            bindings = <&hold_henkan_wrapper>, <&td_henkan_wrapper>;
+            bindings = <&hold_henkan_wrapper>, <&td_henkan_eisu_tap>;
         };
 
         ht_layer3_muhenkan: ht_layer3_muhenkan {
@@ -712,7 +711,7 @@
 &kp Q         &kp L         &kp U    &mm_exclamation          &mm_question                                                              &kp F                      &kp W  &kp R  &kp Y     &kp P
 &kp E         &kp I         &kp A    &kp O                    &mm_minus_tilde   &kp LS(LG(S))       &zoom_in                            &kp K                      &kp T  &kp N  &lt 7 S   &kp H
 &kp Z         &kp X         &kp C    &kp V                    &kp LS(LCTRL)     &kp LEFT_SHIFT      &zoom_out                           &kp G                      &kp D  &kp M  &lt 11 J  &kp B
-&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &ht_layer3_muhenkan 3 0  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &ht_layer2_henkan 2 0                              &kp LEFT_SHIFT
+&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &ht_layer3_muhenkan 3 0  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &ht_layer2_henkan                                  &kp LEFT_SHIFT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
