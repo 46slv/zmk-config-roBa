@@ -17,7 +17,7 @@ layers:
   - O
   - {t: '-', s: '~'}
   - Sft+Gui+S
-  - '&zoom_in'
+  - /
   - K
   - T
   - N
@@ -29,7 +29,7 @@ layers:
   - V
   - Sft+Ctrl
   - Shift
-  - '&zoom_out'
+  - _
   - G
   - D
   - M
@@ -38,11 +38,11 @@ layers:
   - Win
   - Win
   - TAB
-  - {t: '&td_muhenkan_wrapper', h: '&hold_muhenkan_wrapper 3'}
+  - '&td_muhenkan_henkan'
   - Ctrl
   - Alt
   - {t: '&kp_exit_AML INT_MUHENKAN', h: '3'}
-  - '&ht_layer2_henkan'
+  - {t: '&kp_exit_AML INT_HENKAN', h: '&thumb_henkan_master 2'}
   - Shift
   '1':
   - {t: ▽, type: trans}
@@ -182,7 +182,7 @@ layers:
   - Gui+TAB
   - Gui+Ctl+→
   - '&td_alt_f4'
-  - A
+  - '&td_alt_f4'
   - Ctl+W
   - Sft+Ctl+T
   - Ctl+T
