@@ -38,11 +38,11 @@ layers:
   - Win
   - Win
   - TAB
-  - '&td_muhenkan_henkan'
+  - '&ht_layer3_muhenkan'
   - Ctrl
   - Alt
   - {t: '&kp_exit_AML INT_MUHENKAN', h: '3'}
-  - '&td_henkan_eisu'
+  - '&ht_layer2_henkan'
   - Shift
   '1':
   - {t: ▽, type: trans}
