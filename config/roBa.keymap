@@ -441,20 +441,22 @@
         };
 
         // --- タップ側：タップダンスを包むマクロ ---
-        td_henkan_wrapper: td_henkan_wrapper {
+        // ホールド側：引数を受け取ってレイヤーを起動するマクロ
+        hold_henkan_wrapper: hold_henkan_wrapper {
             compatible = "zmk,behavior-macro-one-param";
             #binding-cells = <1>;
             wait-ms = <0>;
             tap-ms = <0>;
-            bindings = <&td_henkan_eisu_tap>;
+            bindings = <&macro_param_1to1>, <&mo 0>; // 第1引数を使ってmoを起動
         };
 
-        td_muhenkan_wrapper: td_muhenkan_wrapper {
+        // 左手用（レイヤー3）も同様に wrapper を作成するか、直接 &mo を使う
+        hold_muhenkan_wrapper: hold_muhenkan_wrapper {
             compatible = "zmk,behavior-macro-one-param";
             #binding-cells = <1>;
             wait-ms = <0>;
             tap-ms = <0>;
-            bindings = <&td_muhenkan_henkan_tap>;
+            bindings = <&macro_param_1to1>, <&mo 0>;
         };
 
         // --- ホールド側：既存の thumb_henkan_master を包むマクロ ---
