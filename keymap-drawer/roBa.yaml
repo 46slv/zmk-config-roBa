@@ -42,7 +42,7 @@ layers:
   - Ctrl
   - Alt
   - {t: '&kp_exit_AML INT_MUHENKAN', h: '3'}
-  - {t: '&td_henkan_wrapper', h: '&hold_henkan_wrapper 2'}
+  - '&ht_layer2_henkan'
   - Shift
   '1':
   - {t: ▽, type: trans}
