@@ -330,6 +330,23 @@
             // レイヤー0へ強制帰還 + AML解除 
         };
 
+        mo3_forced_reset: mo3_forced_reset {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&macro_tap>,
+                <&exit_AML>,
+                <&macro_press>,
+                <&mo 3>,
+                <&macro_pause_for_release>,
+                <&macro_release>,
+                <&mo 3>,
+                <&macro_tap>,
+                <&to 0 &exit_AML>;
+
+            // レイヤー0へ強制帰還 + AML解除 
+        };
+
         zoom_in: zoom_in {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
