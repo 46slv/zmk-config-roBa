@@ -434,12 +434,12 @@
             wait-ms = <1>; 
             tap-ms = <1>;
             bindings =
-                <&macro_tap>,
-                <&kp F24>,
+                // <&macro_tap>,
+                // <&kp F24>,
                 <&macro_tap>,
                 <&exit_AML>,
                 <&macro_press>,
-                <&mo 2>,
+                <&to 2>,
                 <&macro_pause_for_release>,
                 <&macro_release>,
                 <&mo 2>,
