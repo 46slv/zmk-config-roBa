@@ -38,7 +38,7 @@ layers:
   - Win
   - Win
   - TAB
-  - '&ht_layer3_muhenkan'
+  - '&td_muhenkan_henkan'
   - Ctrl
   - Alt
   - {t: '&kp_exit_AML INT_MUHENKAN', h: '3'}
