@@ -38,11 +38,11 @@ layers:
   - Win
   - Win
   - TAB
-  - '&td_muhenkan_henkan'
+  - {t: '&td_muhenkan_wrapper', h: '3'}
   - Ctrl
   - Alt
   - {t: '&kp_exit_AML INT_MUHENKAN', h: '3'}
-  - {t: '&td_muhenkan_wrapper', h: '3'}
+  - {t: '&td_henkan_wrapper', h: '&hold_henkan_wrapper 2'}
   - Shift
   '1':
   - {t: ▽, type: trans}
@@ -170,10 +170,10 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
   - {type: held}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - $
   '4':
