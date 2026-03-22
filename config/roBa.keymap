@@ -459,14 +459,6 @@
             bindings = <&macro_param_1to1>, <&mo 0>;
         };
 
-        // --- ホールド側：既存の thumb_henkan_master を包むマクロ ---
-        hold_henkan_wrapper: hold_henkan_wrapper {
-            compatible = "zmk,behavior-macro-one-param";
-            #binding-cells = <1>;
-            wait-ms = <0>;
-            tap-ms = <0>;
-            bindings = <&thumb_henkan_master>; // あなたのマクロをそのまま呼び出し
-        };
 
         // --- 外殻：Hold-Tap本体 ---
         ht_layer2_henkan: ht_layer2_henkan {
