@@ -401,9 +401,9 @@
             label = "LT_EXIT_AML_ON_TAP";
             bindings = <&mo>, <&kp_exit_AML>;
             #binding-cells = <2>;
-            tapping-term-ms = <170>; // 200から170へ。速い打鍵に合わせる
-            flavor = "tap-unless-interrupted"; // 次のキーが押されたら即座にホールド判定
-            quick-tap-ms = <150>; 
+            tapping-term-ms = <120>; // 150からさらに短縮。0.12秒でホールド確定
+            flavor = "tap-unless-interrupted"; // ★最重要。次のキーが押された瞬間に「待ち」をキャンセルしてレイヤー発動
+            quick-tap-ms = <0>; // 連打によるホールド阻害を完全に排除
         };
 
         lt_henkan_to_0: lt_henkan_to_0 {
@@ -411,16 +411,16 @@
             label = "LT_HENKAN_TO_0";
             bindings = <&thumb_henkan_master>, <&kp_exit_AML>;
             #binding-cells = <2>;
-            tapping-term-ms = <150>; // 100は短すぎて誤爆の恐れがあるため150付近が安定
-            flavor = "hold-preferred"; // マクロ呼び出しを優先
-            quick-tap-ms = <0>; // このキーでの連打ホールド抑止は不要
+            tapping-term-ms = <110>; // 親指マクロはさらに速く反応させる
+            flavor = "hold-preferred"; // 迷ったら即座にマクロ（レイヤー2）を実行
+            quick-tap-ms = <0>;
         };
 
         td_muhenkan_henkan: td_muhenkan_henkan {
             compatible = "zmk,behavior-tap-dance";
             label = "TD_MUHENKAN_HENKAN";
             #binding-cells = <0>;
-            tapping-term-ms = <150>; // 200から150へ。2回タップの許容時間をタイトに
+            tapping-term-ms = <110>; // 200→110ms。超高速な2連打以外は即座に1回押しとして処理
             bindings =
                 <&lt_exit_AML_on_tap 3 INT_MUHENKAN>,
                 <&lt_exit_AML_on_tap 2 INT_HENKAN>;
