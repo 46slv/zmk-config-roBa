@@ -26,6 +26,38 @@
 |  |  |
 |  |  |
 
+## レイヤー2を経由してさらにレイヤーに潜る。
+
+ホールド、リリース時にそれぞれ、
+1．レイヤー2へ移動
+2．レイヤー0へ移動
+を設定する。
+リリース時にレイヤー0へ移動することで、
+レイヤー2の中でトグルレイヤーを実行してさらにレイヤーを潜ることができる。
+
+
+        mo2_with_forced_exit: mo2_with_forced_exit 
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <1>; 
+            tap-ms = <1>;
+            bindings =
+                <&macro_tap>,
+                <&exit_AML>,
+                <&macro_press>,
+                <&mo 2>,
+                <&macro_pause_for_release>,
+                <&macro_release>,
+                <&mo 2>,
+                <&macro_tap>,
+                <&to 0 &exit_AML>;
+
+            // レイヤー0へ強制帰還 + AML解除 
+        };
+
+また、一応AMLから脱出も仕込む。
+これによって、レイヤーを切り替える＝抑えたまま のキーを1つのままあらゆるレイヤーに移動できる。
+
 
 ## keymap drawer
 keymap drawerの描画を、
