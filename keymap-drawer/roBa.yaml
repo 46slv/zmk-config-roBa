@@ -142,7 +142,7 @@ layers:
   - '['
   - ']'
   - ':'
-  - '&td_colon'
+  - SEMICOLON
   - {t: ▽, type: trans}
   - F6
   - F7
