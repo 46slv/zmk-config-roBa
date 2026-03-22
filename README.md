@@ -10,14 +10,23 @@
 
 | キー | 入力 |
 |---------|-------|
+
 | 右手側 |        |
 | ns | enter |
 | sh | backspace |
 | lb | _(underscore) |
+| wr | [] |
+| tn | () |
+| dm | {} |
+|  |  |
 | 左手側 |        |
 | ia | space |
 | ql | escape |
 |  | _(underscore) |
+|  |  |
+|  |  |
+|  |  |
+
 
 ## keymap drawer
 keymap drawerの描画を、
