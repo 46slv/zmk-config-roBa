@@ -426,7 +426,7 @@
                 <&macro_param_1to1 &mo MACRO_PLACEHOLDER>, // 指を離した時
                 <&macro_tap>,
                 <&to 0>,
-                <&exit_AML>,    // ★ここで全解除して帰還
+                <&exit_AML>;    // ★ここで全解除して帰還
         };
 
         mo2_with_forced_exit: mo2_with_forced_exit {
@@ -445,7 +445,7 @@
                 <&macro_release>,
                 <&mo 2>,
                 <&macro_tap>,
-                <&to 0 &exit_AML>;
+                 <&to 0 &exit_AML>;
 
             // レイヤー0へ強制帰還 + AML解除 
         };
@@ -781,7 +781,7 @@
 
         FUNCTIONS_AND_SYMBOLS {
             bindings = <
-&trans  &kp F1  &kp F2   &kp F3   &td_alt_f4                                 &kp LBKT    &kp RBKT      &kp BSLH      &kp JP_COLON   &td_colon
+&trans  &kp F1  &kp F2   &kp F3   &td_alt_f4                                 &kp LBKT    &kp RBKT      &kp BSLH      &kp JP_COLON   &kp SEMICOLON
 &trans  &kp F6  &kp F7   &kp F8   &kp F5      &trans      &kp LS(N4)         &kp LS(N3)  &kp LS(N8)    &kp LS(N9)    &kp LESS_THAN  &kp GREATER_THAN
 &trans  &kp F9  &kp F10  &kp F11  &kp F12     &trans      &kp JP_UNDERSCORE  &kp LS(N6)  &kp LS(RBKT)  &kp LS(BSLH)  &kp JP_DQUOTE  &kp JP_QUOTE
 &trans  &trans  &trans   &trans   &trans      &trans      &trans             &trans                                                 &kp LS(N4)
