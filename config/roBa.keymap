@@ -674,7 +674,7 @@
 &kp Q         &kp L         &kp U    &mm_exclamation      &mm_question                                                              &kp F               &kp W  &kp R  &kp Y     &kp P
 &kp E         &kp I         &kp A    &kp O                &mm_minus_tilde   &kp LS(LG(S))       &kp SLASH                           &kp K               &kp T  &kp N  &lt 7 S   &kp H
 &kp Z         &kp X         &kp C    &kp V                &kp LS(LCTRL)     &kp LEFT_SHIFT      &kp JP_UNDERSCORE                   &kp G               &kp D  &kp M  &lt 11 J  &kp B
-&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &ht_layer3_muhenkan  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  ht_layer2_henkan                            &kp LEFT_SHIFT
+&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &ht_layer3_muhenkan  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &ht_layer2_henkan                           &kp LEFT_SHIFT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
