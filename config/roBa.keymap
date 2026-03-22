@@ -445,17 +445,18 @@
         ht_layer2_henkan: ht_layer2_henkan {
             compatible = "zmk,behavior-hold-tap";
             label = "HT_LAYER2_HENKAN";
-            #binding-cells = <0>;
+            #binding-cells = <2>;
             tapping-term-ms = <150>;
             flavor = "tap-unless-interrupted"; // キーが重なった瞬間に即レイヤー起動
             quick-tap-ms = <0>;
             bindings = <&thumb_henkan_master>, <&td_henkan_eisu_tap>;
         };
 
+
         ht_layer3_muhenkan: ht_layer3_muhenkan {
             compatible = "zmk,behavior-hold-tap";
             label = "HT_LAYER3_MUHENKAN";
-            #binding-cells = <0>;
+            #binding-cells = <2>;
             tapping-term-ms = <150>;
             flavor = "tap-unless-interrupted";
             quick-tap-ms = <0>;
