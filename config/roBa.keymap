@@ -414,8 +414,9 @@
             #binding-cells = <1>;
             wait-ms = <0>;
             tap-ms = <0>;
-            bindings
-                = <&macro_tap>, <&exit_AML>             // 入る前に掃除
+            bindings = 
+                <&macro_tap>,
+                <&exit_AML>,
                 <&macro_tap>,
                 <&exit_AML>,
                 <&macro_press>,
