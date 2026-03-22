@@ -191,12 +191,12 @@ layers:
   - Gui+Sft+←
   - Gui+↑
   - Gui+Sft+→
-  - F5
+  - A
   - {t: ▽, type: trans}
   - VOLUME UP
   - F5
   - Ctl+PAGE UP
-  - ↑
+  - A
   - Ctl+PAGE DOWN
   - '&to_kp 7 TAB'
   - Alt+Ctl+Gui+↓
