@@ -22,7 +22,7 @@
 | 左手側 |        |
 | ia | space |
 | ql | escape |
-|  | _(underscore) |
+| zx | Ctrl Z |
 |  |  |
 |  |  |
 |  |  |
