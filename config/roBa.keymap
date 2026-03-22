@@ -67,14 +67,14 @@
 /* --- 以下設定 --- */
 
 &mt {
-    tapping-term-ms = <200>;
-    quick-tap-ms = <250>;
+    tapping-term-ms = <175>; // 200から175へ（少し速く）
+    quick-tap-ms = <200>;    // 250から200へ（連打判定を少し厳しく）
     flavor = "balanced";
 };
 
 &lt {
-    tapping-term-ms = <200>;
-    quick-tap-ms = <250>;
+    tapping-term-ms = <175>; // 同上
+    quick-tap-ms = <200>;
     flavor = "balanced";
 };
 
@@ -400,33 +400,27 @@
             compatible = "zmk,behavior-hold-tap";
             label = "LT_EXIT_AML_ON_TAP";
             bindings = <&mo>, <&kp_exit_AML>;
-
             #binding-cells = <2>;
-            tapping-term-ms = <200>;
-            flavor = "balanced";
-            quick-tap-ms = <200>;
+            tapping-term-ms = <170>; // 200から170へ。速い打鍵に合わせる
+            flavor = "tap-unless-interrupted"; // 次のキーが押されたら即座にホールド判定
+            quick-tap-ms = <150>; 
         };
 
         lt_henkan_to_0: lt_henkan_to_0 {
             compatible = "zmk,behavior-hold-tap";
             label = "LT_HENKAN_TO_0";
             bindings = <&thumb_henkan_master>, <&kp_exit_AML>;
-
-            // ホールドでマクロ、タップで変換+AML解除
-
             #binding-cells = <2>;
-            tapping-term-ms = <200>;
-            flavor = "balanced";
-            quick-tap-ms = <200>;
+            tapping-term-ms = <150>; // 100は短すぎて誤爆の恐れがあるため150付近が安定
+            flavor = "hold-preferred"; // マクロ呼び出しを優先
+            quick-tap-ms = <0>; // このキーでの連打ホールド抑止は不要
         };
-
-        // 上記を組み合わせたTap-Dance
 
         td_muhenkan_henkan: td_muhenkan_henkan {
             compatible = "zmk,behavior-tap-dance";
             label = "TD_MUHENKAN_HENKAN";
             #binding-cells = <0>;
-            tapping-term-ms = <200>;
+            tapping-term-ms = <150>; // 200から150へ。2回タップの許容時間をタイトに
             bindings =
                 <&lt_exit_AML_on_tap 3 INT_MUHENKAN>,
                 <&lt_exit_AML_on_tap 2 INT_HENKAN>;
