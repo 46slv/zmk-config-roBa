@@ -17,7 +17,7 @@ layers:
   - O
   - {t: '-', s: '~'}
   - Sft+Gui+S
-  - /
+  - '&zoom_in'
   - K
   - T
   - N
@@ -29,7 +29,7 @@ layers:
   - V
   - Sft+Ctrl
   - Shift
-  - _
+  - '&zoom_out'
   - G
   - D
   - M
@@ -42,7 +42,7 @@ layers:
   - Ctrl
   - Alt
   - {t: '&kp_exit_AML INT_MUHENKAN', h: '3'}
-  - {t: '&kp_exit_AML INT_HENKAN', h: '&thumb_henkan_master 2'}
+  - {t: '&kp_exit_AML INT_HENKAN', h: '&mo2_with_forced_exit 2'}
   - Shift
   '1':
   - {t: ▽, type: trans}
