@@ -17,7 +17,7 @@ layers:
   - O
   - {t: '-', s: '~'}
   - Sft+Gui+S
-  - /
+  - '&zoom_in'
   - K
   - T
   - N
@@ -29,7 +29,7 @@ layers:
   - V
   - Sft+Ctrl
   - Shift
-  - _
+  - '&zoom_out'
   - G
   - D
   - M
@@ -182,7 +182,7 @@ layers:
   - Gui+TAB
   - Gui+Ctl+→
   - '&td_alt_f4'
-  - '&td_alt_f4'
+  - A
   - Ctl+W
   - Sft+Ctl+T
   - Ctl+T
