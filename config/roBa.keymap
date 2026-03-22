@@ -313,6 +313,33 @@
             bindings = <&kp JP_LBRACE &kp JP_RBRACE &kp LEFT>;
         };
 
+        zoom_in: zoom_in {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kt_on LCTRL &msc SCRL_UP &kt_off LCTRL>;
+        };
+
+        zoom_out: zoom_out {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kt_on LCTRL &msc SCRL_DOWN &kt_off LCTRL>;
+        };
+
+        eager_tap_dance: eager_tap_dance {
+            compatible = "zmk,behavior-macro-two-param";
+            #binding-cells = <2>;
+            bindings =
+                <&macro_press>,
+                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
+                <&macro_pause_for_release>,
+                <&macro_release>,
+                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
+                <&macro_tap>,
+                <&macro_param_2to1 &sl_250 MACRO_PLACEHOLDER>;
+        };
+
+       // ホールド時にレイヤーを移動し、ホールド解除時に&to 0を強制
+
         mo2_with_forced_exit: mo2_with_forced_exit {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -347,31 +374,6 @@
                 <&to 0 &exit_AML>;
 
             // レイヤー0へ強制帰還 + AML解除 
-        };
-
-        zoom_in: zoom_in {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kt_on LCTRL &msc SCRL_UP &kt_off LCTRL>;
-        };
-
-        zoom_out: zoom_out {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kt_on LCTRL &msc SCRL_DOWN &kt_off LCTRL>;
-        };
-
-        eager_tap_dance: eager_tap_dance {
-            compatible = "zmk,behavior-macro-two-param";
-            #binding-cells = <2>;
-            bindings =
-                <&macro_press>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_pause_for_release>,
-                <&macro_release>,
-                <&macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_tap>,
-                <&macro_param_2to1 &sl_250 MACRO_PLACEHOLDER>;
         };
     };
 
