@@ -428,6 +428,20 @@
                 <&lt_exit_AML_on_tap 2 INT_HENKAN>;
         };
 
+        td_henkan_eisu_tap: td_henkan_eisu_tap {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <150>;
+            bindings = <&kp_exit_AML INT_HENKAN>, <&kp_exit_AML INT_MUHENKAN>;
+        };
+
+        td_muhenkan_henkan_tap: td_muhenkan_henkan_tap {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <150>;
+            bindings = <&kp_exit_AML INT_MUHENKAN>, <&kp_exit_AML INT_HENKAN>;
+        };
+
         td_henkan_wrapper: td_henkan_wrapper {
             compatible = "zmk,behavior-macro";
             #binding-cells = <1>;
