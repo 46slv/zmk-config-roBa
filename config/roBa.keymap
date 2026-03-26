@@ -178,22 +178,6 @@
             track-remainders;
         };
 
-    pointing_accel: pointing_accel {
-        compatible = "zmk,input-processor-acceleration";
-        #input-processor-cells = <0>;
-    
-        // 指数関数的な加速の度合い（1000 = 加速なし, 数値が大きいほど加速が強い）
-        // 1200〜1500程度にすると、速く動かした時だけ大きく飛び、ゆっくりだと粘ります。
-        acceleration-exponent = <1200>; 
-
-        // 低速時の基本速度。0.5f（500/1000）に設定することで、
-        // 1ピクセル単位の移動がさらに精密になります。
-        scale-multiplier = <500>; 
-
-        // 計算の分母。上記500と合わせて「0.5倍」を意味します。
-       scale-divisor = <1000>;
-       };
-
     };
 
     combos {
