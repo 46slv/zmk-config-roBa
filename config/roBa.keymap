@@ -134,7 +134,7 @@
         layers = <DEFAULT MOUSE>;
         input-processors = 
             <&zip_x_scaler 1 5>,
-            <&zip_y_scaler 1 7>,
+            <&zip_y_scaler 3 20>,
             <&pointer_accel>,
             <&zip_temp_layer MOUSE 50000>;
         process-next;
@@ -149,7 +149,8 @@
         layers = <11>;
         input-processors = 
             <&zip_x_scaler 15 1>,
-            <&zip_y_scaler 30 1>,
+            <&zip_y_scaler 45 1>,
+            <&pointer_accel>,
             <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
             <&zip_xy_to_scroll_mapper>,
             <&zip_scroll_snap>;
