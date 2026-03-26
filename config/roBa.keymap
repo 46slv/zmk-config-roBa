@@ -150,7 +150,7 @@
             &zip_xy_scaler 15 1
             &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)
             &zip_xy_to_scroll_mapper
-            &wheel_x_scaler 3 2
+            &wheel_x_scaler 20 1
             &zip_scroll_snap
         >;
 
