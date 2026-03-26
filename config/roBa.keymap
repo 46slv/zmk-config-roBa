@@ -138,7 +138,7 @@
         layers = <DEFAULT MOUSE>;
         input-processors = 
             <&zip_xy_scaler 1 5>, 
-            <&pointing_accel 1000>, // ★ここに追加（引数1000は一時的な感度倍率）
+            <&pointing_accel>, // ★ここに追加（引数1000は一時的な感度倍率）
             <&zip_temp_layer MOUSE 50000>;
         process-next;
     };
