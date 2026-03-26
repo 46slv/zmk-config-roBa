@@ -111,9 +111,27 @@
     idle-reset-timeout-ms = <175>;
 };
 
+&pointer_accel {
+    input-type = <INPUT_EV_REL>;
+    // 0.5x：ゆっくり動かしたときは通常の半分まで速度を落とし、1px単位の操作を可能にする
+    min-factor = <500>;
+    // 1.5x：速く動かしても1.5倍まで。急な飛び跳ねを抑え、安定性を重視
+    max-factor = <1500>;
+    // 2000：加速が始まる閾値を高くし、微細な手の震えで加速しないようにする
+    speed-threshold = <2000>;
+    speed-max = <7000>;
+    // 1：リニアな加速（直感的な操作感）
+    acceleration-exponent = <1>;
+    // 端数の移動量を保持し、超低速時のカクつきを抑える
+    track-remainders;
+};
+
+
 &trackball_listener {
     compatible = "zmk,input-listener";
     input-processors = <&zip_mouse_gesture>;
+    input-processors = <&pointer_accel>;
+
 
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
@@ -173,7 +191,7 @@
 
         // 計算の分母。上記500と合わせて「0.5倍」を意味します。
        scale-divisor = <1000>;
-    };
+       };
 
     };
 
