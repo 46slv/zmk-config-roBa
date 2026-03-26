@@ -180,7 +180,7 @@
 
     pointing_accel: pointing_accel {
         compatible = "zmk,input-processor-acceleration";
-        #input-processor-cells = <1>;
+        #input-processor-cells = <0>;
     
         // 指数関数的な加速の度合い（1000 = 加速なし, 数値が大きいほど加速が強い）
         // 1200〜1500程度にすると、速く動かした時だけ大きく飛び、ゆっくりだと粘ります。
