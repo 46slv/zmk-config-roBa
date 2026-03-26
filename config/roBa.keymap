@@ -22,6 +22,7 @@
 #include <zephyr/dt-bindings/input/input-event-codes.h> // 標準的な入力イベント（キーコード）の定義
 #include <dt-bindings/zmk/input_transform.h>           // トラックボールなどの入力反転・回転変換
 #include <input/processors.dtsi>                       // 入力データの処理（スムージング等）
+#include <behaviors/input_gestures_accel.dtsi>
 
 // #include <input/processors/report_rate_limit.dtsi>     // 通信の更新レート制限（バッテリー節約等）
 
