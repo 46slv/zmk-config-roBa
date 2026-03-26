@@ -114,12 +114,12 @@
 
 &pointer_accel {
     input-type = <INPUT_EV_REL>;
-    min-factor = <310>;
-    max-factor = <2770>;
-    speed-threshold = <920>;
-    speed-max = <1930>;
-    acceleration-exponent = <5>;
-    track-remainders; 
+    min-factor = <800>;        // Slight slowdown for precision
+    max-factor = <3000>;       // Good acceleration for large movements
+    speed-threshold = <1200>;  // Balanced acceleration point
+    speed-max = <6000>;
+    acceleration-exponent = <2>; // Smooth quadratic curve
+    track-remainders;         // Track fractional movements
 };
 
 
