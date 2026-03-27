@@ -97,7 +97,9 @@
     >;
 };
 
-&mkp_input_listener { input-processors = <&zip_temp_layer MOUSE 500>; };
+&mkp_input_listener {
+    input-processors = <&zip_temp_layer MOUSE 500>;
+};
 
 &trackball {
     status = "okay";
@@ -115,10 +117,10 @@
 &pointer_accel {
     input-type = <INPUT_EV_REL>;
     track-remainders;
-    min-factor = <700>;
+    min-factor = <900>;
     max-factor = <2600>;
     speed-threshold = <300>;
-    speed-max = <2300>;
+    speed-max = <2500>;
     acceleration-exponent = <2>;
 };
 
