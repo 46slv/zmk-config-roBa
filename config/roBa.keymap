@@ -115,8 +115,8 @@
 &pointer_accel {
     input-type = <INPUT_EV_REL>;
     track-remainders;
-    min-factor = <1000>;
-    max-factor = <3000>;
+    min-factor = <700>;
+    max-factor = <2500>;
     speed-threshold = <300>;
     speed-max = <2000>;
     acceleration-exponent = <2>;
@@ -130,8 +130,8 @@
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
         input-processors = 
-            <&zip_x_scaler 4 10>,
-            <&zip_y_scaler 5 10>,
+            <&zip_x_scaler 2 10>,
+            <&zip_y_scaler 3 10>,
             <&pointer_accel>,
             <&zip_temp_layer MOUSE 50000>;
         process-next;
