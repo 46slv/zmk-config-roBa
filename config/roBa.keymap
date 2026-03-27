@@ -117,11 +117,11 @@
 &pointer_accel {
     input-type = <INPUT_EV_REL>;
     track-remainders;
-    min-factor = <900>;
+    min-factor = <1000>;
     max-factor = <2600>;
-    speed-threshold = <300>;
-    speed-max = <2500>;
-    acceleration-exponent = <2>;
+    speed-threshold = <400>;
+    speed-max = <2800>;
+    acceleration-exponent = <3>;
 };
 
 &trackball_listener {
