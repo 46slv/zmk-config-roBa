@@ -124,22 +124,11 @@
     acceleration-exponent = <3>;
 };
 
-&scroller_accel {
-    input-type = <INPUT_EV_REL>;
-    track-remainders;
-    min-factor = <1000>;
-    max-factor = <3500>;
-    speed-threshold = <100>;
-    speed-max = <3500>;
-    acceleration-exponent = <2>;
-};
-
 &trackball_listener {
     compatible = "zmk,input-listener";
     input-processors = 
             <&zip_mouse_gesture>,
             <&pointer_accel>,
-            <&scroller_accel>;
 
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
@@ -156,7 +145,7 @@
         input-processors = 
             <&zip_x_scaler 500 1>,
             <&zip_y_scaler 200 1>,
-            <&scroller_accel>,
+            <&pointer_accel>,
             <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
             <&zip_xy_to_scroll_mapper>,
             <&zip_scroll_snap>;
