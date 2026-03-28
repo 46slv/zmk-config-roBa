@@ -136,8 +136,10 @@
 
 &trackball_listener {
     compatible = "zmk,input-listener";
-    input-processors = <&zip_mouse_gesture>;
-    input-processors = <&pointer_accel>;
+    input-processors = 
+            <&zip_mouse_gesture>,
+            <&pointer_accel>,
+            <&scroller_accel>;
 
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
