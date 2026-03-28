@@ -1,7 +1,6 @@
 /* --- マウス・ポインティングの設定 --- */
 
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 1000 // スクロールの移動量を定義（数値が大きいほど速い）
-#define ZMK_MOUSE_DEFAULT_SCRL_VAL 100
 
 /* --- レイヤー番号の定義（名前を付けて管理しやすくする） --- */
 
@@ -120,16 +119,15 @@
     track-remainders;
     min-factor = <1000>;
     max-factor = <2000>;
-    speed-threshold = <100>;
+    speed-threshold = <150>;
     speed-max = <2700>;
     acceleration-exponent = <3>;
 };
 
 &trackball_listener {
     compatible = "zmk,input-listener";
-    input-processors = 
-            <&zip_mouse_gesture>,
-            <&pointer_accel>,
+    input-processors = <&zip_mouse_gesture>;
+    input-processors = <&pointer_accel>;
 
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
@@ -145,7 +143,7 @@
         layers = <11>;
         input-processors = 
             <&zip_x_scaler 500 1>,
-            <&zip_y_scaler 200 1>,
+            <&zip_y_scaler 100 1>,
             <&pointer_accel>,
             <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
             <&zip_xy_to_scroll_mapper>,
@@ -692,14 +690,6 @@
             bindings = <&kp C_VOLUME_DOWN>, <&kp C_VOLUME_UP>;
         };
 
-        scroll_up_down: behavior_sensor_rotate_mouse_wheel_up_down {
-            compatible = "zmk,behavior-sensor-rotate";
-            #sensor-binding-cells = <0>;
-            bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
-            // 追加: スクロールのタップ時間を設定 (20ms)
-            tap-ms = <20>;
-        };
-
         sl_250: sl_250 {
             compatible = "zmk,behavior-sticky-key";
             bindings = <&mo>;
@@ -882,9 +872,6 @@
 &kp LEFT_GUI  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
 &trans        &trans          &trans          &trans           &trans  &trans      &trans  &trans                          &trans
             >;
-
-            sensor-bindings = <&scroll_up_down>;
-
         };
     };
 };
