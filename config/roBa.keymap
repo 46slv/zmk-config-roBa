@@ -121,7 +121,7 @@
     min-factor = <1000>;
     max-factor = <2700>;
     speed-threshold = <100>;
-    speed-max = <3000>;
+    speed-max = <2500>;
     acceleration-exponent = <3>;
 };
 
