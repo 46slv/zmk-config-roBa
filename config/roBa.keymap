@@ -774,7 +774,7 @@
 &kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td_muhenkan_henkan  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &lt_henkan_to_0 2 INT_HENKAN                          &kp LEFT_SHIFT
             >;
 
-            sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
+            sensor-bindings = <&scroll_up_down>;
         };
 
         LANG1_EAGER_TAP_DANCE {
@@ -794,7 +794,8 @@
 &trans                      &trans           &kp KP_EQUAL     &trans           &trans        &trans      &trans  &trans                                                          &to_nl 4
             >;
 
-            sensor-bindings = <&inc_dec_kp LC(C_AC_ZOOM_IN) LC(C_AC_ZOOM_OUT)>;
+            sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
+            
         };
 
         FUNCTIONS_AND_SYMBOLS {
@@ -804,6 +805,7 @@
 &trans  &kp F9  &kp F10  &kp F11  &kp F12     &trans      &kp JP_UNDERSCORE  &kp LS(N6)  &kp LS(RBKT)  &kp LS(BSLH)  &kp JP_DQUOTE  &kp JP_QUOTE
 &trans  &trans  &trans   &trans   &trans      &trans      &trans             &trans                                                 &kp LS(N4)
             >;
+
         };
 
         MISC {
@@ -879,7 +881,7 @@
 &trans        &trans          &trans          &trans           &trans  &trans      &trans  &trans                          &trans
             >;
 
-            sensor-bindings = <&scroll_up_down>;
+            sensor-bindings = <&inc_dec_kp LC(C_AC_ZOOM_IN) LC(C_AC_ZOOM_OUT)>;
 
         };
     };
