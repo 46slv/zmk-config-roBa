@@ -117,9 +117,9 @@
     input-type = <INPUT_EV_REL>;
     track-remainders;
     min-factor = <1000>;
-    max-factor = <2100>;
-    speed-threshold = <130>;
-    speed-max = <2500>;
+    max-factor = <2600>;
+    speed-threshold = <150>;
+    speed-max = <4000>;
     acceleration-exponent = <1>;
 };
 
@@ -131,8 +131,8 @@
     auto-mouse-layer {
         layers = <DEFAULT MOUSE>;
         input-processors =
-            <&zip_x_scaler 34 100>,
-            <&zip_y_scaler 48 100>,
+            <&zip_x_scaler 35 100>,
+            <&zip_y_scaler 40 100>,
             <&pointer_accel>,
             <&zip_temp_layer MOUSE 50000>;
 
@@ -191,6 +191,11 @@
             key-positions = <20 21>;
             layers = <0 7>;
             timeout-ms = <80>;
+        };
+
+        yp_del {
+            bindings = <&kp DEL>;
+            key-positions = <8 9>;
         };
 
         jb_unsc {
@@ -266,10 +271,7 @@
             layers = <0>;
         };
 
-        yp_del {
-            bindings = <&kp DEL>;
-            key-positions = <8 9>;
-        };
+
     };
 
     macros {
