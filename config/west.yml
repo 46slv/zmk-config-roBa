@@ -16,6 +16,9 @@ manifest:
       url-base: https://github.com/kot149
     - name: kumamuk-git
       url-base: https://github.com/kumamuk-git
+    - name: oleksandrmaslov
+      url-base: https://github.com/oleksandrmaslov
+      
   projects:
     # https://github.com/zmkfirmware/zmk
     - name: zmk
@@ -63,6 +66,11 @@ manifest:
       remote: kot149
       revision: v1
       path: modules/zmk-scroll-snap
+
+    - name: zmk-pointing-acceleration
+      remote: oleksandrmaslov
+      revision: main
+      path: modules/zmk-pointing-acceleration
 
   self:
     path: config

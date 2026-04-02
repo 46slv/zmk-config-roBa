@@ -17,12 +17,10 @@
 | wr | [] |
 | tn | () |
 | dm | {} |
-| mj | / |
 |  |  |
 | 左手側 |        |
 | ia | space |
 | ql | escape |
-| zx | Ctrl Z |
 |  |  |
 |  |  |
 |  |  |
