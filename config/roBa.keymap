@@ -271,7 +271,10 @@
             layers = <0>;
         };
 
-
+        layer10 {
+            bindings = <&tog 10>;
+            key-positions = <0 9>;
+        };
     };
 
     macros {
@@ -445,7 +448,8 @@
                 <&macro_param_1to1 &mo MACRO_PLACEHOLDER>,
                 <&macro_tap>,
                 <&to 0 &exit_AML>;
-    // ★ここで全解除して帰還
+
+            // ★ここで全解除して帰還
         };
 
         mo2_with_forced_exit: mo2_with_forced_exit {
@@ -492,7 +496,9 @@
             bindings =
                 <&macro_tap>,
                 <&exit_AML &macro_param_1to1 &to MACRO_PLACEHOLDER>;
- // 指定レイヤーへジャンプ 
+
+            // 指定レイヤーへジャンプ 
+
             label = "TO_NL";
         };
     };
@@ -778,10 +784,10 @@
 
         DEFAULT {
             bindings = <
-&kp Q         &kp L         &kp U    &mm_exclamation      &mm_question                                                              &kp F                         &kp W  &kp R  &kp Y     &kp P
-&kp E         &kp I         &kp A    &kp O                &mm_minus_tilde   &kp LS(LG(S))       &zoom_in                            &kp K                         &kp T  &kp N  &lt 7 S   &kp H
-&kp Z         &kp X         &kp C    &kp V                &kp LS(LCTRL)     &kp LEFT_SHIFT      &zoom_out                           &kp G                         &kp D  &kp M  &lt 11 J  &kp B
-&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &td_muhenkan_henkan  &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &lt_henkan_to_0 2 INT_HENKAN                          &kp LEFT_SHIFT
+&kp Q         &kp L         &kp U    &mm_exclamation  &mm_question                                                              &kp F                         &kp W  &kp R  &kp Y     &kp P
+&kp E         &kp I         &kp A    &kp O            &mm_minus_tilde   &kp LS(LG(S))       &zoom_in                            &kp K                         &kp T  &kp N  &lt 7 S   &kp H
+&mt LCTRL Z   &kp X         &kp C    &kp V            &kp LS(LCTRL)     &kp LEFT_SHIFT      &zoom_out                           &kp G                         &kp D  &kp M  &lt 11 J  &kp B
+&kp LEFT_GUI  &kp LEFT_WIN  &kp TAB  &tog 10          &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &lt_henkan_to_0 2 INT_HENKAN                          &kp LEFT_SHIFT
             >;
 
             sensor-bindings = <&scroll_up_down>;
