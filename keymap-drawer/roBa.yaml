@@ -23,7 +23,7 @@ layers:
   - N
   - {t: S, h: '7'}
   - H
-  - Z
+  - {t: Z, h: Ctrl}
   - X
   - C
   - V
@@ -38,7 +38,7 @@ layers:
   - Win
   - Win
   - TAB
-  - '&td_muhenkan_henkan'
+  - {t: '10', h: toggle}
   - Ctrl
   - Alt
   - {t: '&kp_exit_AML INT_MUHENKAN', h: '3'}
@@ -574,3 +574,5 @@ combos:
 - p: [22, 23]
   k: Ctl+Z
   l: ['0']
+- p: [0, 9]
+  k: {t: '10', h: toggle}
