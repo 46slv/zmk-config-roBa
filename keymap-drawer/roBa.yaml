@@ -34,7 +34,7 @@ layers:
   - D
   - M
   - {t: J, h: '11'}
-  - {t: RIGHT SHIFT, h: B}
+  - B
   - Win
   - TAB
   - Alt
