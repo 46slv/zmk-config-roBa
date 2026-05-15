@@ -1,6 +1,6 @@
 /* --- マウス・ポインティングの設定 --- */
 
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 400 // スクロールの移動量を定義（数値が大きいほど速い）
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 140 // スクロールの移動量を定義（数値が大きいほど速い）
 #define ZMK_MOUSE_POINTING_SCRL_VAL 50
 
 /* --- レイヤー番号の定義（名前を付けて管理しやすくする） --- */
