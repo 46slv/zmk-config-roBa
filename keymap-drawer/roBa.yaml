@@ -34,10 +34,10 @@ layers:
   - D
   - M
   - {t: J, h: '11'}
-  - B
-  - Win
+  - {t: RIGHT SHIFT, h: B}
   - Win
   - TAB
+  - Alt
   - {t: '10', h: toggle}
   - Ctrl
   - Alt
@@ -124,7 +124,7 @@ layers:
   - L
   - '&to_nl 3'
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - INT YEN
   - KP EQUAL
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -441,16 +441,16 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   '10':
-  - {t: '&td_reset', h: '&bootloader'}
+  - {t: '0', h: toggle}
   - ''
   - ''
   - ''
   - ''
-  - ''
-  - ''
+  - {t: BT, h: '1'}
+  - {t: BT, h: '0'}
   - ''
   - OUT TOG
-  - {t: '&td_reset', h: '&bootloader'}
+  - {t: '0', h: toggle}
   - ''
   - ''
   - ''
@@ -459,7 +459,7 @@ layers:
   - {t: ▽, type: trans}
   - '&td_bt_clear'
   - {t: BT, h: '0'}
-  - {t: BT, h: '1'}
+  - {t: '0', h: toggle}
   - {t: BT, h: '2'}
   - {t: BT, h: '3'}
   - {t: BT, h: '4'}
@@ -468,9 +468,9 @@ layers:
   - ''
   - ''
   - '&tog_off'
-  - ''
-  - ''
-  - ''
+  - {t: '&td_reset', h: '&bootloader'}
+  - {t: '&td_reset', h: '&bootloader'}
+  - {t: BT, h: '0'}
   - ''
   - ''
   - ''
