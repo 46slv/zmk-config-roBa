@@ -1,9 +1,9 @@
 /* --- マウス・ポインティングの設定 --- */
 
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 50 // スクロールの移動量を定義（数値が大きいほど速い）
-#define ZMK_MOUSE_POINTING_SCRL_VAL 30
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 140 // スクロールの移動量を定義（数値が大きいほど速い）
+#define ZMK_MOUSE_POINTING_SCRL_VAL 50
 
-/* --- レイヤー番号の定義 --- */
+/* --- レイヤー番号の定義（名前を付けて管理しやすくする） --- */
 
 #define DEFAULT 0               // 基本の入力レイヤー
 #define LANG1_EAGER_TAP_DANCE 1 // 言語切り替え用の特殊な挙動レイヤー
@@ -786,7 +786,7 @@
             bindings = <
 &kp Q         &kp L    &kp U         &mm_exclamation  &mm_question                                                              &kp F                         &kp W  &kp R  &kp Y     &kp P
 &kp E         &kp I    &kp A         &kp O            &mm_minus_tilde   &kp LS(LG(S))       &zoom_in                            &kp K                         &kp T  &kp N  &lt 7 S   &kp H
-&mt LCTRL Z   &kp X    &kp C         &kp V            &kp LS(LCTRL)     &kp LEFT_SHIFT      &zoom_out                           &kp G                         &kp D  &kp M  &lt 11 J  &kp B
+&mt LCTRL Z   &kp X    &kp C         &kp V            &kp LS(LCTRL)     &kp LEFT_SHIFT      &zoom_out                           &kp G                         &kp D  &kp M  &lt 11 J  &mt B RIGHT_SHIFT
 &kp LEFT_GUI  &kp TAB  &kp LEFT_ALT  &tog 10          &kp LEFT_CONTROL  &kp LEFT_ALT        &lt_exit_AML_on_tap 3 INT_MUHENKAN  &lt_henkan_to_0 2 INT_HENKAN                          &kp LEFT_SHIFT
             >;
 
