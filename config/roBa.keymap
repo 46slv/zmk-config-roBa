@@ -3,7 +3,7 @@
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 50 // スクロールの移動量を定義（数値が大きいほど速い）
 #define ZMK_MOUSE_POINTING_SCRL_VAL 30
 
-/* --- レイヤー番号の定義（名前を付けて管理しやすくする） --- */
+/* --- レイヤー番号の定義 --- */
 
 #define DEFAULT 0               // 基本の入力レイヤー
 #define LANG1_EAGER_TAP_DANCE 1 // 言語切り替え用の特殊な挙動レイヤー
