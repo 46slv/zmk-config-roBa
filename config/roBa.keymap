@@ -106,8 +106,8 @@
 };
 
 &zip_scroll_snap {
-    require-n-samples = <8>;
-    immediate-snap-threshold = <750>;
+    require-n-samples = <3>;
+    immediate-snap-threshold = <200>;
     lock-duration-ms = <175>;
     lock-for-next-n-events = <8>;
     idle-reset-timeout-ms = <175>;
