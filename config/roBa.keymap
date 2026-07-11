@@ -106,7 +106,7 @@
 };
 
 &zip_scroll_snap {
-    require-n-samples = <3>;
+    require-n-samples = <2>;
     immediate-snap-threshold = <200>;
     lock-duration-ms = <175>;
     lock-for-next-n-events = <8>;
@@ -143,9 +143,8 @@
         layers = <11>;
         input-processors =
             <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
-            <&zip_scroll_scaler 4 1>,
-            // <&pointer_accel>,
             <&zip_xy_to_scroll_mapper>,
+            <&zip_scroll_scaler 4 1>,
             <&zip_scroll_snap>;
 
         process-next;
