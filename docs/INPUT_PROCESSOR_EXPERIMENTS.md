@@ -25,7 +25,7 @@ input-processors =
 
 ```conf
 CONFIG_ZMK_POINTING_SMOOTH_SCROLLING=y
-CONFIG_PMW3610_SCROLL_TICK=4
+CONFIG_PMW3610_SCROLL_TICK=6
 ```
 
 - `&zip_scroll_snap` currently uses:
@@ -47,7 +47,8 @@ idle-reset-timeout-ms = <175>;
 ### Practical Tuning Order
 
 1. Lower `CONFIG_PMW3610_SCROLL_TICK`.
-   - Applied first test: `8 -> 4`.
+   - First test `8 -> 4` improved responsiveness but may have increased host-side stutter.
+   - Current compromise test: `6`.
    - If still too insensitive at low speed, test `3`.
    - This should make small/slow trackball movement produce scroll events sooner.
 
@@ -79,15 +80,15 @@ input-processors =
 
 ### Applied Changes
 
-- `CONFIG_PMW3610_SCROLL_TICK`: `8 -> 4`.
+- `CONFIG_PMW3610_SCROLL_TICK`: `8 -> 4`, then backed off to `6` after host-side stutter was reported while the keyboard was connected.
 - `zip_scroll_snap.require-n-samples`: `3 -> 2`.
 - `scroller` processor order now maps XY to wheel before applying
   `zip_scroll_scaler 4 1`.
 
-These are intentionally conservative first-pass tuning changes. If the real
-keyboard still feels delayed at very low speed, the next narrow test is
-`CONFIG_PMW3610_SCROLL_TICK=3`. If direction lock still feels delayed, test
-`require-n-samples = <1>;`.
+These are intentionally conservative tuning changes. If the real keyboard still
+causes host-side stutter at `6`, restore `CONFIG_PMW3610_SCROLL_TICK=8` before
+changing other parameters. If stutter is gone but low-speed scroll is still too
+delayed, compare `5` against `6` rather than jumping back to `4`.
 
 ### Inertia Assessment
 
