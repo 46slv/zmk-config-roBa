@@ -176,11 +176,10 @@ auto-mouse-layer {
 scroller {
     layers = <11>;
         input-processors =
-            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+            <&zip_y_scaler (-1) 1>,
             <&zip_xy_to_scroll_mapper>,
             <&scroll_inertia_v>,
-            <&zip_scroll_scaler 4 1>,
-            <&zip_scroll_snap>;
+            <&zip_scroll_scaler 4 675>;
     process-next;
 };
 ```
@@ -195,8 +194,8 @@ scroller {
 
 注意:
 
-- `zip_scroll_scaler` は wheel / horizontal wheel 向けの scaler。現在は `zip_xy_to_scroll_mapper` の後に置き、X/Y movement を scroll event に変換してから scroll 量を増やす意図にしている。
-- 2026-07-11 の低速スクロール改善では、`CONFIG_PMW3610_SCROLL_TICK=4`、`zip_scroll_snap.require-n-samples=<2>`、`zip_xy_to_scroll_mapper` -> `zip_scroll_scaler` の順を採用した。さらに同日に `scroll_inertia_v` を `zip_xy_to_scroll_mapper` と `zip_scroll_scaler` の間へ追加し、縦方向のみの慣性スクロール実験を開始した。実機で蓄積感、慣性の尾、縦横スナップの誤爆を確認する。
+- `zip_scroll_scaler` は wheel / horizontal wheel 向けの scaler。慣性スクロール実験では記事例に合わせ、`zip_y_scaler (-1) 1` -> `zip_xy_to_scroll_mapper` -> `scroll_inertia_v` -> `zip_scroll_scaler 4 675` の順にする。
+- 2026-07-11 の低速スクロール改善では、`CONFIG_PMW3610_SCROLL_TICK=4` と `zip_scroll_snap.require-n-samples=<2>` を採用した。その後の慣性スクロール実験では `scroll_inertia_v` を追加し、`zip_scroll_snap` はチェーンから外した。実機で蓄積感、慣性の尾、縦方向の向きを確認する。
 
 ### `disable-scroll-x`
 
@@ -449,7 +448,7 @@ ZMK / roBa 設定を変更する前に必ず確認する。
 
 - `README.md` と `config/roBa.keymap` の日本語コメントに文字化けがある。修正するなら、元テキストの復元方針を決めてから行う。
 - `&trackball_listener` の base `input-processors` が2回定義されている。後勝ちで `&zip_mouse_gesture` が消えている可能性がある。
-- `scroller` は `zip_xy_to_scroll_mapper` の後に `zip_scroll_scaler` を置く構成へ変更済み。実機で意図通り scroll scaler が効いているか確認する。
+- `scroller` は慣性スクロール記事の例に寄せ、`zip_y_scaler (-1) 1`、`zip_xy_to_scroll_mapper`、`scroll_inertia_v`、`zip_scroll_scaler 4 675` の順に変更済み。実機で慣性が出るか、向きが正しいか確認する。
 - `zip_x_scaler 70 100` や `zip_y_scaler 80 100` は公式推奨の最大 16 を超える。実際に問題が出ていないなら現状維持でよいが、将来の ZMK 更新時に警戒する。
 - `EXTRA_FINCTIONS` は typo らしき名前だが、define と参照が一致しているため、単純修正は破壊的変更になり得る。
 - ZMK `v0.3` 固定なので、development docs と挙動差がある可能性がある。必要に応じて `v0.3` docs も確認する。

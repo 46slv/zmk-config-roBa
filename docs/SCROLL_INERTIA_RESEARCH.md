@@ -14,11 +14,10 @@ configuration.
 - Current scroll processor chain:
 
 ```dts
-<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+<&zip_y_scaler (-1) 1>,
 <&zip_xy_to_scroll_mapper>,
 <&scroll_inertia_v>,
-<&zip_scroll_scaler 4 1>,
-<&zip_scroll_snap>
+<&zip_scroll_scaler 4 675>
 ```
 
 - Current right-hand shield scroll setting:
@@ -108,10 +107,10 @@ Candidate chain concept for a first test:
 
 ```dts
 input-processors =
-    <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+    <&zip_y_scaler (-1) 1>,
     <&zip_xy_to_scroll_mapper>,
     <&scroll_inertia_v>,
-    <&zip_scroll_scaler 4 1>;
+    <&zip_scroll_scaler 4 675>;
 ```
 
 This is only a concept. The real parameters must follow the module's binding
@@ -215,13 +214,15 @@ a narrow vertical-only experiment:
 - `boards/shields/roBa/roBa_R.overlay` enables `scroll_inertia_v` only on the
   central/right build.
 - `config/roBa.keymap` inserts `&scroll_inertia_v` before
-  `&zip_scroll_scaler 4 1`.
+  `&zip_scroll_scaler 4 675`.
 - `axis = <1>` keeps inertia vertical-only for the first test.
 - `layer = <11>` resets inertia when the `SCROLL` layer turns off.
-- `scale = <4>` and `scale-div = <1>` match the downstream
-  `zip_scroll_scaler 4 1`.
+- `scale = <4>` and `scale-div = <675>` match the downstream
+  `zip_scroll_scaler 4 675`.
 - `tick = <8>` matches the PMW3610 125 Hz polling interval.
 
-`zip_scroll_snap` remains in the chain for this first test so existing active
-scroll behavior changes as little as possible. Treat `zip_scroll_snap` as the
-main integration risk if inertia feels sticky, delayed, or axis-confused.
+This corrected experiment follows the article example more closely. It uses
+`zip_y_scaler (-1) 1` before `zip_xy_to_scroll_mapper`, removes
+`zip_scroll_snap` from the inertia chain, and matches the inertia node's
+`scale` / `scale-div` to `zip_scroll_scaler 4 675`. The previous `4 1` setup
+was too aggressive and did not match the article's intended scaling model.

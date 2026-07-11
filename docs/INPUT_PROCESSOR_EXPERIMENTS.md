@@ -15,11 +15,10 @@ settings under `boards/shields/roBa/`.
 
 ```dts
 input-processors =
-    <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+    <&zip_y_scaler (-1) 1>,
     <&zip_xy_to_scroll_mapper>,
     <&scroll_inertia_v>,
-    <&zip_scroll_scaler 4 1>,
-    <&zip_scroll_snap>;
+    <&zip_scroll_scaler 4 675>;
 ```
 
 - Right-hand shield config currently has:
@@ -59,10 +58,9 @@ idle-reset-timeout-ms = <175>;
 
 ```dts
 input-processors =
-    <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+    <&zip_y_scaler (-1) 1>,
     <&zip_xy_to_scroll_mapper>,
-    <&zip_scroll_scaler 4 1>,
-    <&zip_scroll_snap>;
+    <&zip_scroll_scaler 4 675>;
 ```
 
    - This may be more logically correct if `zip_scroll_scaler` only acts on
@@ -84,9 +82,14 @@ input-processors =
 - `CONFIG_PMW3610_SCROLL_TICK`: `8 -> 4`.
 - `zip_scroll_snap.require-n-samples`: `3 -> 2`.
 - `scroller` processor order now maps XY to wheel before applying
-  `zip_scroll_scaler 4 1`.
+  scroll scaling.
 - `scroll_inertia_v` is inserted between `zip_xy_to_scroll_mapper` and
-  `zip_scroll_scaler 4 1` for a first vertical-only inertia experiment.
+  `zip_scroll_scaler 4 675` for a vertical-only inertia experiment.
+- The inertia experiment follows the article's structure:
+  `zip_y_scaler (-1) 1` -> `zip_xy_to_scroll_mapper` ->
+  `scroll_inertia_v` -> `zip_scroll_scaler 4 675`. `zip_scroll_snap` is not in
+  this chain because the inertia processor expects explicit axis intent rather
+  than post-hoc automatic axis guessing.
 
 These are intentionally conservative tuning changes. The first-pass version with
 `CONFIG_PMW3610_SCROLL_TICK=4` was reported to work after the matching BT/wired
@@ -108,8 +111,8 @@ momentum/inertia setting. As of this memo, local greps for `inertia` and
 See `docs/SCROLL_INERTIA_RESEARCH.md` for the 2026-07-11 research report.
 `mjmjm0101/zmk-input-processor-scroll-inertia` has been added as the first
 experiment candidate. The initial setup is vertical-only (`axis = <1>`) on
-`SCROLL` layer `11`, with `scale = <4>`, `scale-div = <1>`, and `tick = <8>`
-to match the downstream `zip_scroll_scaler 4 1` and PMW3610 125 Hz polling.
+`SCROLL` layer `11`, with `scale = <4>`, `scale-div = <675>`, and `tick = <8>`
+to match the downstream `zip_scroll_scaler 4 675` and PMW3610 125 Hz polling.
 
 ### Verification Notes
 
