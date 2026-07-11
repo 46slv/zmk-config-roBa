@@ -44,4 +44,5 @@ needs an update.
   processors, behaviors, and current risks.
 - `docs/ROBA_KEYMAP_MAP.md`: layer-by-layer source map for bindings, combos,
   custom behaviors, and macro references.
-
+- `docs/BUILD_AND_FLASH_NOTES.md`: local zmk-workspace, build, flash, and
+  keymap-drawer procedure for this roBa config.

@@ -117,6 +117,18 @@
         compatible = "zmk,input-listener";
         status = "disabled";
     };
+
+    scroll_inertia_v: scroll_inertia_v {
+        status = "disabled";
+        compatible = "zmk,input-processor-scroll-inertia";
+        #input-processor-cells = <0>;
+
+        axis = <1>;
+        layer = <11>;
+        scale = <4>;
+        scale-div = <1>;
+        tick = <8>;
+    };
 };
 
 &spi0 {

@@ -17,6 +17,7 @@ settings under `boards/shields/roBa/`.
 input-processors =
     <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
     <&zip_xy_to_scroll_mapper>,
+    <&scroll_inertia_v>,
     <&zip_scroll_scaler 4 1>,
     <&zip_scroll_snap>;
 ```
@@ -25,7 +26,7 @@ input-processors =
 
 ```conf
 CONFIG_ZMK_POINTING_SMOOTH_SCROLLING=y
-CONFIG_PMW3610_SCROLL_TICK=6
+CONFIG_PMW3610_SCROLL_TICK=4
 ```
 
 - `&zip_scroll_snap` currently uses:
@@ -47,8 +48,8 @@ idle-reset-timeout-ms = <175>;
 ### Practical Tuning Order
 
 1. Lower `CONFIG_PMW3610_SCROLL_TICK`.
-   - First test `8 -> 4` improved responsiveness but may have increased host-side stutter.
-   - Current compromise test: `6`.
+   - Applied: `8 -> 4`.
+   - A later host-side stutter report was traced to using wired mode without updating the matching Bluetooth-side settings, not to this value.
    - If still too insensitive at low speed, test `3`.
    - This should make small/slow trackball movement produce scroll events sooner.
 
@@ -80,15 +81,18 @@ input-processors =
 
 ### Applied Changes
 
-- `CONFIG_PMW3610_SCROLL_TICK`: `8 -> 4`, then backed off to `6` after host-side stutter was reported while the keyboard was connected.
+- `CONFIG_PMW3610_SCROLL_TICK`: `8 -> 4`.
 - `zip_scroll_snap.require-n-samples`: `3 -> 2`.
 - `scroller` processor order now maps XY to wheel before applying
   `zip_scroll_scaler 4 1`.
+- `scroll_inertia_v` is inserted between `zip_xy_to_scroll_mapper` and
+  `zip_scroll_scaler 4 1` for a first vertical-only inertia experiment.
 
-These are intentionally conservative tuning changes. If the real keyboard still
-causes host-side stutter at `6`, restore `CONFIG_PMW3610_SCROLL_TICK=8` before
-changing other parameters. If stutter is gone but low-speed scroll is still too
-delayed, compare `5` against `6` rather than jumping back to `4`.
+These are intentionally conservative tuning changes. The first-pass version with
+`CONFIG_PMW3610_SCROLL_TICK=4` was reported to work after the matching BT/wired
+configuration state was corrected. If low-speed scroll is still too delayed,
+test `CONFIG_PMW3610_SCROLL_TICK=3`. If it becomes too noisy, compare `5` or
+`6` against `4`.
 
 ### Inertia Assessment
 
@@ -100,6 +104,12 @@ processor or driver/module change, not just `roBa.keymap` tuning.
 Before attempting inertia, confirm whether any used external module has a
 momentum/inertia setting. As of this memo, local greps for `inertia` and
 `momentum` found no setting in this repo checkout.
+
+See `docs/SCROLL_INERTIA_RESEARCH.md` for the 2026-07-11 research report.
+`mjmjm0101/zmk-input-processor-scroll-inertia` has been added as the first
+experiment candidate. The initial setup is vertical-only (`axis = <1>`) on
+`SCROLL` layer `11`, with `scale = <4>`, `scale-div = <1>`, and `tick = <8>`
+to match the downstream `zip_scroll_scaler 4 1` and PMW3610 125 Hz polling.
 
 ### Verification Notes
 

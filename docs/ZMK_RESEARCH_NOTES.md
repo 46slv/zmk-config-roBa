@@ -175,11 +175,12 @@ auto-mouse-layer {
 ```dts
 scroller {
     layers = <11>;
-    input-processors =
-        <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
-        <&zip_xy_to_scroll_mapper>,
-        <&zip_scroll_scaler 4 1>,
-        <&zip_scroll_snap>;
+        input-processors =
+            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+            <&zip_xy_to_scroll_mapper>,
+            <&scroll_inertia_v>,
+            <&zip_scroll_scaler 4 1>,
+            <&zip_scroll_snap>;
     process-next;
 };
 ```
@@ -195,7 +196,7 @@ scroller {
 注意:
 
 - `zip_scroll_scaler` は wheel / horizontal wheel 向けの scaler。現在は `zip_xy_to_scroll_mapper` の後に置き、X/Y movement を scroll event に変換してから scroll 量を増やす意図にしている。
-- 2026-07-11 の低速スクロール改善では、`CONFIG_PMW3610_SCROLL_TICK=4`、`zip_scroll_snap.require-n-samples=<2>`、`zip_xy_to_scroll_mapper` -> `zip_scroll_scaler` の順を採用した。実機で蓄積感と縦横スナップの誤爆を確認する。
+- 2026-07-11 の低速スクロール改善では、`CONFIG_PMW3610_SCROLL_TICK=4`、`zip_scroll_snap.require-n-samples=<2>`、`zip_xy_to_scroll_mapper` -> `zip_scroll_scaler` の順を採用した。さらに同日に `scroll_inertia_v` を `zip_xy_to_scroll_mapper` と `zip_scroll_scaler` の間へ追加し、縦方向のみの慣性スクロール実験を開始した。実機で蓄積感、慣性の尾、縦横スナップの誤爆を確認する。
 
 ### `disable-scroll-x`
 
@@ -429,6 +430,7 @@ tap-dance は誤爆リスクがあるため、dangerous behavior (`BT_CLR_ALL`, 
 - `kot149/zmk-layout-shift`: layout shift / key override。
 - `kot149/zmk-scroll-snap`: scroll snap。
 - `oleksandrmaslov/zmk-pointing-acceleration`: pointer acceleration。
+- `mjmjm0101/zmk-input-processor-scroll-inertia`: trackball scroll inertia.
 
 ZMK input processor / behavior の公式仕様だけでは説明できない behavior があるため、問題調査時は該当 module の README と devicetree binding を確認する。
 
@@ -458,5 +460,6 @@ ZMK / roBa 設定を変更する前に必ず確認する。
 
 - `docs/ROBA_KEYMAP_MAP.md`: layer / combo / behavior の現行仕様一覧。
 - `docs/INPUT_PROCESSOR_EXPERIMENTS.md`: trackball, AML, scroll snap, acceleration の実験ログ。
+- `docs/SCROLL_INERTIA_RESEARCH.md`: trackball inertia scroll の外部モジュール調査と実験方針。
 - `docs/BUILD_AND_FLASH_NOTES.md`: GitHub Actions build、local west build、左右 firmware flash 手順。
 - `docs/NOTION_SYNC_NOTES.md`: Notion `roBa custom` と GitHub repo の同期方針。

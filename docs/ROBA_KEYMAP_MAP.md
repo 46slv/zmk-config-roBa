@@ -228,6 +228,7 @@ Input processor interaction:
 - The current scroller chain is:
   - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)`
   - `&zip_xy_to_scroll_mapper`
+  - `&scroll_inertia_v`
   - `&zip_scroll_scaler 4 1`
   - `&zip_scroll_snap`
 - Scroll tuning notes for future Codex/AI sessions are in
