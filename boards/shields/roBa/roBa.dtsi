@@ -140,10 +140,3 @@
     };
 };
 
-/ {
-    chg_stat: chg_stat {
-        compatible = "custom,chg-stat";
-        status = "okay";
-        gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
-    };
-};

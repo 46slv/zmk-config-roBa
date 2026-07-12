@@ -225,11 +225,15 @@ Input processor interaction:
 
 - `&trackball` has `scroll-layers = <11>`.
 - `scroller` input processor override applies on layer `11`.
-- The current scroller chain is:
+- On `codex/scroll-inertia-lab`, the current scroller chain is intentionally
+  minimal for inertia verification:
   - `&zip_y_scaler (-1) 1`
   - `&zip_xy_to_scroll_mapper`
   - `&scroll_inertia_v`
   - `&zip_scroll_scaler 4 675`
+- Production-only trackball helpers are removed on this branch: auto mouse
+  layer, pointer acceleration, mouse gesture, scroll snap, and horizontal wheel
+  suppression.
 - Scroll tuning notes for future Codex/AI sessions are in
   `docs/INPUT_PROCESSOR_EXPERIMENTS.md`.
 

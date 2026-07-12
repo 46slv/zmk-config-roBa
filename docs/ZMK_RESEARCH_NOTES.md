@@ -448,7 +448,7 @@ ZMK / roBa 設定を変更する前に必ず確認する。
 
 - `README.md` と `config/roBa.keymap` の日本語コメントに文字化けがある。修正するなら、元テキストの復元方針を決めてから行う。
 - `&trackball_listener` の base `input-processors` が2回定義されている。後勝ちで `&zip_mouse_gesture` が消えている可能性がある。
-- `scroller` は慣性スクロール記事の例に寄せ、`zip_y_scaler (-1) 1`、`zip_xy_to_scroll_mapper`、`scroll_inertia_v`、`zip_scroll_scaler 4 675` の順に変更済み。実機で慣性が出るか、向きが正しいか確認する。
+- `codex/scroll-inertia-lab` では、慣性スクロール実装可否の切り分けのため、trackball 入力経路から AML、pointer acceleration、mouse gesture、scroll snap、horizontal wheel suppression を外した。`scroller` は `zip_y_scaler (-1) 1`、`zip_xy_to_scroll_mapper`、`scroll_inertia_v`、`zip_scroll_scaler 4 675` の最小構成。
 - `zip_x_scaler 70 100` や `zip_y_scaler 80 100` は公式推奨の最大 16 を超える。実際に問題が出ていないなら現状維持でよいが、将来の ZMK 更新時に警戒する。
 - `EXTRA_FINCTIONS` は typo らしき名前だが、define と参照が一致しているため、単純修正は破壊的変更になり得る。
 - ZMK `v0.3` 固定なので、development docs と挙動差がある可能性がある。必要に応じて `v0.3` docs も確認する。
