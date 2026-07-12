@@ -197,6 +197,7 @@ scroller {
 - `zip_scroll_scaler` は wheel / horizontal wheel 向けの scaler。慣性スクロール実験では記事例に合わせ、`zip_y_scaler (-1) 1` -> `zip_xy_to_scroll_mapper` -> `scroll_inertia_v` -> `zip_scroll_scaler 4 675` の順にする。
 - 2026-07-11 の低速スクロール改善では、`CONFIG_PMW3610_SCROLL_TICK=4` と `zip_scroll_snap.require-n-samples=<2>` を採用した。その後の慣性スクロール実験では `scroll_inertia_v` を追加し、`zip_scroll_snap` はチェーンから外した。実機で蓄積感、慣性の尾、縦方向の向きを確認する。
 - 2026-07-12 の Lab 9 では、Lab 8 の `CPI=3200`、smart algorithm 無効、scroll tick `4`、scaler `4/1` を維持し、active chain から `scroll_inertia_v` だけを外した。滑らかな物理操作で発生する停止が消えるかを確認し、慣性 processor 経路とその他の最小化差分を切り分ける。
+- 2026-07-12 の Lab 10 では、PMW3610 の optional `scroll-layers` を外し、layer 11 でも raw X/Y を listener へ渡す構成へ変更した。listener が `transform -> mapper -> inertia -> scaler 4/675` を単独で所有し、`CPI=1000`、`axis=1`、module defaults で作者の参照条件に合わせる。これにより、driver 内の閾値量子化と inertia の速度推定が競合しない。
 
 ### `disable-scroll-x`
 

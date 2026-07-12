@@ -88,7 +88,6 @@
 
 &trackball {
     status = "okay";
-    scroll-layers = <11>;
 };
 
 &trackball_listener {
@@ -99,7 +98,8 @@
         input-processors =
             <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
             <&zip_xy_to_scroll_mapper>,
-            <&zip_scroll_scaler 4 1>;
+            <&scroll_inertia_v>,
+            <&zip_scroll_scaler 4 675>;
 
         process-next;
     };

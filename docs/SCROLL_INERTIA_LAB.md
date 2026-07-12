@@ -438,6 +438,72 @@ Hardware result:
 
 - Pending user flash/test.
 
+## Lab 10: Raw-Input Reference Integration
+
+Lab 10 replaces the diagnostic integration with the data path documented by
+the inertia module. This is a coherent reference configuration rather than a
+single-parameter tuning step.
+
+Driver ownership change:
+
+- Remove `scroll-layers = <11>` from the PMW3610 node. The optional property now
+  defaults to an empty list, so the modified driver emits raw `INPUT_REL_X/Y`
+  on layer 11 instead of accumulating and quantizing motion into `+/-1` wheel
+  events.
+- The ZMK input-listener becomes the only owner of scroll conversion.
+
+Active chain:
+
+```dts
+<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+<&zip_xy_to_scroll_mapper>,
+<&scroll_inertia_v>,
+<&zip_scroll_scaler 4 675>;
+```
+
+Reference settings:
+
+- `CONFIG_PMW3610_CPI=1000`, matching the module's documented calibration.
+- `CONFIG_PMW3610_SMART_ALGORITHM=y`, restoring stable sensor tracking without
+  adding a scroll processor.
+- `axis=1` for dedicated vertical scrolling.
+- `layer=11` so leaving the scroll layer immediately clears inertia state.
+- `scale=4`, `scale-div=675`, matching the downstream scaler.
+- `tick=8` for the 125 Hz PMW3610 polling rate.
+- Diagnostic Lab 6/7 overrides are removed; the module defaults provide the
+  initial `start`, `move`, event-count, decay, friction, stop, and span values.
+- The inertia module revision is pinned to tested commit `f7dadef` so subsequent
+  builds cannot silently change behavior.
+
+Expected behavior:
+
+- Active scroll receives magnitude-bearing deltas on every PMW3610 report and
+  should no longer pause at the driver's old scroll threshold.
+- Casual slow scrolling should remain in `TRACKING` and pass through directly.
+- A deliberate flick should enter `COASTING` after deceleration or release and
+  produce a fading vertical tail.
+- Cursor behavior outside layer 11 is not part of this scroll-chain test.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 16:45.
+- Output path:
+  `~/zmk-workspace/firmware/zmk-config-roBa-inertia-lab/roBa_R-seeeduino_xiao_ble.uf2`
+- Generated devicetree verification:
+  - PMW3610 node has no `scroll-layers` property.
+  - Layer 11 chain resolves to transform, mapper, inertia, scaler `4/675`.
+  - Inertia resolves to `axis=1`, `layer=11`, scale `4/675`, tick `8`.
+- Generated Kconfig verification:
+  - `CONFIG_PMW3610_CPI=1000`
+  - `CONFIG_PMW3610_SMART_ALGORITHM=y`
+  - `CONFIG_PMW3610_POLLING_RATE_125_SW=y`
+- The left half was not rebuilt because the experiment changes only the
+  right-hand trackball input path.
+
+Hardware result:
+
+- Pending user flash/test.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:

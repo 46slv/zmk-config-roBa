@@ -87,7 +87,7 @@ Layer 11 uses:
 Lab 7 currently uses `axis = <0>`, scale `4/1`, tick `8`, start `1`, move `1`,
 release `24`, decay `995`, friction `5`, stop `1`, and span `2000`.
 
-The current Lab 9 branch keeps the same sensor settings but temporarily removes
+Lab 9 kept the same sensor settings but temporarily removed
 `&scroll_inertia_v` from the active chain, leaving:
 
 ```dts
@@ -95,6 +95,19 @@ The current Lab 9 branch keeps the same sensor settings but temporarily removes
 <&zip_xy_to_scroll_mapper>,
 <&zip_scroll_scaler 4 1>;
 ```
+
+Lab 10 is the current raw-input reference integration. It removes the PMW3610
+driver's optional `scroll-layers` property and uses:
+
+```dts
+<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+<&zip_xy_to_scroll_mapper>,
+<&scroll_inertia_v>,
+<&zip_scroll_scaler 4 675>;
+```
+
+Lab 10 uses `CPI=1000`, PMW3610 smart behavior enabled, `axis=1`, `layer=11`,
+scale `4/675`, tick `8`, and the module's default arming/decay parameters.
 
 ## Next Work
 

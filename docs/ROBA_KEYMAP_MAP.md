@@ -223,16 +223,18 @@ Sensor binding:
 
 Input processor interaction:
 
-- `&trackball` has `scroll-layers = <11>`.
+- The PMW3610 `scroll-layers` property is intentionally omitted so the driver
+  emits raw X/Y on layer `11`; the input-listener owns scroll conversion.
 - `scroller` input processor override applies on layer `11`.
-- On `codex/scroll-inertia-lab`, the current scroller chain is intentionally
-  minimal for inertia verification. Lab 9 bypasses the inertia processor:
+- On the Lab 10 raw-reference branch, the scroller chain follows the inertia
+  module's documented placement:
   - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)`
   - `&zip_xy_to_scroll_mapper`
-  - `&zip_scroll_scaler 4 1`
-- Lab 9 keeps the Lab 8 sensor and scaler settings but removes only the active
-  `scroll_inertia_v` reference to diagnose intermittent scrolling. The inertia
-  node and Lab 7 parameters remain defined and enabled.
+  - `&scroll_inertia_v`
+  - `&zip_scroll_scaler 4 675`
+- `scroll_inertia_v` uses vertical `axis=1`, binds cleanup to layer `11`, and
+  mirrors the downstream `4/675` scale. Diagnostic threshold and decay
+  overrides are removed so the module defaults apply at `CPI=1000`.
 - Production-only trackball helpers are removed on this branch: auto mouse
   layer, pointer acceleration, mouse gesture, scroll snap, and horizontal wheel
   suppression.

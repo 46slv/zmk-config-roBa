@@ -29,7 +29,7 @@ manifest:
 
     - name: zmk-input-processor-scroll-inertia
       remote: mjmjm0101
-      revision: main
+      revision: f7dadef
       path: modules/zmk-input-processor-scroll-inertia
 
   self:

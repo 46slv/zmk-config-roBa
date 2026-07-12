@@ -123,22 +123,11 @@
         compatible = "zmk,input-processor-scroll-inertia";
         #input-processor-cells = <0>;
 
-        axis = <0>;
-        layer = <(-1)>;
+        axis = <1>;
+        layer = <11>;
         scale = <4>;
-        scale-div = <1>;
+        scale-div = <675>;
         tick = <8>;
-        start = <1>;
-        move = <1>;
-        min-events = <1>;
-        decel-samples = <1>;
-        release = <24>;
-        decay-fast = <995>;
-        decay-slow = <995>;
-        decay-tail = <995>;
-        friction = <5>;
-        stop = <1>;
-        span = <2000>;
     };
 };
 
