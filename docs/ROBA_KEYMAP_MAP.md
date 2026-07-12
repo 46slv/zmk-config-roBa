@@ -228,7 +228,7 @@ Input processor interaction:
 - `scroller` input processor override applies on layer `11`.
 - On the Lab 12 production-input branch, the scroller chain follows the inertia
   module's documented placement and reverses vertical direction:
-  - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)`
+  - `&zip_xy_transform INPUT_TRANSFORM_X_INVERT`
   - `&zip_xy_to_scroll_mapper`
   - `&zip_scroll_snap`
   - `&scroll_inertia_v`
@@ -237,6 +237,10 @@ Input processor interaction:
   Snap uses the earlier low-latency settings (`require-n-samples=2`, immediate
   threshold `200`, lock `175 ms` / `8` events, idle reset `175 ms`) so vertical
   or horizontal intent is selected before inertia measures the gesture.
+- Lab 16a removes only `INPUT_TRANSFORM_XY_SWAP` after hardware testing showed
+  right mapped to up, up to right, left to down, and down to left. Keeping
+  `X_INVERT` preserves the established direction convention while routing
+  physical horizontal movement to HWHEEL and vertical movement to WHEEL.
 - `scroll_inertia_v` binds cleanup to layer `11` and
   mirrors the downstream `4/75` scale. At restored `CPI=400`, `start=16`,
   `move=32`, `friction=14`, and `stop=3` preserve the approximate physical

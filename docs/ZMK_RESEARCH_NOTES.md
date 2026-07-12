@@ -204,6 +204,7 @@ scroller {
 - Lab 13 実機で高速flickのarmingは実用範囲まで改善したが、非常に高速な操作ではcoast開始時の減速段差が残った。Lab 14 はEMAだけを `gain=500 / blend=500` へ変更し、短い高速入力をcoast seedへ早く反映する。低速の短い操作が整数HID単位へ届かず無反応になる件は別課題として残す。
 - Lab 14 実機はほぼ許容範囲。Lab 15 はEMAとscaleを維持し、小さい意図的flick向けに `start=12`、`move=20`へ下げる。低速active scrollの無反応は混同せず、必要なら次段でmatched scale `4/75 -> 4/60`を単独検証する。
 - Lab 16 はLab 15を維持し、`mapper -> zip_scroll_snap -> scroll_inertia_v(axis=0) -> scaler`を検証する。snapは過去の低遅延設定（2 samples、immediate 200、175 ms / 8 events）を使う。縦横の選択と同方向の慣性を狙うが、snap判定中のevent抑制が低速・短距離の無反応を悪化させる可能性を最優先で確認する。
+- Lab 16実機では右→上、上→右、左→下、下→左となり、`XY_SWAP`が横軸を有効化した構成では不適切と判明した。Lab 16aは`INPUT_TRANSFORM_XY_SWAP`だけを外し、`X_INVERT`、snap、axis=0 inertia、その他のLab 15設定を維持する。
 
 ### `disable-scroll-x`
 

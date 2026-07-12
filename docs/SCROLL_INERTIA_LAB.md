@@ -815,6 +815,43 @@ Hardware result:
 
 - Pending user flash/test.
 
+### Lab 16a: Correct Swapped Physical Axes
+
+Initial Lab 16 hardware result:
+
+- Physical right produced up scroll.
+- Physical up produced right scroll.
+- Physical left produced down scroll.
+- Physical down produced left scroll.
+
+This is an X/Y exchange, not an inertia or snap-direction failure. Lab 16a
+changes only the transform flags:
+
+```dts
+<&zip_xy_transform INPUT_TRANSFORM_X_INVERT>,
+```
+
+`INPUT_TRANSFORM_XY_SWAP` is removed. Snap settings, inertia `axis=0`, Lab 15
+parameters, scale, and every other input processor remain unchanged.
+
+Expected result:
+
+- Physical right/left controls horizontal scroll.
+- Physical up/down controls vertical scroll.
+- Snap still selects one of those axes before inertia.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 23:23.
+- Generated devicetree confirms transform flags `0x2` (`X_INVERT` only), then
+  mapper, snap, inertia, and scaler `4/75`.
+- Output:
+  `~/zmk-workspace/firmware/zmk-config-roBa-inertia-lab/roBa_R-seeeduino_xiao_ble.uf2`
+
+Hardware result:
+
+- Pending user flash/test.
+
 ## Future Candidate: Unified Axis-Lock Inertia Processor
 
 Keep a purpose-built combined module on the development backlog. Its goal is
