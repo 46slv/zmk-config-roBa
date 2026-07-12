@@ -230,9 +230,14 @@ Input processor interaction:
   module's documented placement and reverses vertical direction:
   - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)`
   - `&zip_xy_to_scroll_mapper`
+  - `&zip_scroll_snap`
   - `&scroll_inertia_v`
   - `&zip_scroll_scaler 4 75`
-- `scroll_inertia_v` uses vertical `axis=1`, binds cleanup to layer `11`, and
+- Lab 16 restores scroll snap before inertia and changes inertia to `axis=0`.
+  Snap uses the earlier low-latency settings (`require-n-samples=2`, immediate
+  threshold `200`, lock `175 ms` / `8` events, idle reset `175 ms`) so vertical
+  or horizontal intent is selected before inertia measures the gesture.
+- `scroll_inertia_v` binds cleanup to layer `11` and
   mirrors the downstream `4/75` scale. At restored `CPI=400`, `start=16`,
   `move=32`, `friction=14`, and `stop=3` preserve the approximate physical
   thresholds of the 1000 CPI defaults. Lab 13 lowers `min-events` from the
@@ -243,7 +248,8 @@ Input processor interaction:
 - Cursor pointer acceleration, AML, mouse gesture, and horizontal-wheel
   suppression are restored. Pointer acceleration is limited to the
   `DEFAULT/MOUSE` conditional path and does not precede layer 11 scrolling.
-  Scroll snap remains removed.
+  Scroll snap affects only the layer-11 scroll chain. Lab 16 hardware behavior
+  is not yet verified; initial low-speed response is the primary risk.
 - Scroll tuning notes for future Codex/AI sessions are in
   `docs/INPUT_PROCESSOR_EXPERIMENTS.md`.
 

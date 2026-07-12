@@ -32,6 +32,7 @@
 
 #include <behaviors/input_gestures_accel.dtsi>
 #include <mouse-gesture.dtsi>
+#include <scroll-snap.dtsi>
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
@@ -109,6 +110,14 @@
     acceleration-exponent = <1>;
 };
 
+&zip_scroll_snap {
+    require-n-samples = <2>;
+    immediate-snap-threshold = <200>;
+    lock-duration-ms = <175>;
+    lock-for-next-n-events = <8>;
+    idle-reset-timeout-ms = <175>;
+};
+
 &trackball_listener {
     compatible = "zmk,input-listener";
     input-processors = <&zip_mouse_gesture>;
@@ -129,6 +138,7 @@
         input-processors =
             <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)>,
             <&zip_xy_to_scroll_mapper>,
+            <&zip_scroll_snap>,
             <&scroll_inertia_v>,
             <&zip_scroll_scaler 4 75>;
 

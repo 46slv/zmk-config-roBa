@@ -123,7 +123,7 @@
         compatible = "zmk,input-processor-scroll-inertia";
         #input-processor-cells = <0>;
 
-        axis = <1>;
+        axis = <0>;
         layer = <11>;
         scale = <4>;
         scale-div = <75>;

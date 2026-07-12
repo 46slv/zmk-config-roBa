@@ -751,6 +751,108 @@ Hardware result:
 
 - Pending user flash/test.
 
+## Lab 16: Snap Before Two-Axis Inertia
+
+Lab 16 keeps all Lab 15 sensitivity, EMA, scale, direction, CPI, and production
+input-stack settings. It adds one integration experiment: restore scroll snap
+before inertia and allow inertia to track either selected wheel axis.
+
+```dts
+<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)>,
+<&zip_xy_to_scroll_mapper>,
+<&zip_scroll_snap>,
+<&scroll_inertia_v>,
+<&zip_scroll_scaler 4 75>;
+```
+
+```dts
+&zip_scroll_snap {
+    require-n-samples = <2>;
+    immediate-snap-threshold = <200>;
+    lock-duration-ms = <175>;
+    lock-for-next-n-events = <8>;
+    idle-reset-timeout-ms = <175>;
+};
+
+scroll_inertia_v {
+    axis = <0>;
+};
+```
+
+Rationale:
+
+- Snap must run first so inertia measures only the selected vertical or
+  horizontal axis. Its direct HID coast output then continues that selected
+  axis even though it bypasses downstream input processors.
+- Putting snap after inertia would let active input snap while direct-HID coast
+  could remain diagonal, producing an incoherent handoff.
+- The earlier two-sample snap settings minimize, but do not eliminate, the
+  sampling delay before active movement reaches inertia.
+
+Test focus:
+
+- Vertical and horizontal gestures should select the intended axis.
+- The coast direction should match the active snapped direction.
+- A diagonal gesture should choose one axis rather than coast diagonally.
+- Compare initial low-speed and very short movement against Lab 15. Revert Lab
+  16 if snap makes the existing dead zone materially worse.
+- Check rapid axis reversals and leaving layer 11 for stale direction locks or
+  lingering coast.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12.
+- Generated devicetree confirms the layer-11 chain is transform, mapper,
+  `zip_scroll_snap`, `scroll_inertia_v`, and scaler `4/75` in that order.
+- Generated devicetree confirms the low-latency snap settings and inertia
+  `axis=0`; all Lab 15 inertia parameters remain unchanged.
+- Output:
+  `~/zmk-workspace/firmware/zmk-config-roBa-inertia-lab/roBa_R-seeeduino_xiao_ble.uf2`
+- The left half was not rebuilt because this experiment changes only the
+  right-hand trackball input path.
+
+Hardware result:
+
+- Pending user flash/test.
+
+## Future Candidate: Unified Axis-Lock Inertia Processor
+
+Keep a purpose-built combined module on the development backlog. Its goal is
+automatic vertical/horizontal selection with inertia, without the behavioral
+gap created by simply chaining `zmk-scroll-snap` and the current inertia
+processor.
+
+Required behavior:
+
+- Preserve low-speed and very short active input while deciding the intended
+  axis; axis sampling must not silently consume the first movement events.
+- Select vertical or horizontal from the original XY gesture, then carry that
+  selected axis and its measured velocity into coast as one state machine.
+- Keep active output and coast output on the same scale so release does not
+  introduce a speed step.
+- Support configurable axis ratios, lock hysteresis, unlock/idle timing,
+  flick arming, decay, and per-axis direction inversion.
+- Reset all lock and coast state when layer 11 is released or the endpoint
+  changes.
+- Keep diagonal/free-scroll mode available as an explicit option rather than
+  an accidental result of bypassing snap during direct HID coast output.
+
+Reason for considering a new module:
+
+- `scroll-snap -> inertia(axis=0)` can make the coast follow the selected axis,
+  but scroll-snap suppresses events during its sampling phase. That can worsen
+  the existing low-speed/small-motion response issue.
+- `inertia(axis=0) -> scroll-snap` is not coherent because the inertia timer
+  sends synthetic HID reports directly; those reports do not pass through a
+  downstream scroll-snap processor.
+- A shared state machine can make axis choice, velocity estimation, active
+  output, and coast handoff from the same event history.
+
+This is a future development candidate, not part of Lab 15. Before starting it,
+finish the current one-change-at-a-time hardware validation and capture a
+repeatable test matrix for slow movement, short flicks, fast flicks, horizontal
+intent, diagonal intent, reversals, and layer release.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:

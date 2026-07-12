@@ -203,6 +203,7 @@ scroller {
 - Lab 12 実機では中速gestureが最も強く慣性になり、高速flickは停止または一度減速して中速相当のcoastへ移った。Lab 13 は `min-events` だけを既定10から4へ下げ、125 Hzで約80 ms必要だったarming gateを約32 msへ短縮する。高速coast速度がまだ頭打ちなら、次に `gain/blend` のEMA追従を一要素として検証する。
 - Lab 13 実機で高速flickのarmingは実用範囲まで改善したが、非常に高速な操作ではcoast開始時の減速段差が残った。Lab 14 はEMAだけを `gain=500 / blend=500` へ変更し、短い高速入力をcoast seedへ早く反映する。低速の短い操作が整数HID単位へ届かず無反応になる件は別課題として残す。
 - Lab 14 実機はほぼ許容範囲。Lab 15 はEMAとscaleを維持し、小さい意図的flick向けに `start=12`、`move=20`へ下げる。低速active scrollの無反応は混同せず、必要なら次段でmatched scale `4/75 -> 4/60`を単独検証する。
+- Lab 16 はLab 15を維持し、`mapper -> zip_scroll_snap -> scroll_inertia_v(axis=0) -> scaler`を検証する。snapは過去の低遅延設定（2 samples、immediate 200、175 ms / 8 events）を使う。縦横の選択と同方向の慣性を狙うが、snap判定中のevent抑制が低速・短距離の無反応を悪化させる可能性を最優先で確認する。
 
 ### `disable-scroll-x`
 
@@ -437,6 +438,14 @@ tap-dance は誤爆リスクがあるため、dangerous behavior (`BT_CLR_ALL`, 
 - `kot149/zmk-scroll-snap`: scroll snap。
 - `oleksandrmaslov/zmk-pointing-acceleration`: pointer acceleration。
 - `mjmjm0101/zmk-input-processor-scroll-inertia`: trackball scroll inertia.
+- Future module candidate: combine axis-lock/snap and inertia in one input
+  processor state machine. It should preserve initial low-speed events, choose
+  vertical or horizontal intent, and carry the chosen axis plus measured
+  velocity into coast. A simple processor chain is insufficient because snap
+  can consume sampling events, while the current inertia timer emits direct
+  HID coast reports that bypass downstream processors. Track this separately
+  from Lab 15 parameter tuning and do not change the current firmware until the
+  active-scroll and small-flick baselines are recorded.
 
 ZMK input processor / behavior の公式仕様だけでは説明できない behavior があるため、問題調査時は該当 module の README と devicetree binding を確認する。
 
