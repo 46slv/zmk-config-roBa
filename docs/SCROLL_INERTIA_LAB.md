@@ -125,6 +125,26 @@ Interpretation:
   required part of roBa's scroll path and should be compared against production
   before continuing inertia-specific tests.
 
+User result for Lab 3: active scrolling returned.
+
+Additional observation: trackball pointer movement felt less responsive and
+more uneven starting from the reduced lab builds. This is expected for the lab
+configuration because it intentionally removed the production pointer path:
+
+- `pointer_accel` is removed from the trackball listener.
+- `CONFIG_PMW3610_SMART_ALGORITHM` is set to `n`.
+- Auto mouse layer processing and its pointer scaling are removed.
+- Mouse gesture and other production helper modules are removed.
+
+Conclusion for Lab 3:
+
+- The base reduced scroll path works when `scroll_inertia_v` is not referenced.
+- The current scroll failure is therefore strongly tied to inserting
+  `scroll_inertia_v` into the active input processor chain.
+- Pointer quality in this lab should not be treated as representative of the
+  production keymap until pointer acceleration and PMW3610 smart behavior are
+  restored.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:
