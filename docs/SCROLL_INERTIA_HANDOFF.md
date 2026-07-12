@@ -13,6 +13,7 @@ then add trackpad-like inertia without reintroducing input gaps or coarse steps.
 - Branch: `codex/scroll-inertia-lab`
 - Remote: `origin/codex/scroll-inertia-lab`
 - Detailed experiment log: `docs/SCROLL_INERTIA_LAB.md`
+- Reproducible integration manual: `docs/SCROLL_INERTIA_INTEGRATION_GUIDE.md`
 - Current processor map: `docs/ROBA_KEYMAP_MAP.md`
 - WSL config: `~/zmk-workspace/config/zmk-config-roBa-inertia-lab`
 - Firmware output: `~/zmk-workspace/firmware/zmk-config-roBa-inertia-lab`

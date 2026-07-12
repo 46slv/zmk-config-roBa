@@ -1,5 +1,8 @@
 # roBa Local Build Runbook
 
+For inertial-scroll integration and tuning, read
+`docs/SCROLL_INERTIA_INTEGRATION_GUIDE.md` before building.
+
 Created: 2026-07-11
 Status: procedure drafted, local build not yet executed
 
