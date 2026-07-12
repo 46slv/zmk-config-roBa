@@ -124,10 +124,14 @@
         #input-processor-cells = <0>;
 
         axis = <1>;
-        layer = <11>;
-        scale = <4>;
-        scale-div = <675>;
+        layer = <(-1)>;
+        scale = <8000>;
+        scale-div = <1000>;
         tick = <8>;
+        start = <1>;
+        move = <1>;
+        min-events = <1>;
+        decel-samples = <1>;
     };
 };
 

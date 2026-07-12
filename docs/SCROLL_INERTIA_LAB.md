@@ -63,6 +63,44 @@ scale-div = <675>;
 tick = <8>;
 ```
 
+## Lab 2: Restore Active Scroll Scale
+
+Lab 1 result: active scrolling did not work with the article-style
+`scroll_inertia_v -> zip_scroll_scaler 4 675` chain, even after removing the
+production stack.
+
+Lab 2 keeps the lab branch minimal, but changes the scroll chain back toward
+the known-working active scroll scale:
+
+```dts
+<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+<&zip_xy_to_scroll_mapper>,
+<&zip_scroll_scaler 4 1>,
+<&scroll_inertia_v>;
+```
+
+`scroll_inertia_v` is intentionally exaggerated for visibility:
+
+```dts
+layer = <(-1)>;
+scale = <8000>;
+scale-div = <1000>;
+start = <1>;
+move = <1>;
+min-events = <1>;
+decel-samples = <1>;
+```
+
+Interpretation:
+
+- If active scrolling returns, the article-style `4/675` scaling is too small
+  for roBa's current event stream.
+- If active scrolling returns but inertia is still absent, the problem is not
+  the removed production stack. Focus on whether `scroll_inertia_v` arms or
+  whether its direct HID output is effective.
+- If active scrolling still does not return, the lab removal changed another
+  required piece of roBa's scroll path.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:
@@ -83,4 +121,3 @@ Output directory:
 - If this build does not scroll, the article-style chain itself is incompatible
   with roBa's current scroll signal scale/orientation and should be adjusted in
   the lab before being reintroduced to production.
-
