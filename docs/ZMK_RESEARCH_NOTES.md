@@ -200,6 +200,7 @@ scroller {
 - 2026-07-12 の Lab 10 では、PMW3610 の optional `scroll-layers` を外し、layer 11 でも raw X/Y を listener へ渡す構成へ変更した。listener が `transform -> mapper -> inertia -> scaler 4/675` を単独で所有し、`CPI=1000`、`axis=1`、module defaults で作者の参照条件に合わせる。これにより、driver 内の閾値量子化と inertia の速度推定が競合しない。
 - Lab 10 実機で連続scrollと慣性tailを確認した。Lab 11 は検出条件を保ったまま、inertia node と downstream scaler を `4/225` へ揃え、active/coast出力を正確に3倍へ上げる。既存 `pointer_accel` はscroll値を慣性検出前に変形するため追加しない。
 - Lab 12 は raw X/Y ownership を維持したまま、元キーマップの cursor acceleration、AML、mouse gesture、horizontal suppression を復帰した。scroll は `4/75`、上下方向は `Y_INVERT` を外して反転。CPI 400に戻し、1000 CPI既定値から `start=16`、`move=32`、`friction=14`、`stop=3`へ物理比率を換算した。scroll snapとscroll-chain accelerationは復帰しない。
+- Lab 12 実機では中速gestureが最も強く慣性になり、高速flickは停止または一度減速して中速相当のcoastへ移った。Lab 13 は `min-events` だけを既定10から4へ下げ、125 Hzで約80 ms必要だったarming gateを約32 msへ短縮する。高速coast速度がまだ頭打ちなら、次に `gain/blend` のEMA追従を一要素として検証する。
 
 ### `disable-scroll-x`
 

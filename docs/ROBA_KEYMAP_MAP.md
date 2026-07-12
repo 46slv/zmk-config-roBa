@@ -235,7 +235,8 @@ Input processor interaction:
 - `scroll_inertia_v` uses vertical `axis=1`, binds cleanup to layer `11`, and
   mirrors the downstream `4/75` scale. At restored `CPI=400`, `start=16`,
   `move=32`, `friction=14`, and `stop=3` preserve the approximate physical
-  thresholds of the 1000 CPI defaults.
+  thresholds of the 1000 CPI defaults. Lab 13 lowers `min-events` from the
+  default 10 to 4 so short fast flicks can arm within about 32 ms.
 - Cursor pointer acceleration, AML, mouse gesture, and horizontal-wheel
   suppression are restored. Pointer acceleration is limited to the
   `DEFAULT/MOUSE` conditional path and does not precede layer 11 scrolling.

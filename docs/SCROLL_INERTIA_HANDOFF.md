@@ -115,6 +115,11 @@ original cursor acceleration, AML, mouse gesture, and horizontal suppression
 while preserving raw X/Y scroll ownership. It uses reversed vertical direction,
 `CPI=400`, scale `4/75`, `start=16`, `move=32`, `friction=14`, and `stop=3`.
 
+Lab 13 keeps that integration and lowers only `min-events` from the default 10
+to 4. Its purpose is to let short fast flicks arm; EMA response and release
+delay remain unchanged for a later isolated test if fast coasts still appear
+capped near medium speed.
+
 ## Next Work
 
 Priority 1 is a smooth and consistently responsive active scroll path. Inertia

@@ -130,6 +130,7 @@
         tick = <8>;
         start = <16>;
         move = <32>;
+        min-events = <4>;
         friction = <14>;
         stop = <3>;
     };

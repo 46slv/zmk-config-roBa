@@ -109,6 +109,7 @@ scroll_inertia_v: scroll_inertia_v {
     tick = <8>;
     start = <16>;
     move = <32>;
+    min-events = <4>;
     friction = <14>;
     stop = <3>;
 };
@@ -119,7 +120,8 @@ scroll_inertia_v: scroll_inertia_v {
 - `tick=8`: 125 Hz PMW3610に合わせる。
 - `scale/scale-div`: 下流scalerと必ず一致させる。
 - `start=16`、`move=32`、`friction=14`、`stop=3` は1000 CPI既定値の40%。
-- `min-events`、decay、spanはmodule既定値を使う。
+- `min-events=4` は短い高速flickを約32 msでarm可能にする。
+- decayとspanはmodule既定値を使う。
 
 右手だけでnodeを有効にする。
 
@@ -259,6 +261,8 @@ active側にしか効かない。加速対応はmodule側の出力scale拡張と
 - Lab 11: 同じ成立条件を維持し、active/coast出力を `4/225`へ揃えて3倍化。
 - Lab 12: 元キーマップのcursor acceleration、AML、mouse gesture、横scroll制御を
   復帰。CPI 400換算しきい値、scale `4/75`、上下反転を適用。
+- Lab 13: 高速flickが既定10イベントgateを満たせず停止する問題に対し、
+  `min-events=4`を適用。
 - 慣性module revision: `f7dadef`
 - PMW3610 driver revision at build time: `5e04553`
 

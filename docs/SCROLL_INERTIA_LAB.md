@@ -616,6 +616,50 @@ Build result:
 
 Hardware result:
 
+- Tested on the right half on 2026-07-12.
+- Medium-speed gestures produce the strongest perceived inertia.
+- Very fast flicks either stop or visibly slow almost to a halt before a coast
+  begins at roughly the same speed as a medium gesture.
+- This indicates two likely gates: the default `min-events=10` can reject a
+  short fast flick before arming, and the default `gain=300` / `blend=700` EMA
+  can under-estimate a short high-speed gesture at the handoff.
+
+## Lab 13: Arm Short Fast Flicks
+
+Lab 13 changes one inertia state-machine parameter:
+
+```dts
+min-events = <4>;
+```
+
+At 125 Hz, the default `10` events requires about 80 ms of tracked input before
+inertia may arm. A short, fast flick can end before that gate is met even when
+`start` and `move` are exceeded. Four events reduce the gate to about 32 ms and
+remain inside the module's documented recommended range of 3 to 30.
+
+Unchanged:
+
+- `gain=300`, `blend=700`, and `release=24`
+- `limit=600`
+- CPI-adjusted `start=16`, `move=32`, `friction=14`, and `stop=3`
+- Raw input path, reversed direction, scale `4/75`, and production input stack
+
+Test focus:
+
+- A short fast flick should now produce inertia instead of stopping.
+- Compare the initial coast speed of medium and fast flicks separately.
+- A brief pause before coast may remain because `release=24` and EMA response
+  are intentionally unchanged in this stage.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 20:54.
+- Generated devicetree confirms `min-events=4`.
+- The left half was not rebuilt because this stage changes only a right-hand
+  inertia parameter.
+
+Hardware result:
+
 - Pending user flash/test.
 
 ## Build Results
