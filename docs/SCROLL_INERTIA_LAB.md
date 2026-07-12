@@ -559,6 +559,65 @@ Hardware result:
 
 - Pending user flash/test.
 
+## Lab 12: Production-Like Trackball Stack
+
+Lab 12 applies the working raw-input inertia path to the original roBa
+trackball feature set and reverses the vertical scroll direction.
+
+Restored from the comfortable keymap:
+
+- Cursor-only `pointer_accel`
+- Auto mouse layer with X/Y cursor scaling and `zip_temp_layer`
+- Mouse gesture input and the right-click gesture binding
+- Horizontal-wheel suppression on `EXTRA_FINCTIONS`
+- PMW3610 `CPI=400` and smart behavior
+
+Intentionally not restored:
+
+- PMW3610 `scroll-layers`; raw X/Y must continue to reach the listener.
+- `zip_scroll_snap`; vertical `axis=1` already provides deterministic intent.
+- Scroll-chain pointer acceleration; it would distort inertia detection.
+- RGB, charge-indicator, and encoder modules unrelated to trackball input.
+
+Scroll integration:
+
+```dts
+<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)>,
+<&zip_xy_to_scroll_mapper>,
+<&scroll_inertia_v>,
+<&zip_scroll_scaler 4 75>;
+```
+
+Removing `INPUT_TRANSFORM_Y_INVERT` reverses vertical scroll relative to Lab
+10/11 while preserving the transformed horizontal direction.
+
+The module defaults were calibrated at 1000 CPI. For the restored 400 CPI
+cursor baseline, physical thresholds are scaled to 40 percent:
+
+```dts
+start = <16>;
+move = <32>;
+friction = <14>;
+stop = <3>;
+```
+
+The base listener runs mouse gesture only. `pointer_accel` is referenced inside
+the `DEFAULT/MOUSE` conditional child so layer 11 raw X/Y reaches the scroller
+without acceleration.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 17:32.
+- `roBa_L-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 17:33.
+- Generated right-hand devicetree confirms transform flags `0x3`, matched
+  scale `4/75`, the CPI-adjusted inertia values, AML, and horizontal-wheel
+  suppression.
+- Generated right-hand Kconfig confirms `CPI=400` and PMW3610 smart behavior.
+
+Hardware result:
+
+- Pending user flash/test.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:

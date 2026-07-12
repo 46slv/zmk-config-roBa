@@ -8,6 +8,10 @@ manifest:
       url-base: https://github.com/kumamuk-git
     - name: mjmjm0101
       url-base: https://github.com/mjmjm0101
+    - name: ssbb
+      url-base: https://github.com/ssbb
+    - name: oleksandrmaslov
+      url-base: https://github.com/oleksandrmaslov
       
   projects:
     # https://github.com/zmkfirmware/zmk
@@ -21,11 +25,26 @@ manifest:
       remote: kumamuk-git
       revision: main
 
+    - name: zmk-listeners
+      remote: ssbb
+      revision: v1
+      path: modules/zmk-listeners
+
+    - name: zmk-mouse-gesture
+      remote: kot149
+      revision: v1
+      path: modules/zmk-mouse-gesture
+
     # https://github.com/kot149/zmk-layout-shift
     - name: zmk-layout-shift
       remote: kot149
       revision: v1
       path: modules/zmk-layout-shift
+
+    - name: zmk-pointing-acceleration
+      remote: oleksandrmaslov
+      revision: main
+      path: modules/zmk-pointing-acceleration
 
     - name: zmk-input-processor-scroll-inertia
       remote: mjmjm0101

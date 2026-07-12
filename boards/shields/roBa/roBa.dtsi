@@ -126,8 +126,12 @@
         axis = <1>;
         layer = <11>;
         scale = <4>;
-        scale-div = <225>;
+        scale-div = <75>;
         tick = <8>;
+        start = <16>;
+        move = <32>;
+        friction = <14>;
+        stop = <3>;
     };
 };
 

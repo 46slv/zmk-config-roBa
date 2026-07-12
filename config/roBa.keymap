@@ -30,6 +30,8 @@
 
 /* --- ZMKの基本機能の読み込み --- */
 
+#include <behaviors/input_gestures_accel.dtsi>
+#include <mouse-gesture.dtsi>
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
@@ -86,26 +88,71 @@
 
 /* --- AML (Auto Mouse Layer) 制御 --- */
 
+&zip_temp_layer {
+    require-prior-idle-ms = <800>;
+    excluded-positions = <18 19>;
+};
+
+&mkp_input_listener { input-processors = <&zip_temp_layer MOUSE 500>; };
+
 &trackball {
     status = "okay";
 };
 
+&pointer_accel {
+    input-type = <INPUT_EV_REL>;
+    track-remainders;
+    min-factor = <1000>;
+    max-factor = <2800>;
+    speed-threshold = <150>;
+    speed-max = <4500>;
+    acceleration-exponent = <1>;
+};
+
 &trackball_listener {
     compatible = "zmk,input-listener";
+    input-processors = <&zip_mouse_gesture>;
+
+    auto-mouse-layer {
+        layers = <DEFAULT MOUSE>;
+        input-processors =
+            <&zip_x_scaler 70 100>,
+            <&zip_y_scaler 80 100>,
+            <&pointer_accel>,
+            <&zip_temp_layer MOUSE 50000>;
+
+        process-next;
+    };
 
     scroller {
         layers = <11>;
         input-processors =
-            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)>,
             <&zip_xy_to_scroll_mapper>,
             <&scroll_inertia_v>,
-            <&zip_scroll_scaler 4 225>;
+            <&zip_scroll_scaler 4 75>;
 
+        process-next;
+    };
+
+    disable-scroll-x {
+        layers = <EXTRA_FINCTIONS>;
+        input-processors = <&wheel_x_scaler 0 1>;
         process-next;
     };
 };
 
 / {
+    input_processors {
+        wheel_x_scaler: wheel_x_scaler {
+            compatible = "zmk,input-processor-scaler";
+            #input-processor-cells = <2>;
+            type = <INPUT_EV_REL>;
+            codes = <INPUT_REL_HWHEEL>;
+            track-remainders;
+        };
+    };
+
     combos {
         compatible = "zmk,combos";
 
@@ -707,7 +754,7 @@
         td_rclick_close_tab_mouse_gesture: td_rclick_close_tab_mouse_gesture {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
-            bindings = <&none>, <&td_rclick_close_tab>;
+            bindings = <&mouse_gesture>, <&td_rclick_close_tab>;
 
             tapping-term-ms = <150>;
             flavor = "balanced";

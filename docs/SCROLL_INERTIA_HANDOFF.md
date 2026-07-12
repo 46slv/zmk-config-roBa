@@ -110,6 +110,11 @@ driver's optional `scroll-layers` property and uses:
 Lab 10 uses `CPI=1000`, PMW3610 smart behavior enabled, `axis=1`, `layer=11`,
 scale `4/675`, tick `8`, and the module's default arming/decay parameters.
 
+Lab 12 is the current production-like integration candidate. It restores the
+original cursor acceleration, AML, mouse gesture, and horizontal suppression
+while preserving raw X/Y scroll ownership. It uses reversed vertical direction,
+`CPI=400`, scale `4/75`, `start=16`, `move=32`, `friction=14`, and `stop=3`.
+
 ## Next Work
 
 Priority 1 is a smooth and consistently responsive active scroll path. Inertia

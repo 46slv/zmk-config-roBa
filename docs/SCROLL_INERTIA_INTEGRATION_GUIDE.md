@@ -7,8 +7,8 @@
 roBa の右手 PMW3610 から生の X/Y 移動量を受け取り、通常操作中は連続して
 スクロールし、ボールを弾いて離した後は減速するソフトウェア慣性を出す。
 
-この手順は、実機で通常スクロールと慣性 tail を確認した Lab 10 と、その出力を
-3 倍にした Lab 11 を基準にしている。
+この手順は、実機で通常スクロールと慣性 tail を確認した Lab 10、速度を上げた
+Lab 11、元キーマップの入力機能を統合した Lab 12 を基準にしている。
 
 ## 最重要ルール
 
@@ -79,14 +79,15 @@ manifest:
 CONFIG_ZMK_POINTING=y
 CONFIG_ZMK_POINTING_SMOOTH_SCROLLING=y
 
-CONFIG_PMW3610_CPI=1000
+CONFIG_PMW3610_CPI=400
 CONFIG_PMW3610_CPI_DIVIDOR=1
 CONFIG_PMW3610_SMART_ALGORITHM=y
 CONFIG_PMW3610_POLLING_RATE_125_SW=y
 ```
 
-`CPI=1000` は慣性module既定値の調整基準。`SMART_ALGORITHM=y` はセンサー追跡を
-安定させる設定で、scroll加速processorではない。
+`CPI=400` は元キーマップのcursor感を維持する値。慣性module既定値は1000 CPI
+基準なので、後述のしきい値を40%へ換算する。`SMART_ALGORITHM=y` はセンサー
+追跡を安定させる設定で、scroll加速processorではない。
 
 `CONFIG_PMW3610_SCROLL_TICK` はドライバ内 `scroll-layers` を使わない構成では
 active scroll量の決定に使われない。残っていてもよいが、慣性調整値として扱わない。
@@ -104,8 +105,12 @@ scroll_inertia_v: scroll_inertia_v {
     axis = <1>;
     layer = <11>;
     scale = <4>;
-    scale-div = <225>;
+    scale-div = <75>;
     tick = <8>;
+    start = <16>;
+    move = <32>;
+    friction = <14>;
+    stop = <3>;
 };
 ```
 
@@ -113,8 +118,8 @@ scroll_inertia_v: scroll_inertia_v {
 - `layer=11`: layer 11を離れた瞬間に慣性状態をclearする。
 - `tick=8`: 125 Hz PMW3610に合わせる。
 - `scale/scale-div`: 下流scalerと必ず一致させる。
-- `start`、`move`、`min-events`、`decay`、`friction`、`stop` は最初は指定せず、
-  module既定値を使う。
+- `start=16`、`move=32`、`friction=14`、`stop=3` は1000 CPI既定値の40%。
+- `min-events`、decay、spanはmodule既定値を使う。
 
 右手だけでnodeを有効にする。
 
@@ -139,10 +144,10 @@ scroll_inertia_v: scroll_inertia_v {
     scroller {
         layers = <11>;
         input-processors =
-            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)>,
             <&zip_xy_to_scroll_mapper>,
             <&scroll_inertia_v>,
-            <&zip_scroll_scaler 4 225>;
+            <&zip_scroll_scaler 4 75>;
 
         process-next;
     };
@@ -152,8 +157,10 @@ scroll_inertia_v: scroll_inertia_v {
 順番を変えない。特に慣性processorはmapperの後、scalerの前へ置く。
 
 慣性出力は下流scalerを通らず直接hostへ送られる。このため、nodeの
-`scale=4 / scale-div=225` と `zip_scroll_scaler 4 225` が一致していないと、
+`scale=4 / scale-div=75` と `zip_scroll_scaler 4 75` が一致していないと、
 active scrollから慣性へ移る瞬間に速度が変わる。
+
+`INPUT_TRANSFORM_Y_INVERT` を外したLab 12は、Lab 10/11から縦方向を反転する。
 
 ## 6. Buildする
 
@@ -189,6 +196,7 @@ nix develop -c just build roBa_R
 ```text
 4/675  Lab 10。慣性成立確認済みだが低速。
 4/225  Lab 11。Lab 10の正確に3倍。
+4/75   Lab 12。Lab 11の3倍。低速時のHID出力頻度を改善。
 ```
 
 より速くする場合は分母を小さくする。例:
@@ -249,6 +257,8 @@ active側にしか効かない。加速対応はmodule側の出力scale拡張と
 - Lab 10: raw input、`CPI=1000`、module defaults、scale `4/675`で連続scrollと
   software inertiaを実機確認。
 - Lab 11: 同じ成立条件を維持し、active/coast出力を `4/225`へ揃えて3倍化。
+- Lab 12: 元キーマップのcursor acceleration、AML、mouse gesture、横scroll制御を
+  復帰。CPI 400換算しきい値、scale `4/75`、上下反転を適用。
 - 慣性module revision: `f7dadef`
 - PMW3610 driver revision at build time: `5e04553`
 

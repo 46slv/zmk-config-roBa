@@ -226,20 +226,20 @@ Input processor interaction:
 - The PMW3610 `scroll-layers` property is intentionally omitted so the driver
   emits raw X/Y on layer `11`; the input-listener owns scroll conversion.
 - `scroller` input processor override applies on layer `11`.
-- On the Lab 10 raw-reference branch, the scroller chain follows the inertia
-  module's documented placement:
-  - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)`
+- On the Lab 12 production-input branch, the scroller chain follows the inertia
+  module's documented placement and reverses vertical direction:
+  - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)`
   - `&zip_xy_to_scroll_mapper`
   - `&scroll_inertia_v`
-  - `&zip_scroll_scaler 4 225`
+  - `&zip_scroll_scaler 4 75`
 - `scroll_inertia_v` uses vertical `axis=1`, binds cleanup to layer `11`, and
-  mirrors the downstream `4/225` scale. Lab 11 triples output speed from the
-  working Lab 10 `4/675` baseline without changing detection or decay.
-  Diagnostic threshold and decay
-  overrides are removed so the module defaults apply at `CPI=1000`.
-- Production-only trackball helpers are removed on this branch: auto mouse
-  layer, pointer acceleration, mouse gesture, scroll snap, and horizontal wheel
-  suppression.
+  mirrors the downstream `4/75` scale. At restored `CPI=400`, `start=16`,
+  `move=32`, `friction=14`, and `stop=3` preserve the approximate physical
+  thresholds of the 1000 CPI defaults.
+- Cursor pointer acceleration, AML, mouse gesture, and horizontal-wheel
+  suppression are restored. Pointer acceleration is limited to the
+  `DEFAULT/MOUSE` conditional path and does not precede layer 11 scrolling.
+  Scroll snap remains removed.
 - Scroll tuning notes for future Codex/AI sessions are in
   `docs/INPUT_PROCESSOR_EXPERIMENTS.md`.
 
