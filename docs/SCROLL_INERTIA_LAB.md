@@ -306,6 +306,54 @@ Handoff observation:
   active scroll baseline while preserving the Lab 6 proof that inertia works.
 - Continue from `docs/SCROLL_INERTIA_HANDOFF.md` in a fresh task.
 
+## Lab 8: Raise PMW3610 CPI Only
+
+The failed scroll-snap restoration experiment is not included in this branch.
+Lab 8 returns to the Lab 7 processor chain and changes only the PMW3610 sensor
+resolution:
+
+```conf
+CONFIG_PMW3610_CPI=3200
+```
+
+Reason:
+
+- Earlier roBa history used `CONFIG_PMW3610_CPI=3200` together with a low
+  scroll tick before later changing CPI to `400`.
+- The reduced inertia lab also has `CONFIG_PMW3610_SMART_ALGORITHM=n`, so it no
+  longer has the production driver's smart behavior smoothing the low-speed
+  event stream.
+- If the active scroll path is starving the inertia processor of fine-grained
+  movement events, raising CPI should improve both continuous active scrolling
+  and coast arming without changing inertia parameters.
+
+Not changed in Lab 8:
+
+- `CONFIG_PMW3610_SCROLL_TICK` remains `4`.
+- `scroll_inertia_v.axis = <0>` remains unchanged.
+- `scroll_inertia_v` remains before `zip_scroll_scaler`.
+- `zip_scroll_snap`, auto mouse layer, pointer acceleration, mouse gesture, and
+  horizontal wheel suppression remain removed.
+
+Test focus:
+
+- Layer-11 active scroll should respond to smaller trackball movements.
+- Trackpoint-style scroll should become less intermittent.
+- Inertia should still coast after release; if it does not, CPI alone is not the
+  missing condition.
+
+Lab 8 build results:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 15:23.
+- Output path:
+  `~/zmk-workspace/firmware/zmk-config-roBa-inertia-lab/roBa_R-seeeduino_xiao_ble.uf2`
+- Left-hand firmware was not rebuilt because this step changes only the
+  right-hand PMW3610 sensor configuration.
+
+Hardware result:
+
+- Pending user flash/test.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:
