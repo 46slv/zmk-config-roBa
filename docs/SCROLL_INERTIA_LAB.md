@@ -262,6 +262,41 @@ Lab 6 build results:
 - `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 12:25.
 - `roBa_L-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 12:26.
 
+Result on hardware:
+
+- Active scrolling works.
+- After the trackball is released, scrolling continues in the same direction
+  for a while.
+- This is the intentionally non-decaying Lab 6 coast. It proves that release
+  detection, the transition to coasting, scheduled ticks, and direct HID
+  scroll reports all work on roBa.
+- The Lab 5 failure was therefore an imperceptible effective decay/output
+  problem, not a missing processor invocation or broken HID path.
+
+## Lab 7: Practical Single-Curve Decay
+
+Lab 7 restores a stopping threshold and uses a gentle single decay curve:
+
+```dts
+start = <1>;
+decay-fast = <995>;
+decay-slow = <995>;
+decay-tail = <995>;
+friction = <5>;
+stop = <1>;
+span = <2000>;
+```
+
+At an 8 ms tick, `995` retains 99.5% of velocity per tick. The intended result
+is a clearly visible but steadily weakening coast, with a two-second safety
+cap. This remains a tuning build: the next decision is based on whether the
+coast feels too long, too short, or appropriately trackpad-like.
+
+Lab 7 build results:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 12:32.
+- `roBa_L-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 12:33.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:

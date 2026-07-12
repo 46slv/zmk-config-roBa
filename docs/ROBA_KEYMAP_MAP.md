@@ -231,12 +231,11 @@ Input processor interaction:
   - `&zip_xy_to_scroll_mapper`
   - `&scroll_inertia_v`
   - `&zip_scroll_scaler 4 1`
-- Lab 6 keeps `scroll_inertia_v.axis = <0>` and places it before
+- Lab 7 keeps `scroll_inertia_v.axis = <0>` and places it before
   `&zip_scroll_scaler 4 1` so the inertia processor sees pre-scaler scroll
   values while mirroring the downstream scale as `scale = <4>; scale-div = <1>;`.
-- Its diagnostic parameters disable decay and stopping for up to six seconds;
-  this intentionally exaggerated behavior distinguishes an imperceptibly short
-  coast from failure to arm or emit inertia.
+- It uses a `995` single decay curve, light friction, and a two-second safety
+  cap after Lab 6 proved that coasting and direct HID output work.
 - Production-only trackball helpers are removed on this branch: auto mouse
   layer, pointer acceleration, mouse gesture, scroll snap, and horizontal wheel
   suppression.
