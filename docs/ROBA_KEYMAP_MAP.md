@@ -230,8 +230,9 @@ Input processor interaction:
   - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)`
   - `&zip_xy_to_scroll_mapper`
   - `&zip_scroll_scaler 4 1`
-- Lab 3 removes `&scroll_inertia_v` from the active chain to confirm whether
-  the base scroll path still works without the inertia processor.
+  - `&scroll_inertia_v`
+- Lab 4 sets `scroll_inertia_v.axis = <0>` to test whether previous no-scroll
+  results were caused by vertical-only axis filtering.
 - Production-only trackball helpers are removed on this branch: auto mouse
   layer, pointer acceleration, mouse gesture, scroll snap, and horizontal wheel
   suppression.

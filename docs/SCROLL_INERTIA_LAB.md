@@ -145,6 +145,35 @@ Conclusion for Lab 3:
   production keymap until pointer acceleration and PMW3610 smart behavior are
   restored.
 
+## Lab 4: Axis-Mismatch Diagnostic
+
+Lab 4 returns `scroll_inertia_v` to the active chain, but changes its axis from
+vertical-only to both axes:
+
+```dts
+axis = <0>;
+```
+
+Reason:
+
+- In single-axis mode, the module treats the other wheel axis as cross-axis
+  input and sets `event->value = 0`.
+- Lab 3 proved the reduced `transform -> mapper -> scaler` scroll path works
+  without the inertia processor.
+- Therefore, if roBa's effective scroll output reaches `scroll_inertia_v` as
+  `INPUT_REL_HWHEEL` while the inertia node is configured as `axis = <1>`, the
+  inertia processor itself will suppress normal scrolling.
+
+Interpretation:
+
+- If active scrolling returns with `axis = <0>`, the previous no-scroll result
+  was likely an axis/code mismatch, not a general pass-through failure.
+- If active scrolling still fails with `axis = <0>`, the issue is more likely
+  caused by coasting/arming state or the module's handling after the scaler.
+- If inertia appears, continue by finding the correct single-axis setting
+  (`axis = <1>` vs `axis = <2>`) and/or by moving the processor back before the
+  scaler with matching `scale`/`scale-div`.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:
