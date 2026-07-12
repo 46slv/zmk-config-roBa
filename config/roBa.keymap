@@ -140,7 +140,7 @@
             <&zip_xy_to_scroll_mapper>,
             <&zip_scroll_snap>,
             <&scroll_inertia_v>,
-            <&zip_scroll_scaler 4 75>;
+            <&zip_scroll_scaler 4 60>;
 
         process-next;
     };

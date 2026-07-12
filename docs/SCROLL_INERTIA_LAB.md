@@ -883,6 +883,45 @@ Hardware result:
   blocking defect was observed in the acceptance check.
 - Lab 16b is the accepted baseline for the next experiment.
 
+## Lab 17: Matched Low-Speed Output Scale
+
+Lab 17 keeps the accepted Lab 16b snap, axes, directions, inertia thresholds,
+EMA, and decay. It changes only the matched active/coast output ratio:
+
+```dts
+scroll_inertia_v {
+    scale = <4>;
+    scale-div = <60>;
+};
+
+<&zip_scroll_scaler 4 60>;
+```
+
+Compared with `4/75`, `4/60` produces 25 percent more output from the same
+input. Matching both values preserves the active-to-coast speed relationship.
+This does not lower the sensor or snap detection thresholds; it helps small
+accumulated values reach a host-visible HID scroll unit sooner.
+
+Test focus:
+
+- Slow and short scroll movements should respond more consistently.
+- Normal vertical and horizontal scrolling should not become too fast.
+- Active-to-coast handoff should remain as smooth as Lab 16b.
+- Snap direction, short-flick arming, and very fast flick behavior should not
+  regress.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 23:55.
+- Generated devicetree confirms both inertia scale and downstream scaler are
+  `4/60`; snap, transform, and all inertia thresholds remain unchanged.
+- Output:
+  `~/zmk-workspace/firmware/zmk-config-roBa-inertia-lab/roBa_R-seeeduino_xiao_ble.uf2`
+
+Hardware result:
+
+- Pending user flash/test.
+
 ## Future Candidate: Unified Axis-Lock Inertia Processor
 
 Keep a purpose-built combined module on the development backlog. Its goal is

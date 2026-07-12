@@ -232,7 +232,7 @@ Input processor interaction:
   - `&zip_xy_to_scroll_mapper`
   - `&zip_scroll_snap`
   - `&scroll_inertia_v`
-  - `&zip_scroll_scaler 4 75`
+  - `&zip_scroll_scaler 4 60`
 - Lab 16 restores scroll snap before inertia and changes inertia to `axis=0`.
   Snap uses the earlier low-latency settings (`require-n-samples=2`, immediate
   threshold `200`, lock `175 ms` / `8` events, idle reset `175 ms`) so vertical
@@ -246,8 +246,11 @@ Input processor interaction:
   `Y_INVERT`: horizontal loses its inversion and vertical gains one.
   The user accepted this direction mapping and the combined snap/inertia
   behavior on right-hand hardware on 2026-07-12.
+- Lab 17 changes the matched active/coast scale from `4/75` to `4/60`, making
+  both outputs 25 percent faster while preserving their handoff ratio. Snap,
+  directions, arming thresholds, EMA, and decay are unchanged.
 - `scroll_inertia_v` binds cleanup to layer `11` and
-  mirrors the downstream `4/75` scale. At restored `CPI=400`, `start=16`,
+  mirrors the downstream `4/60` scale. At restored `CPI=400`, `start=16`,
   `move=32`, `friction=14`, and `stop=3` preserve the approximate physical
   thresholds of the 1000 CPI defaults. Lab 13 lowers `min-events` from the
   default 10 to 4 so short fast flicks can arm within about 32 ms. Lab 14 uses

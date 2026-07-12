@@ -126,7 +126,7 @@
         axis = <0>;
         layer = <11>;
         scale = <4>;
-        scale-div = <75>;
+        scale-div = <60>;
         tick = <8>;
         gain = <500>;
         blend = <500>;
