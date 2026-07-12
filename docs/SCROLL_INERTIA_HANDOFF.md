@@ -30,7 +30,9 @@ must not be changed until the lab behavior is acceptable.
   scrolling, but inertia was not perceptible.
 - Lab 6, commit `93162a0`: disabling decay caused scrolling to continue in the
   release direction. This proves release detection, transition to coasting,
-  scheduled inertia ticks, and direct HID scroll output all work.
+  scheduled inertia ticks, and direct HID scroll output all work on the
+  driver's quantized `+/-1` wheel event stream. It does not prove correct
+  velocity tracking from physical ball motion.
 - Lab 7, commit `5fcae6d`: practical decay candidate was built but has not yet
   received a conclusive feel assessment.
 
@@ -46,7 +48,32 @@ The reduced lab build is not yet a usable scrolling baseline:
 Do not interpret Lab 6's long same-direction scroll as a bug. It was an
 intentional non-decaying diagnostic and successfully proved inertia operation.
 
-## Current Chain
+## Root Integration Mismatch
+
+The modified `kumamuk-git/zmk-pmw3610-driver` and the inertia module currently
+both participate in scroll conversion:
+
+1. `&trackball { scroll-layers = <11>; };` makes the PMW3610 driver enter its
+   internal `SCROLL` mode.
+2. The driver accumulates raw X/Y motion until
+   `CONFIG_PMW3610_SCROLL_TICK` is exceeded.
+3. It then emits only `INPUT_REL_WHEEL` or `INPUT_REL_HWHEEL` with value `+1`
+   or `-1`, and clears both X and Y accumulators.
+4. The listener chain receives this already quantized wheel stream, although
+   the inertia module is designed to follow `zip_xy_to_scroll_mapper` and infer
+   velocity from magnitude-preserving scroll deltas.
+
+This is a data-contract mismatch, not evidence that pointer acceleration or
+normal cursor behavior conflicts with inertia. Outside the driver's scroll
+layer, cursor motion follows the separate `MOVE` path and can be diagnosed
+independently.
+
+Lab 6 could still coast for nearly six seconds because its diagnostic gates
+accepted one `+/-1` event (`start=0`, `move=1`, `min-events=1`), its 24 ms stop
+detector entered `COASTING`, and no decay or stop threshold could reduce the
+stored velocity before `span=6000` expired.
+
+## Lab 7 And Lab 8 Chain
 
 Layer 11 uses:
 
@@ -60,6 +87,15 @@ Layer 11 uses:
 Lab 7 currently uses `axis = <0>`, scale `4/1`, tick `8`, start `1`, move `1`,
 release `24`, decay `995`, friction `5`, stop `1`, and span `2000`.
 
+The current Lab 9 branch keeps the same sensor settings but temporarily removes
+`&scroll_inertia_v` from the active chain, leaving:
+
+```dts
+<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+<&zip_xy_to_scroll_mapper>,
+<&zip_scroll_scaler 4 1>;
+```
+
 ## Next Work
 
 Priority 1 is a smooth and consistently responsive active scroll path. Inertia
@@ -71,20 +107,19 @@ only tiny HID movement. The cause must be sought among the current lab changes
 from the comfortable production configuration, including the active inertia
 processor path; it should not be assumed to be a mechanical sensor fault.
 
-1. Compare the current lab input path with the first known comfortable
-   low-speed production version and identify which removed processor or PMW3610
-   setting supplied continuous fine-grained events.
-2. Restore one input-path component at a time while keeping the proven Lab 6
-   inertia placement and `axis = <0>`.
-3. Test both layer-11 trackball scrolling and trackpoint-style scrolling after
-   each build. Record active-scroll continuity separately from coast behavior.
-4. Once active scrolling is stable, tune decay from the Lab 6 proof toward a
-   short natural tail. Do not change axis, placement, scale, and decay together.
-
-Likely comparison points include PMW3610 scroll tick, the original scaler
-ratio/remainder behavior, low-speed scaling, and scroll snap. Pointer
-acceleration and AML should only be restored when evaluating pointer quality;
-they must not obscure the active-scroll test.
+1. Complete the Lab 9 bypass test as a baseline for the driver's current
+   quantized scroll mode.
+2. In the next isolated experiment, remove only
+   `&trackball { scroll-layers = <11>; };`. The property is optional in this
+   driver, so layer 11 should remain in the raw X/Y `MOVE` path while the ZMK
+   input-listener's `scroller` child performs transform and mapping.
+3. Verify the raw-listener baseline without inertia before adding the processor
+   back after `zip_xy_to_scroll_mapper`.
+4. For normal vertical scrolling, return to `axis=1`; reserve `axis=0` for the
+   module's documented free-2D pan mode.
+5. Only after active raw-input scrolling is continuous, tune inertia thresholds
+   and decay. Keep pointer acceleration out of the scroll chain; cursor-chain
+   behavior is a separate concern.
 
 ## Safety And Recovery
 

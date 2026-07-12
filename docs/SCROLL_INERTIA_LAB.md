@@ -270,8 +270,25 @@ Result on hardware:
 - This is the intentionally non-decaying Lab 6 coast. It proves that release
   detection, the transition to coasting, scheduled ticks, and direct HID
   scroll reports all work on roBa.
-- The Lab 5 failure was therefore an imperceptible effective decay/output
-  problem, not a missing processor invocation or broken HID path.
+- Why this worked despite the integration mismatch: the modified PMW3610
+  driver had already reduced scroll-layer motion to sparse `WHEEL/HWHEEL`
+  events with values of `+1` or `-1`. Lab 6 used `start=0`, `move=1`, and
+  `min-events=1`, so one such event was enough to arm the processor. After
+  `release=24` ms without another quantized wheel event, the stop detector
+  entered `COASTING`. With `decay=1000`, `friction=0`, and `stop=0`, velocity
+  could not decrease; `span=6000` was therefore the effective stop condition.
+- This validates the coasting scheduler and HID output mechanism, but not the
+  intended velocity tracking quality. The processor was operating on a
+  thresholded `+/-1` event stream rather than raw or magnitude-preserving
+  scroll deltas.
+- The same mismatch can explain the intermittent active-scroll symptom. While
+  the ball is still moving, the PMW3610 driver's accumulation threshold can
+  leave gaps longer than `release=24` ms. The inertia processor can interpret
+  such a gap as release, enter `COASTING` early, and absorb later same-direction
+  wheel events as physical tail input.
+- The Lab 5 failure was not a missing processor invocation or broken HID path,
+  but it cannot be attributed to decay alone. The quantized driver event stream
+  also prevented meaningful velocity estimation under practical thresholds.
 
 ## Lab 7: Practical Single-Curve Decay
 
