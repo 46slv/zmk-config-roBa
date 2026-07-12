@@ -266,7 +266,7 @@ Result on hardware:
 
 - Active scrolling works.
 - After the trackball is released, scrolling continues in the same direction
-  for a while.
+  for close to the configured six-second span.
 - This is the intentionally non-decaying Lab 6 coast. It proves that release
   detection, the transition to coasting, scheduled ticks, and direct HID
   scroll reports all work on roBa.
@@ -374,6 +374,52 @@ Hardware result:
 - The next decisive one-element test is to keep the Lab 8 sensor settings and
   bypass only `scroll_inertia_v`. If continuous scrolling returns, the failure
   is in the inertia processor path rather than CPI or physical sensor motion.
+
+## Lab 9: Bypass Inertia With Lab 8 Sensor Settings
+
+Lab 9 keeps every Lab 8 sensor and scroll-path setting except for one change:
+`scroll_inertia_v` is removed from the active scroller chain.
+
+```dts
+<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+<&zip_xy_to_scroll_mapper>,
+<&zip_scroll_scaler 4 1>;
+```
+
+Unchanged:
+
+- `CONFIG_PMW3610_CPI=3200`
+- `CONFIG_PMW3610_SMART_ALGORITHM=n`
+- `CONFIG_PMW3610_SCROLL_TICK=4`
+- `zip_scroll_scaler 4 1`
+- The reduced listener stack remains in place.
+- The inertia node and Lab 7 parameters remain defined and enabled, but no
+  active input-listener references the processor.
+
+Purpose:
+
+- Determine whether the intermittent response seen in the Lab 8 video is
+  introduced by the active inertia processor path.
+- Do not evaluate inertia feel in this build; no software coast is expected.
+
+Hardware decision:
+
+- If smooth physical movement becomes continuous, investigate
+  `scroll_inertia_v` state transitions, axis merging, and event suppression.
+- If pauses remain, the cause is elsewhere in the reduced lab changes. Restore
+  the production PMW3610 smart behavior next, one element at a time.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 15:54.
+- Output path:
+  `~/zmk-workspace/firmware/zmk-config-roBa-inertia-lab/roBa_R-seeeduino_xiao_ble.uf2`
+- The left half was not rebuilt because this test changes only the right-hand
+  trackball input chain.
+
+Hardware result:
+
+- Pending user flash/test.
 
 ## Build Results
 

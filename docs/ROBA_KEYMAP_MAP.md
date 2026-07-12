@@ -226,16 +226,13 @@ Input processor interaction:
 - `&trackball` has `scroll-layers = <11>`.
 - `scroller` input processor override applies on layer `11`.
 - On `codex/scroll-inertia-lab`, the current scroller chain is intentionally
-  minimal for inertia verification:
+  minimal for inertia verification. Lab 9 bypasses the inertia processor:
   - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)`
   - `&zip_xy_to_scroll_mapper`
-  - `&scroll_inertia_v`
   - `&zip_scroll_scaler 4 1`
-- Lab 7 keeps `scroll_inertia_v.axis = <0>` and places it before
-  `&zip_scroll_scaler 4 1` so the inertia processor sees pre-scaler scroll
-  values while mirroring the downstream scale as `scale = <4>; scale-div = <1>;`.
-- It uses a `995` single decay curve, light friction, and a two-second safety
-  cap after Lab 6 proved that coasting and direct HID output work.
+- Lab 9 keeps the Lab 8 sensor and scaler settings but removes only the active
+  `scroll_inertia_v` reference to diagnose intermittent scrolling. The inertia
+  node and Lab 7 parameters remain defined and enabled.
 - Production-only trackball helpers are removed on this branch: auto mouse
   layer, pointer acceleration, mouse gesture, scroll snap, and horizontal wheel
   suppression.
