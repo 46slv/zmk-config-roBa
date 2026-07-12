@@ -229,10 +229,11 @@ Input processor interaction:
   minimal for inertia verification:
   - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)`
   - `&zip_xy_to_scroll_mapper`
-  - `&zip_scroll_scaler 4 1`
   - `&scroll_inertia_v`
-- Lab 4 sets `scroll_inertia_v.axis = <0>` to test whether previous no-scroll
-  results were caused by vertical-only axis filtering.
+  - `&zip_scroll_scaler 4 1`
+- Lab 5 keeps `scroll_inertia_v.axis = <0>` and moves it before
+  `&zip_scroll_scaler 4 1` so the inertia processor sees pre-scaler scroll
+  values while mirroring the downstream scale as `scale = <4>; scale-div = <1>;`.
 - Production-only trackball helpers are removed on this branch: auto mouse
   layer, pointer acceleration, mouse gesture, scroll snap, and horizontal wheel
   suppression.

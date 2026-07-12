@@ -125,8 +125,8 @@
 
         axis = <0>;
         layer = <(-1)>;
-        scale = <8000>;
-        scale-div = <1000>;
+        scale = <4>;
+        scale-div = <1>;
         tick = <8>;
         start = <1>;
         move = <1>;

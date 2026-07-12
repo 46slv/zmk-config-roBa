@@ -174,6 +174,52 @@ Interpretation:
   (`axis = <1>` vs `axis = <2>`) and/or by moving the processor back before the
   scaler with matching `scale`/`scale-div`.
 
+User result for Lab 4: active scrolling works, but inertia is still absent.
+
+Conclusion for Lab 4:
+
+- The earlier no-scroll behavior was likely caused by vertical-only axis
+  filtering (`axis = <1>`) suppressing roBa's effective wheel axis.
+- `scroll_inertia_v` can pass through active scroll when configured as
+  `axis = <0>`.
+- The remaining problem is now inertia arming/output, not basic pass-through.
+
+## Lab 5: Recommended Processor Placement With roBa Scale
+
+Lab 5 keeps `axis = <0>`, but moves `scroll_inertia_v` before
+`zip_scroll_scaler`, matching the module's binding recommendation. Instead of
+using the article's small `4/675` scaler, it uses roBa's known active scroll
+scale:
+
+```dts
+<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+<&zip_xy_to_scroll_mapper>,
+<&scroll_inertia_v>,
+<&zip_scroll_scaler 4 1>;
+```
+
+The inertia node mirrors the downstream scaler:
+
+```dts
+axis = <0>;
+scale = <4>;
+scale-div = <1>;
+start = <1>;
+move = <1>;
+min-events = <1>;
+decel-samples = <1>;
+```
+
+Interpretation:
+
+- If inertia appears, the module needed to see pre-scaler values and the prior
+  post-scaler placement was preventing reliable arming.
+- If active scrolling works but inertia is still absent, the issue is likely
+  inside arming/release detection or the module's direct HID output path.
+- If active scrolling breaks again, the recommended pre-scaler placement is
+  incompatible with this reduced roBa chain unless more axis/code mapping is
+  added before the scaler.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:
