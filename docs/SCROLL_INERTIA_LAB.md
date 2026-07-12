@@ -297,6 +297,15 @@ Lab 7 build results:
 - `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 12:32.
 - `roBa_L-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 12:33.
 
+Handoff observation:
+
+- In the current reduced lab lineage, active scrolling is choppy and
+  intermittent: some trackball movement scrolls and some does not.
+- The trackpoint-style scroll operation shows the same issue.
+- Before further inertia feel tuning, restore a smooth, continuously responsive
+  active scroll baseline while preserving the Lab 6 proof that inertia works.
+- Continue from `docs/SCROLL_INERTIA_HANDOFF.md` in a fresh task.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:
