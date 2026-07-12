@@ -852,6 +852,32 @@ Hardware result:
 
 - Pending user flash/test.
 
+### Lab 16b: Reverse Both Scroll Directions
+
+Lab 16a corrected the physical axis assignment, but hardware testing showed
+that both horizontal and vertical directions were opposite the desired result.
+Lab 16b changes only the transform flag:
+
+```dts
+<&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>,
+```
+
+Relative to Lab 16a, removing `X_INVERT` reverses horizontal output and adding
+`Y_INVERT` reverses vertical output. XY remains unswapped. Snap, inertia,
+scaling, thresholds, and all other processors remain unchanged.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 23:32.
+- Generated devicetree confirms transform flags `0x4` (`Y_INVERT` only), then
+  mapper, snap, inertia, and scaler `4/75`.
+- Output:
+  `~/zmk-workspace/firmware/zmk-config-roBa-inertia-lab/roBa_R-seeeduino_xiao_ble.uf2`
+
+Hardware result:
+
+- Pending user flash/test.
+
 ## Future Candidate: Unified Axis-Lock Inertia Processor
 
 Keep a purpose-built combined module on the development backlog. Its goal is

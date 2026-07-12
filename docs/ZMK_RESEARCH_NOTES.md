@@ -205,6 +205,7 @@ scroller {
 - Lab 14 実機はほぼ許容範囲。Lab 15 はEMAとscaleを維持し、小さい意図的flick向けに `start=12`、`move=20`へ下げる。低速active scrollの無反応は混同せず、必要なら次段でmatched scale `4/75 -> 4/60`を単独検証する。
 - Lab 16 はLab 15を維持し、`mapper -> zip_scroll_snap -> scroll_inertia_v(axis=0) -> scaler`を検証する。snapは過去の低遅延設定（2 samples、immediate 200、175 ms / 8 events）を使う。縦横の選択と同方向の慣性を狙うが、snap判定中のevent抑制が低速・短距離の無反応を悪化させる可能性を最優先で確認する。
 - Lab 16実機では右→上、上→右、左→下、下→左となり、`XY_SWAP`が横軸を有効化した構成では不適切と判明した。Lab 16aは`INPUT_TRANSFORM_XY_SWAP`だけを外し、`X_INVERT`、snap、axis=0 inertia、その他のLab 15設定を維持する。
+- Lab 16a実機では軸対応は直ったが左右・上下とも希望方向と逆だった。Lab 16bは`X_INVERT`を`Y_INVERT`へ置換し、横と縦を両方反転する。XY swap、snap、慣性パラメータは変更しない。
 
 ### `disable-scroll-x`
 

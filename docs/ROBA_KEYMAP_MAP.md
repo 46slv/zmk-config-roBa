@@ -228,7 +228,7 @@ Input processor interaction:
 - `scroller` input processor override applies on layer `11`.
 - On the Lab 12 production-input branch, the scroller chain follows the inertia
   module's documented placement and reverses vertical direction:
-  - `&zip_xy_transform INPUT_TRANSFORM_X_INVERT`
+  - `&zip_xy_transform INPUT_TRANSFORM_Y_INVERT`
   - `&zip_xy_to_scroll_mapper`
   - `&zip_scroll_snap`
   - `&scroll_inertia_v`
@@ -241,6 +241,9 @@ Input processor interaction:
   right mapped to up, up to right, left to down, and down to left. Keeping
   `X_INVERT` preserves the established direction convention while routing
   physical horizontal movement to HWHEEL and vertical movement to WHEEL.
+- Lab 16b reverses both user-facing directions after Lab 16a hardware testing.
+  Reversing both relative to the `X_INVERT` state requires replacing it with
+  `Y_INVERT`: horizontal loses its inversion and vertical gains one.
 - `scroll_inertia_v` binds cleanup to layer `11` and
   mirrors the downstream `4/75` scale. At restored `CPI=400`, `start=16`,
   `move=32`, `friction=14`, and `stop=3` preserve the approximate physical
