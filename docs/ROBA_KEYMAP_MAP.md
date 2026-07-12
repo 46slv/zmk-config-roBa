@@ -231,14 +231,17 @@ Input processor interaction:
   - `&zip_xy_to_scroll_mapper`
   - `&scroll_inertia_v`
   - `&zip_scroll_scaler 4 1`
+  - `&zip_scroll_snap`
 - Lab 7 keeps `scroll_inertia_v.axis = <0>` and places it before
   `&zip_scroll_scaler 4 1` so the inertia processor sees pre-scaler scroll
   values while mirroring the downstream scale as `scale = <4>; scale-div = <1>;`.
 - It uses a `995` single decay curve, light friction, and a two-second safety
   cap after Lab 6 proved that coasting and direct HID output work.
-- Production-only trackball helpers are removed on this branch: auto mouse
-  layer, pointer acceleration, mouse gesture, scroll snap, and horizontal wheel
-  suppression.
+- Lab 8 restores only production `zip_scroll_snap` after `&zip_scroll_scaler 4 1`
+  to test whether snap/remainder handling recovers smooth active scrolling while
+  preserving Lab 6 inertia placement and `axis = <0>`.
+- Production-only trackball helpers still removed on this branch: auto mouse
+  layer, pointer acceleration, mouse gesture, and horizontal wheel suppression.
 - Scroll tuning notes for future Codex/AI sessions are in
   `docs/INPUT_PROCESSOR_EXPERIMENTS.md`.
 

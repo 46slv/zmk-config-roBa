@@ -27,6 +27,7 @@
 // #include <input/processors/report_rate_limit.dtsi>     // 通信の更新レート制限（バッテリー節約等）
 
 #include <layout_shift_kp_override.dtsi>               // シフト時のキー上書き設定
+#include <scroll-snap.dtsi>
 
 /* --- ZMKの基本機能の読み込み --- */
 
@@ -91,6 +92,14 @@
     scroll-layers = <11>;
 };
 
+&zip_scroll_snap {
+    require-n-samples = <2>;
+    immediate-snap-threshold = <200>;
+    lock-duration-ms = <175>;
+    lock-for-next-n-events = <8>;
+    idle-reset-timeout-ms = <175>;
+};
+
 &trackball_listener {
     compatible = "zmk,input-listener";
 
@@ -100,7 +109,8 @@
             <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
             <&zip_xy_to_scroll_mapper>,
             <&scroll_inertia_v>,
-            <&zip_scroll_scaler 4 1>;
+            <&zip_scroll_scaler 4 1>,
+            <&zip_scroll_snap>;
 
         process-next;
     };

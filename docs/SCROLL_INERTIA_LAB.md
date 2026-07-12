@@ -306,6 +306,76 @@ Handoff observation:
   active scroll baseline while preserving the Lab 6 proof that inertia works.
 - Continue from `docs/SCROLL_INERTIA_HANDOFF.md` in a fresh task.
 
+## Lab 8: Restore Scroll Snap Only
+
+Lab 8 keeps the proven Lab 6/Lab 7 inertia conditions:
+
+- `scroll_inertia_v.axis = <0>`
+- `scroll_inertia_v` remains before `zip_scroll_scaler`
+- downstream active scroll scale remains `zip_scroll_scaler 4 1`
+
+The only active-scroll component restored from the stable low-speed production
+path is `zip_scroll_snap`, with the same parameters that were previously
+recorded as acceptable:
+
+```dts
+&zip_scroll_snap {
+    require-n-samples = <2>;
+    immediate-snap-threshold = <200>;
+    lock-duration-ms = <175>;
+    lock-for-next-n-events = <8>;
+    idle-reset-timeout-ms = <175>;
+};
+```
+
+The layer-11 scroller chain becomes:
+
+```dts
+<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+<&zip_xy_to_scroll_mapper>,
+<&scroll_inertia_v>,
+<&zip_scroll_scaler 4 1>,
+<&zip_scroll_snap>;
+```
+
+Reason:
+
+- The handoff problem is active-scroll continuity, not inertia strength.
+- Production history says the comfortable low-speed scroll path used
+  `CONFIG_PMW3610_SCROLL_TICK=4`, `zip_scroll_scaler 4 1`, and
+  `zip_scroll_snap.require-n-samples = <2>`.
+- Current Lab 7 already keeps `CONFIG_PMW3610_SCROLL_TICK=4` and
+  `zip_scroll_scaler 4 1`; therefore `zip_scroll_snap` is the smallest
+  remaining direct scroll-path difference to test before restoring broader
+  pointer or AML helpers.
+
+Test focus:
+
+- Layer-11 trackball active scroll should be smooth and continuously responsive.
+- Trackpoint-style scroll should not intermittently drop movement.
+- Coast behavior should still appear after release; exact decay feel is not the
+  priority in this build.
+
+Not changed in Lab 8:
+
+- PMW3610 smart algorithm remains disabled.
+- Auto mouse layer, pointer acceleration, mouse gesture, and horizontal wheel
+  suppression remain removed.
+- Inertia parameters are unchanged from Lab 7.
+
+Lab 8 build results:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 12:48.
+- Output path:
+  `~/zmk-workspace/firmware/zmk-config-roBa-inertia-lab/roBa_R-seeeduino_xiao_ble.uf2`
+- Left-hand firmware was not rebuilt for this step because the change targets
+  right-hand trackball scroll behavior and the immediate test needs the right
+  half first.
+
+Hardware result:
+
+- Pending user flash/test.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:
