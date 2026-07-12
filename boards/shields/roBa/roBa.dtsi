@@ -126,7 +126,7 @@
         axis = <1>;
         layer = <11>;
         scale = <4>;
-        scale-div = <675>;
+        scale-div = <225>;
         tick = <8>;
     };
 };

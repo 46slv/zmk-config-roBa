@@ -198,6 +198,7 @@ scroller {
 - 2026-07-11 の低速スクロール改善では、`CONFIG_PMW3610_SCROLL_TICK=4` と `zip_scroll_snap.require-n-samples=<2>` を採用した。その後の慣性スクロール実験では `scroll_inertia_v` を追加し、`zip_scroll_snap` はチェーンから外した。実機で蓄積感、慣性の尾、縦方向の向きを確認する。
 - 2026-07-12 の Lab 9 では、Lab 8 の `CPI=3200`、smart algorithm 無効、scroll tick `4`、scaler `4/1` を維持し、active chain から `scroll_inertia_v` だけを外した。滑らかな物理操作で発生する停止が消えるかを確認し、慣性 processor 経路とその他の最小化差分を切り分ける。
 - 2026-07-12 の Lab 10 では、PMW3610 の optional `scroll-layers` を外し、layer 11 でも raw X/Y を listener へ渡す構成へ変更した。listener が `transform -> mapper -> inertia -> scaler 4/675` を単独で所有し、`CPI=1000`、`axis=1`、module defaults で作者の参照条件に合わせる。これにより、driver 内の閾値量子化と inertia の速度推定が競合しない。
+- Lab 10 実機で連続scrollと慣性tailを確認した。Lab 11 は検出条件を保ったまま、inertia node と downstream scaler を `4/225` へ揃え、active/coast出力を正確に3倍へ上げる。既存 `pointer_accel` はscroll値を慣性検出前に変形するため追加しない。
 
 ### `disable-scroll-x`
 

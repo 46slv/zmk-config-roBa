@@ -502,6 +502,61 @@ Build result:
 
 Hardware result:
 
+- Tested on the right half on 2026-07-12.
+- Active scrolling is continuous with the raw-input path.
+- A software inertia tail is perceptible after release.
+- The integration objective is therefore achieved: the PMW3610 driver no
+  longer quantizes the input before the inertia processor.
+- Active scroll speed is too slow at scale `4/675`; increase output scale next
+  without changing CPI, arming, axis, or decay.
+
+## Lab 11: Triple Active And Inertia Output Scale
+
+Lab 11 keeps the working Lab 10 raw-input integration and changes only the
+matched active/inertia output ratio:
+
+```dts
+scroll_inertia_v {
+    scale = <4>;
+    scale-div = <225>;
+};
+
+<&zip_scroll_scaler 4 225>;
+```
+
+`4/225` is exactly three times `4/675`. Matching both locations preserves the
+handoff between direct active scroll and the inertia module's direct HID coast.
+
+Unchanged:
+
+- Raw X/Y input on layer 11; PMW3610 `scroll-layers` remains omitted.
+- `CONFIG_PMW3610_CPI=1000`
+- `CONFIG_PMW3610_SMART_ALGORITHM=y`
+- `axis=1`, `layer=11`, and `tick=8`
+- Module-default arming, decay, friction, stop, and span parameters
+
+Acceleration decision:
+
+- Do not add the existing `pointer_accel` processor to this scroll chain. It
+  would alter the values used by the inertia detector and can make slow motion
+  look like a flick.
+- First determine whether the 3x linear scale plus inertia provides enough
+  range. If speed-dependent acceleration is still required, add it as a
+  scroll-specific output policy that does not modify the raw values observed by
+  inertia.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 16:55.
+- Output path:
+  `~/zmk-workspace/firmware/zmk-config-roBa-inertia-lab/roBa_R-seeeduino_xiao_ble.uf2`
+- Generated devicetree confirms both the downstream scaler and inertia
+  `scale-div` resolve to `225`.
+- The left half was not rebuilt because this changes only the right-hand scroll
+  output scale.
+
+Hardware result:
+
 - Pending user flash/test.
 
 ## Build Results

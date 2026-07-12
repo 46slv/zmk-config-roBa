@@ -231,9 +231,11 @@ Input processor interaction:
   - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)`
   - `&zip_xy_to_scroll_mapper`
   - `&scroll_inertia_v`
-  - `&zip_scroll_scaler 4 675`
+  - `&zip_scroll_scaler 4 225`
 - `scroll_inertia_v` uses vertical `axis=1`, binds cleanup to layer `11`, and
-  mirrors the downstream `4/675` scale. Diagnostic threshold and decay
+  mirrors the downstream `4/225` scale. Lab 11 triples output speed from the
+  working Lab 10 `4/675` baseline without changing detection or decay.
+  Diagnostic threshold and decay
   overrides are removed so the module defaults apply at `CPI=1000`.
 - Production-only trackball helpers are removed on this branch: auto mouse
   layer, pointer acceleration, mouse gesture, scroll snap, and horizontal wheel
