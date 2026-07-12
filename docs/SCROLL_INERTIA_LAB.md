@@ -220,6 +220,48 @@ Interpretation:
   incompatible with this reduced roBa chain unless more axis/code mapping is
   added before the scaler.
 
+Result on hardware:
+
+- Active scrolling works.
+- No inertia is perceptible.
+- This rules out processor placement alone as the cause. The next test must
+  distinguish an effect that decays too quickly from failure to enter or emit
+  the coasting state.
+
+## Lab 6: Non-Decaying Inertia Diagnostic
+
+Lab 6 keeps the working Lab 5 processor chain and makes any successfully armed
+coast deliberately persistent and obvious:
+
+```dts
+start = <0>;
+move = <1>;
+min-events = <1>;
+release = <24>;
+decay-fast = <1000>;
+decay-slow = <1000>;
+decay-tail = <1000>;
+friction = <0>;
+stop = <0>;
+span = <6000>;
+```
+
+This is a diagnostic configuration, not a usable final feel. Once armed, the
+velocity should remain for up to six seconds. Therefore:
+
+- If a long coast appears, earlier builds were arming but their effective
+  output decayed or stopped before it became perceptible.
+- If active scrolling still works but no coast appears, parameter strength is
+  no longer a credible explanation. The remaining fault is in release/arming
+  or the module's direct HID report path.
+- If scrolling becomes stuck or runaway, unplug/reflash with Lab 5; that result
+  still proves the coasting output path is active.
+
+Lab 6 build results:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 12:25.
+- `roBa_L-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 12:26.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:
