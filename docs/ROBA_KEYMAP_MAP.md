@@ -227,10 +227,11 @@ Input processor interaction:
 - `scroller` input processor override applies on layer `11`.
 - On `codex/scroll-inertia-lab`, the current scroller chain is intentionally
   minimal for inertia verification:
-  - `&zip_y_scaler (-1) 1`
+  - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)`
   - `&zip_xy_to_scroll_mapper`
-  - `&scroll_inertia_v`
-  - `&zip_scroll_scaler 4 675`
+  - `&zip_scroll_scaler 4 1`
+- Lab 3 removes `&scroll_inertia_v` from the active chain to confirm whether
+  the base scroll path still works without the inertia processor.
 - Production-only trackball helpers are removed on this branch: auto mouse
   layer, pointer acceleration, mouse gesture, scroll snap, and horizontal wheel
   suppression.

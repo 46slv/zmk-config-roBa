@@ -101,6 +101,30 @@ Interpretation:
 - If active scrolling still does not return, the lab removal changed another
   required piece of roBa's scroll path.
 
+## Lab 3: Remove Inertia Processor From The Chain
+
+User result for Lab 2: active scroll itself still did not work.
+
+Lab 3 keeps the same reduced branch and same known-working active scroll scale,
+but removes `scroll_inertia_v` from the active scroller chain:
+
+```dts
+<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+<&zip_xy_to_scroll_mapper>,
+<&zip_scroll_scaler 4 1>;
+```
+
+`scroll_inertia_v` is still defined in the devicetree, but it is not referenced
+by the input listener.
+
+Interpretation:
+
+- If active scrolling returns, `scroll_inertia_v` is blocking or consuming the
+  normal scroll event path when inserted into the chain.
+- If active scrolling still does not return, the lab branch has removed another
+  required part of roBa's scroll path and should be compared against production
+  before continuing inertia-specific tests.
+
 ## Build Results
 
 Built from WSL after syncing this worktree to:
