@@ -876,7 +876,12 @@ Build result:
 
 Hardware result:
 
-- Pending user flash/test.
+- Tested by the user on the right half on 2026-07-12.
+- Horizontal and vertical axes and directions are correct.
+- Scroll snap and inertia operate together as intended.
+- No material low-speed regression, coast-axis jump, stale axis lock, or other
+  blocking defect was observed in the acceptance check.
+- Lab 16b is the accepted baseline for the next experiment.
 
 ## Future Candidate: Unified Axis-Lock Inertia Processor
 

@@ -244,6 +244,8 @@ Input processor interaction:
 - Lab 16b reverses both user-facing directions after Lab 16a hardware testing.
   Reversing both relative to the `X_INVERT` state requires replacing it with
   `Y_INVERT`: horizontal loses its inversion and vertical gains one.
+  The user accepted this direction mapping and the combined snap/inertia
+  behavior on right-hand hardware on 2026-07-12.
 - `scroll_inertia_v` binds cleanup to layer `11` and
   mirrors the downstream `4/75` scale. At restored `CPI=400`, `start=16`,
   `move=32`, `friction=14`, and `stop=3` preserve the approximate physical
