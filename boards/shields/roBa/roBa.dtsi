@@ -130,8 +130,8 @@
         tick = <8>;
         gain = <500>;
         blend = <500>;
-        start = <16>;
-        move = <32>;
+        start = <12>;
+        move = <20>;
         min-events = <4>;
         friction = <14>;
         stop = <3>;

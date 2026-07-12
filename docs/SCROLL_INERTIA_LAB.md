@@ -704,6 +704,51 @@ Build result:
 
 Hardware result:
 
+- Tested on the right half on 2026-07-12.
+- Overall behavior is close to acceptable.
+- Very fast flicks still have a small active-to-coast speed step, but the
+  remaining difference is within a range the user can accommodate.
+- Proceed to small-flick sensitivity without changing EMA again.
+
+## Lab 15: Smaller Flick Arming Thresholds
+
+Lab 15 changes the two physical arming thresholds as one coupled sensitivity
+adjustment:
+
+```dts
+start = <12>;
+move = <20>;
+```
+
+Compared with Lab 14 (`start=16`, `move=32`), this allows a lower peak speed and
+shorter cumulative roll to qualify as an intentional flick.
+
+Unchanged:
+
+- EMA `gain=500`, `blend=500`
+- `min-events=4`, `release=24`, and `limit=600`
+- Scale `4/75`, CPI 400, reversed direction, and production input stack
+- Decay, friction, stop, and span
+
+Test focus:
+
+- A small deliberate flick should produce a short inertia tail more reliably.
+- Ordinary slow positioning should not trigger unwanted coast.
+- Very small noise or accidental ball contact should remain below the combined
+  speed, movement, and four-event gates.
+- Low-speed active-scroll dead-zone behavior is intentionally unchanged. If it
+  remains objectionable, the next isolated stage changes matched scale from
+  `4/75` to `4/60`.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 22:17.
+- Generated devicetree confirms `start=12` and `move=20`.
+- The left half was not rebuilt because this stage changes only right-hand
+  inertia arming thresholds.
+
+Hardware result:
+
 - Pending user flash/test.
 
 ## Build Results

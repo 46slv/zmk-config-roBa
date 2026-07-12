@@ -123,6 +123,11 @@ capped near medium speed.
 Lab 14 is the current candidate. It keeps Lab 13 and changes only the EMA pair
 from `300/700` to `500/500` to reduce the very-fast active-to-coast speed drop.
 
+Lab 15 is the current candidate. It keeps Lab 14 and lowers only the coupled
+small-flick gates from `start=16 / move=32` to `start=12 / move=20`. Active
+low-speed sensitivity remains at scale `4/75`; test `4/60` only after evaluating
+small-flick arming separately.
+
 ## Next Work
 
 Priority 1 is a smooth and consistently responsive active scroll path. Inertia
