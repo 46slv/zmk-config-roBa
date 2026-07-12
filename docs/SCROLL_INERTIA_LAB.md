@@ -352,7 +352,28 @@ Lab 8 build results:
 
 Hardware result:
 
-- Pending user flash/test.
+- Tested on the right half on 2026-07-12.
+- Raising CPI from `400` to `3200` increased scroll speed, but did not restore
+  smooth, continuous response.
+- Even when the trackball was moved smoothly, scrolling sometimes stopped
+  completely or emitted only a very small movement before responding again.
+- A screen recording of the test showed visible pauses followed by larger
+  movement. This is not explained by a speed or acceleration-curve change
+  alone.
+- Therefore, the cause is present somewhere in the current inertia-lab changes
+  relative to the comfortable production version. Do not treat this result as
+  evidence of a mechanical PMW3610 problem.
+- Relevant lab differences include `CONFIG_PMW3610_SMART_ALGORITHM=n`, removal
+  of pointer remainder/acceleration and the production listener stack, and the
+  active `scroll_inertia_v` state machine.
+- In particular, `scroll_inertia_v` can suppress same-direction input while it
+  is in `COASTING`. The current diagnostic thresholds (`start=1`, `move=1`,
+  `min-events=1`, `decel-samples=1`) make an early transition into that state a
+  plausible explanation for smooth physical movement producing intermittent
+  HID scroll output. This remains a hypothesis, not a confirmed root cause.
+- The next decisive one-element test is to keep the Lab 8 sensor settings and
+  bypass only `scroll_inertia_v`. If continuous scrolling returns, the failure
+  is in the inertia processor path rather than CPI or physical sensor motion.
 
 ## Build Results
 

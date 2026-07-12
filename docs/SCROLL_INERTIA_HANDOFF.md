@@ -65,6 +65,12 @@ release `24`, decay `995`, friction `5`, stop `1`, and span `2000`.
 Priority 1 is a smooth and consistently responsive active scroll path. Inertia
 tuning is secondary until that baseline is restored.
 
+Lab 8 hardware evidence narrows the issue: increasing PMW3610 CPI to `3200`
+raised speed but smooth physical movement still produced complete pauses or
+only tiny HID movement. The cause must be sought among the current lab changes
+from the comfortable production configuration, including the active inertia
+processor path; it should not be assumed to be a mechanical sensor fault.
+
 1. Compare the current lab input path with the first known comfortable
    low-speed production version and identify which removed processor or PMW3610
    setting supplied continuous fine-grained events.
