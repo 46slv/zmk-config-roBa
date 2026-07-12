@@ -120,6 +120,9 @@ to 4. Its purpose is to let short fast flicks arm; EMA response and release
 delay remain unchanged for a later isolated test if fast coasts still appear
 capped near medium speed.
 
+Lab 14 is the current candidate. It keeps Lab 13 and changes only the EMA pair
+from `300/700` to `500/500` to reduce the very-fast active-to-coast speed drop.
+
 ## Next Work
 
 Priority 1 is a smooth and consistently responsive active scroll path. Inertia

@@ -201,6 +201,7 @@ scroller {
 - Lab 10 実機で連続scrollと慣性tailを確認した。Lab 11 は検出条件を保ったまま、inertia node と downstream scaler を `4/225` へ揃え、active/coast出力を正確に3倍へ上げる。既存 `pointer_accel` はscroll値を慣性検出前に変形するため追加しない。
 - Lab 12 は raw X/Y ownership を維持したまま、元キーマップの cursor acceleration、AML、mouse gesture、horizontal suppression を復帰した。scroll は `4/75`、上下方向は `Y_INVERT` を外して反転。CPI 400に戻し、1000 CPI既定値から `start=16`、`move=32`、`friction=14`、`stop=3`へ物理比率を換算した。scroll snapとscroll-chain accelerationは復帰しない。
 - Lab 12 実機では中速gestureが最も強く慣性になり、高速flickは停止または一度減速して中速相当のcoastへ移った。Lab 13 は `min-events` だけを既定10から4へ下げ、125 Hzで約80 ms必要だったarming gateを約32 msへ短縮する。高速coast速度がまだ頭打ちなら、次に `gain/blend` のEMA追従を一要素として検証する。
+- Lab 13 実機で高速flickのarmingは実用範囲まで改善したが、非常に高速な操作ではcoast開始時の減速段差が残った。Lab 14 はEMAだけを `gain=500 / blend=500` へ変更し、短い高速入力をcoast seedへ早く反映する。低速の短い操作が整数HID単位へ届かず無反応になる件は別課題として残す。
 
 ### `disable-scroll-x`
 

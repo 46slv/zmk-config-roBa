@@ -660,6 +660,50 @@ Build result:
 
 Hardware result:
 
+- Tested on the right half on 2026-07-12.
+- Lowering `min-events` made fast flick inertia reliable enough to be usable.
+- At very high flick speed, a visible drop to a slower coast remains, although
+  the user considers it close to acceptable with deliberate technique.
+- This isolates the remaining experiment to EMA response rather than arming.
+
+## Lab 14: Faster EMA Handoff
+
+Lab 14 changes the EMA weighting as one coupled filter parameter:
+
+```dts
+gain = <500>;
+blend = <500>;
+```
+
+The sum remains 1000 as required by the module. Compared with the default
+`300/700`, each event contributes more immediately to estimated velocity. A
+short high-speed flick should therefore enter `COASTING` closer to its active
+speed instead of dropping toward the medium-speed estimate.
+
+Unchanged:
+
+- `min-events=4`, `release=24`, and `limit=600`
+- CPI-adjusted thresholds and decay
+- Raw input path, reversed direction, scale `4/75`, and production input stack
+
+Test focus:
+
+- Compare the active-to-coast speed step on very fast flicks.
+- Check that medium flicks do not become excessively strong.
+- Check that small speed fluctuations during normal scrolling do not make
+  inertia feel nervous or trigger too aggressively.
+- The separate low-speed short-movement dead zone is not targeted by this
+  build.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-12 21:54.
+- Generated devicetree confirms `gain=500` and `blend=500`.
+- The left half was not rebuilt because this stage changes only a right-hand
+  inertia filter parameter.
+
+Hardware result:
+
 - Pending user flash/test.
 
 ## Build Results

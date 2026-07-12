@@ -107,6 +107,8 @@ scroll_inertia_v: scroll_inertia_v {
     scale = <4>;
     scale-div = <75>;
     tick = <8>;
+    gain = <500>;
+    blend = <500>;
     start = <16>;
     move = <32>;
     min-events = <4>;
@@ -121,6 +123,7 @@ scroll_inertia_v: scroll_inertia_v {
 - `scale/scale-div`: 下流scalerと必ず一致させる。
 - `start=16`、`move=32`、`friction=14`、`stop=3` は1000 CPI既定値の40%。
 - `min-events=4` は短い高速flickを約32 msでarm可能にする。
+- `gain=500`、`blend=500` は短い高速flickへの速度追従を速める。
 - decayとspanはmodule既定値を使う。
 
 右手だけでnodeを有効にする。
@@ -263,6 +266,7 @@ active側にしか効かない。加速対応はmodule側の出力scale拡張と
   復帰。CPI 400換算しきい値、scale `4/75`、上下反転を適用。
 - Lab 13: 高速flickが既定10イベントgateを満たせず停止する問題に対し、
   `min-events=4`を適用。
+- Lab 14: 高速時のactive-to-coast速度段差に対し、EMAを `500/500`へ変更。
 - 慣性module revision: `f7dadef`
 - PMW3610 driver revision at build time: `5e04553`
 
