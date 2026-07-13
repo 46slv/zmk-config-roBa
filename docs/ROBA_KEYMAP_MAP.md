@@ -249,6 +249,7 @@ Input processor interaction:
 - Lab 17 changes the matched active/coast scale from `4/75` to `4/60`, making
   both outputs 25 percent faster while preserving their handoff ratio. Snap,
   directions, arming thresholds, EMA, and decay are unchanged.
+  The user accepted this scale on right-hand hardware on 2026-07-13.
 - `scroll_inertia_v` binds cleanup to layer `11` and
   mirrors the downstream `4/60` scale. At restored `CPI=400`, `start=16`,
   `move=32`, `friction=14`, and `stop=3` preserve the approximate physical

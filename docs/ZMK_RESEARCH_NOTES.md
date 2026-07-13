@@ -208,6 +208,7 @@ scroller {
 - Lab 16a実機では軸対応は直ったが左右・上下とも希望方向と逆だった。Lab 16bは`X_INVERT`を`Y_INVERT`へ置換し、横と縦を両方反転する。XY swap、snap、慣性パラメータは変更しない。
 - Lab 16b実機で縦横の軸・方向、scroll snapと慣性の併用を確認し、ユーザー評価は良好。低速悪化、coast時の軸飛び、古いsnap lockなどの重大な不具合は受入確認では見られず、次の実験の基準構成とする。
 - Lab 17は合格したLab 16bを維持し、activeとcoastのmatched scaleだけを`4/75 -> 4/60`へ変更する。同一入力の出力を25%上げ、小さい蓄積値がHID単位へ早く届くか確認する。snap、方向、arming、EMA、decayは変更しない。
+- Lab 17実機で低速応答、通常速度、snap、active-to-coast handoff、慣性に問題なし。`4/60`を次の実験の基準scaleとして採用する。
 
 ### `disable-scroll-x`
 

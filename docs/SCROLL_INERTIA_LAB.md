@@ -920,7 +920,10 @@ Build result:
 
 Hardware result:
 
-- Pending user flash/test.
+- Tested by the user on the right half on 2026-07-13.
+- No problem was observed with low-speed response, normal speed, snap,
+  active-to-coast handoff, or inertia behavior.
+- Lab 17 is accepted; matched scale `4/60` becomes the new baseline.
 
 ## Future Candidate: Unified Axis-Lock Inertia Processor
 
