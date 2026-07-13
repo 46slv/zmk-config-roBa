@@ -13,3 +13,4 @@ firmware/
 
 # Native host-test binary
 tests/encoder_scroll/test_encoder_scroll
+tests/encoder_scroll/test_encoder_scroll.exe

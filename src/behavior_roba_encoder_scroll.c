@@ -222,27 +222,17 @@ static int process_sensor_data(struct zmk_behavior_binding *binding,
     int8_t direction = signed_triggers > 0 ? 1 : -1;
     int trigger_count = signed_triggers > 0 ? signed_triggers : -signed_triggers;
     int64_t accepted_at = data->accepted_at[sensor_index][event.layer];
-    int64_t previous_time = data->acceleration.last_time_ms;
-    int64_t spacing_ms = 0;
-
-    if (previous_time > 0 && accepted_at > previous_time && trigger_count > 1) {
-        spacing_ms = (accepted_at - previous_time) / trigger_count;
-    }
 
     cancel_pending_work(data);
     if (data->runtime_state == ROBA_ENCODER_SCROLL_COASTING) {
         clear_runtime_state(data);
-        previous_time = 0;
-        spacing_ms = 0;
     }
     data->runtime_state = ROBA_ENCODER_SCROLL_TRACKING;
 
-    for (int i = 0; i < trigger_count; i++) {
-        int64_t trigger_time =
-            spacing_ms > 0 ? previous_time + spacing_ms * (i + 1) : accepted_at;
-        struct roba_encoder_scroll_result result = roba_encoder_scroll_feed(
-            &data->acceleration, &config->acceleration, direction, trigger_time);
+    struct roba_encoder_scroll_result result = roba_encoder_scroll_feed(
+        &data->acceleration, &config->acceleration, direction, accepted_at);
 
+    for (int i = 0; i < trigger_count; i++) {
         int ret = emit_scroll(config, direction, result.multiplier);
         if (ret < 0 && ret != -ENOTSUP) {
             LOG_WRN("Failed to emit encoder scroll report: %d", ret);

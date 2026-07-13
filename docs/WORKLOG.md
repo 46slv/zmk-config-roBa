@@ -390,3 +390,64 @@ the module's `main` branch advances.
 - Preserved artifacts:
   - `roBa_R-encoder-tune2.uf2`: `573952` bytes.
   - `roBa_L-encoder-tune2.uf2`: `363008` bytes.
+
+## 2026-07-13: Encoder Tune 3 Batch Evaluation
+
+### Hardware / Monitor Finding
+
+- Tune 2 fixed the endless-scroll symptom, and Windows-side JSONL monitoring
+  proved that the finite inertia tail is active.
+- The max-release capture showed the expected tail signature:
+  `45 -> 37 -> 30 -> 22 -> 15 -> 7`, matching firmware multipliers
+  `6 -> 5 -> 4 -> 3 -> 2 -> 1` after Windows wheel scaling.
+- Slow captures also contained many `45` deltas and repeated tail signatures,
+  so Tune 2 was too easy to push into maximum speed and inertia.
+
+### Cause Hypothesis
+
+- `process_sensor_data()` can receive one accepted sensor event containing
+  multiple encoder triggers.
+- The Tune 2 implementation spread those triggers across synthetic timestamps
+  and fed each one into the acceleration state machine.
+- That let one physical / batched event advance `quick_streak` and `max_streak`
+  multiple times, so slow or irregular rotation could look like several fast
+  consecutive detents.
+
+### Adjustment
+
+- Kept `base-delta=1`, `steps=12`, `triggers-per-rotation=10`, and all Tune 2
+  timing thresholds unchanged.
+- Changed `process_sensor_data()` so acceleration is evaluated once per
+  accepted sensor event.
+- If the accepted event contains multiple triggers, the firmware still emits
+  the same number of finite wheel reports, but all reports use the one
+  multiplier chosen for that event.
+- Acceleration and inertia streaks now advance once per accepted event, not
+  once per trigger inside a batch.
+
+### Expected Result
+
+- Slow rotation should produce fewer accidental `6x` reports.
+- Inertia should require multiple accepted fast events, not one batched event.
+- Fast deliberate rotation should still accelerate because separate accepted
+  events remain timed by their real event timestamps.
+
+### Verification
+
+- Host logic test passed with Windows LLVM `clang.exe` using
+  `-std=c11 -Wall -Wextra -Werror -pedantic`.
+- Right and left ZMK builds passed.
+- Generated right DTS still contains the Tune 2 timing values:
+  `two-x-ms=<240>`, `four-x-ms=<140>`, `six-x-ms=<80>`, and
+  `inertia-enabled;`.
+- Both `.config` files contain `CONFIG_ROBA_ENCODER_SCROLL=y`.
+- Preserved Tune 3 artifacts:
+  - `roBa_R-encoder-tune3.uf2`: `573952` bytes,
+    sha256 `47b7136c5fb2f859e1932adf9f15138784785ad11fea40b73d0974f45026f279`.
+  - `roBa_L-encoder-tune3.uf2`: `363008` bytes,
+    sha256 `a5e9747e20cec9fa4f916e02cdfea3f2e64ee3fae24c65cee37c19974e2e446c`.
+
+### Pending
+
+- Flash Tune 3 and repeat the four JSONL phases: slow, medium, fast, and
+  max-release.

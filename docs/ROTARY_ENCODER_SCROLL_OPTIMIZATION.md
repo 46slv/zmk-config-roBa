@@ -522,6 +522,30 @@ Tune 2のhost testと左右firmware buildは成功した。生成DTSで選択値
 - `~/zmk-workspace/firmware/zmk-config-roBa/roBa_R-encoder-tune2.uf2`
 - `~/zmk-workspace/firmware/zmk-config-roBa/roBa_L-encoder-tune2.uf2`
 
+### 2026-07-13 Tune 3
+
+Tune 2を書き込んだ後、`tools/encoder_scroll_monitor.ps1`でslow / medium / fast /
+max-releaseをJSONL記録した。max-releaseでは最後に
+`45 -> 37 -> 30 -> 22 -> 15 -> 7`の有限tailが出ており、Windows側のwheel delta換算で
+firmwareの`6 -> 5 -> 4 -> 3 -> 2 -> 1` tailが動作していることを確認できた。
+
+一方でslow phaseにも最大deltaとtail signatureが多く出たため、Tune 2は最大速度と慣性に入り
+やすすぎる。最有力の原因は、1回のaccepted sensor eventに複数triggerが含まれた場合に、
+Tune 2がtriggerごとに疑似時刻を作って`quick_streak` / `max_streak`を複数回進めていたこと。
+この場合、実際には1回のセンサーbatchでも、firmware内部では高速な連続detentのように扱われる。
+
+Tune 3ではTune 2の閾値を変えず、速度評価の単位だけを変更する。
+
+- `base-delta=1`、`steps=12`、`triggers-per-rotation=10`は維持。
+- `240/140/80 ms`、`reset=320 ms`、`fast-streak=1`、`inertia-streak=2`は維持。
+- `process_sensor_data()`はaccepted sensor eventごとに1回だけ速度判定する。
+- event内に複数triggerがある場合も、出力report数は維持し、全reportに同じmultiplierを使う。
+- acceleration / inertia streakはtrigger数ではなくaccepted event数で進む。
+
+これにより、低速や不規則な操作で偶発的に`6x`とtailへ入る可能性を下げる。高速に複数eventが
+届く操作では、実event間隔に基づく加速は残る。Tune 3の実機評価では、同じ4 phaseのJSONLを再取得し、
+slow phaseの`45` delta比率とtail signature回数が下がるかを確認する。
+
 ## 推奨する最小実験
 
 以下は差分案であり、まだ適用しない。

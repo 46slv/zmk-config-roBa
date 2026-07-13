@@ -59,6 +59,10 @@ Encoder scroll behavior on `codex/encoder-scroll-accel-inertia-lab`:
   idle or any direction change.
 - Allows `4x` or `6x` after one matching interval so acceleration is easier to
   feel than the first hardware-tested build.
+- Tune 3 keeps the Tune 2 thresholds but evaluates acceleration once per
+  accepted sensor event. If that event contains multiple encoder triggers, all
+  emitted wheel reports use the same multiplier and acceleration / inertia
+  streaks advance only once.
 - Arms inertia only after two consecutive `6x` outputs.
 - After an armed gesture stops for `70 ms`, emits at most six coast reports:
   `6x -> 5x -> 4x -> 3x -> 2x -> 1x`, spaced by `28 ms`.

@@ -554,6 +554,21 @@ ZMK / roBa 設定を変更する前に必ず確認する。
 - `EXTRA_FINCTIONS` は typo らしき名前だが、define と参照が一致しているため、単純修正は破壊的変更になり得る。
 - ZMK `v0.3` 固定なので、development docs と挙動差がある可能性がある。必要に応じて `v0.3` docs も確認する。
 
+## 2026-07-13: Encoder Tune 3 batching note
+
+Tune 2 hardware JSONL proved the finite tail on max-release: Windows reported
+`45 -> 37 -> 30 -> 22 -> 15 -> 7`, corresponding to firmware multipliers
+`6 -> 5 -> 4 -> 3 -> 2 -> 1`. The same capture set also showed many maximum
+deltas and tail signatures during slow rotation.
+
+Tune 3 keeps the Tune 2 thresholds but changes batching semantics in
+`process_sensor_data()`: one accepted sensor event advances acceleration and
+inertia streaks once, even when that event contains multiple encoder triggers.
+The event still emits one finite wheel report per trigger, but all reports use
+the multiplier chosen for the event. This isolates batching from velocity
+tuning and avoids treating one batched sensor event as several fast consecutive
+detents.
+
 ## 推奨する次の資料
 
 必要になったら以下を追加する。
