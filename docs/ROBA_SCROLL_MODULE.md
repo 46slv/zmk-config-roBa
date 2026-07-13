@@ -10,7 +10,7 @@ in one input processor. It replaces the previous serial combination of
 
 The reusable implementation is maintained at
 <https://github.com/46slv/zmk-input-processor-roba-scroll>. This config pins
-commit `0c7a8fe243d1182c090a138005d275795d7b206b` in `config/west.yml`.
+commit `76addce781a65a9ac681d60856bdda4a03c5bdd6` in `config/west.yml`.
 
 ## Processing Contract
 
@@ -18,8 +18,8 @@ commit `0c7a8fe243d1182c090a138005d275795d7b206b` in `config/west.yml`.
 PMW3610 raw X/Y
   -> zip_xy_to_scroll_mapper
   -> roba_scroll
+       retained physical-vector axis selection
        direction inversion
-       retained axis selection
        active scaling with per-axis remainder
        direction-aware active remainder
        distance-neutral low-speed eager quantization
@@ -49,6 +49,8 @@ roba_scroll: roba_scroll {
     axis-mode = <0>;
     snap-x-ratio = <5 8>;
     snap-y-ratio = <1 1>;
+    snap-vertical-sector-deg = <120>;
+    snap-angle-offset-deg = <30>;
     snap-events = <2>;
     snap-immediate = <200>;
     snap-lock-ms = <175>;
@@ -86,15 +88,22 @@ clears the old remainder on that axis instead of spending weak reverse input
 to cancel it. Velocity tracking, flick arming, medium/high active input, and
 coast remain unchanged.
 
+Lab 23 enables angular snap sectors. Each vertical direction receives 120
+degrees and each horizontal direction receives the remaining 60 degrees. The
+vertical center is rotated 30 degrees toward physical negative X (left) before
+`invert-y` is applied. This changes initial axis classification only; selected
+HID axes, direction, active scale, and coast behavior are unchanged.
+
 ## Parameter Reference
 
 | Group | Properties | Units / practical range |
 | --- | --- | --- |
 | Axis choice | `axis-mode` | `0` snap, `1` explicit free 2D |
-| Direction ratio | `snap-x-ratio`, `snap-y-ratio` | Positive numerator/denominator pairs |
+| Legacy direction ratio | `snap-x-ratio`, `snap-y-ratio` | Used when angular sector width is `0` |
+| Angular snap | `snap-vertical-sector-deg`, `snap-angle-offset-deg` | Per-direction vertical width and signed physical center rotation; roBa `120`, `30` |
 | Initial decision | `snap-events`, `snap-immediate` | Events and raw movement; roBa `2`, `200` |
 | Lock | `snap-lock-ms`, `snap-lock-events`, `snap-idle-ms`, `snap-switch` | Time/events/movement; roBa `175`, `8`, `175`, `1` |
-| Direction | `invert-x`, `invert-y` | Boolean, before selection and velocity tracking |
+| Direction | `invert-x`, `invert-y` | Boolean, after physical-angle selection and before velocity tracking |
 | Velocity EMA | `gain`, `blend` | Permille; sum should be `1000` |
 | Flick arm | `start`, `move`, `min-events` | Raw velocity/movement/events; roBa `12`, `20`, `4` |
 | Release | `release`, `gesture-timeout`, `handoff-ms` | Milliseconds; defaults `24`, `100`, `100` |
@@ -154,6 +163,7 @@ plus all axis-lock checks passing.
 
 ## Rollback
 
-Set `active-low-speed-boost` and `active-low-speed-eager` to `0`, or pin the
-module back to `b0c2884`, to restore the accepted Lab 20/21 quantization
-behavior without changing other scroll parameters.
+Set `snap-vertical-sector-deg = <0>` to restore legacy dominant-axis selection.
+Set only `snap-angle-offset-deg = <0>` to keep the 120/60 sectors centered on
+the sensor axes. Pin the module back to `0c7a8fe` and remove both properties to
+restore Lab 22 exactly.

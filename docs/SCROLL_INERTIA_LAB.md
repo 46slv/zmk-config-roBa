@@ -1174,6 +1174,46 @@ Hardware focus:
 - Medium/fast active scrolling and active-to-coast handoff must match Lab 20.
 - Repeat the first two checks on both USB and BLE if possible.
 
+## Lab 23: Angular Snap Sectors And Physical Center Offset
+
+The legacy initial selector ultimately fell back to `abs(Y) >= abs(X)`, so the
+configured ratios did not change the final result: up, down, left, and right
+each occupied 90 degrees. Lab 23 adds an opt-in angular selector while retaining
+the ratio path for module compatibility.
+
+roBa uses:
+
+```dts
+snap-vertical-sector-deg = <120>;
+snap-angle-offset-deg = <30>;
+```
+
+Each vertical direction receives 120 degrees. Each horizontal direction
+receives `180 - 120 = 60` degrees, so the four sectors cover 360 degrees with
+no dead band. Positive offset rotates the physical vertical center toward
+negative X (left). The selector evaluates the retained signed physical vector
+before `invert-y`, preserving the accepted user-facing scroll directions.
+
+Only initial axis classification changes. Snap retention and lock timing,
+active/coast scale, low-speed quantization, velocity EMA, flick arming,
+friction, stop, and inertia output remain unchanged from Lab 22.
+
+Pre-hardware verification:
+
+- Standalone module commit: `76addce781a65a9ac681d60856bdda4a03c5bdd6`.
+- Fixed-point checks: `162/162`.
+- Axis-lock checks include 120/60 sectors, positive 30-degree offset, opposite
+  directions, and empty-component boundary protection.
+- ZMK builds and physical sign confirmation are pending at this point.
+
+Hardware focus:
+
+- A natural up/down roll along the shell angle should select vertical sooner.
+- Deliberate left/right rolls should still select horizontal inside the narrower
+  60-degree sectors.
+- Existing scroll directions, low-speed response, and inertia must not change.
+- If the center moved right in physical use, change only the offset to `-30`.
+
 ## Superseded Design Rationale
 
 Keep a purpose-built combined module on the development backlog. Its goal is
