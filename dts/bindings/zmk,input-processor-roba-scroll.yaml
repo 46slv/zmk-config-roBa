@@ -1,0 +1,179 @@
+description: |
+  Unified axis-selection and inertial-scroll processor for roBa. Place it
+  directly after zip_xy_to_scroll_mapper. It retains initial movement while
+  selecting an axis, scales active events with per-axis remainders, tracks
+  velocity, and emits direct-HID coast from the same scale setting.
+
+compatible: "zmk,input-processor-roba-scroll"
+
+properties:
+  "#input-processor-cells":
+    type: int
+    required: true
+    const: 0
+
+  axis-mode:
+    type: int
+    default: 0
+    enum: [0, 1]
+    description: "0 = automatic X/Y snap, 1 = free two-axis scrolling."
+  snap-x-ratio:
+    type: array
+    required: true
+    description: "X selection ratio numerator and denominator."
+  snap-y-ratio:
+    type: array
+    required: true
+    description: "Y selection ratio numerator and denominator."
+  snap-events:
+    type: int
+    default: 2
+    description: "Events retained before initial axis selection."
+  snap-immediate:
+    type: int
+    default: 200
+    description: "Pending absolute movement that selects immediately."
+  snap-lock-ms:
+    type: int
+    default: 175
+    description: "Time guard before a continuous cross-axis switch."
+  snap-lock-events:
+    type: int
+    default: 8
+    description: "Event guard before a continuous cross-axis switch."
+  snap-idle-ms:
+    type: int
+    default: 175
+    description: "Silence that resets axis sampling and lock state."
+  snap-switch:
+    type: int
+    default: 1
+    description: "Retained cross-axis movement required after lock expiry."
+  invert-x:
+    type: boolean
+    description: "Invert horizontal wheel input before axis selection."
+  invert-y:
+    type: boolean
+    description: "Invert vertical wheel input before axis selection."
+
+  gain:
+    type: int
+    default: 300
+    description: "EMA input weight in permille."
+  blend:
+    type: int
+    default: 700
+    description: "EMA history weight in permille; gain + blend should be 1000."
+  start:
+    type: int
+    default: 40
+    description: "Minimum peak velocity for inertia arming."
+  move:
+    type: int
+    default: 80
+    description: "Minimum cumulative movement for inertia arming."
+  release:
+    type: int
+    default: 24
+    description: "No-input milliseconds before release is detected."
+  min-events:
+    type: int
+    default: 10
+    description: "Minimum tracked events before inertia can arm."
+  decel-samples:
+    type: int
+    default: 3
+    description: "Sub-peak samples required to confirm deceleration."
+  decel-ratio:
+    type: int
+    default: 850
+    description: "Deceleration threshold relative to peak, in permille."
+  peak-decay:
+    type: int
+    default: 990
+    description: "Peak velocity decay per event, in permille."
+  gesture-timeout:
+    type: int
+    default: 100
+    description: "Silence that resets inertia tracking state."
+  suppress-limit:
+    type: int
+    default: 50
+    description: "Safety limit for absorbed same-direction coast events."
+  handoff-ms:
+    type: int
+    default: 100
+    description: "Initial coast handoff window in milliseconds."
+
+  fast:
+    type: int
+    default: 0
+    description: "Fast decay-zone velocity boundary; 0 disables the zone."
+  decay-fast:
+    type: int
+    default: 990
+    description: "Fast-zone multiplicative decay in permille per tick."
+  decay-slow:
+    type: int
+    default: 990
+    description: "Middle-zone multiplicative decay in permille per tick."
+  slow:
+    type: int
+    default: 0
+    description: "Tail decay-zone velocity boundary; 0 disables the zone."
+  decay-tail:
+    type: int
+    default: 990
+    description: "Tail-zone multiplicative decay in permille per tick."
+  friction:
+    type: int
+    default: 35
+    description: "Additive deceleration in permille of a scroll unit per tick."
+  stop:
+    type: int
+    default: 7
+    description: "Velocity below which coast stops."
+  limit:
+    type: int
+    default: 600
+    description: "Maximum tracked velocity."
+  span:
+    type: int
+    default: 6000
+    description: "Maximum coast duration in milliseconds."
+  tick:
+    type: int
+    default: 8
+    description: "Coast update interval in milliseconds."
+
+  scale:
+    type: int
+    default: 1000
+    description: "Shared active and coast output-scale numerator."
+  scale-div:
+    type: int
+    default: 1000
+    description: "Shared active and coast output-scale denominator."
+  axis:
+    type: int
+    default: 0
+    enum: [0, 1, 2]
+    description: "Inertia axes: 0 = both, 1 = Y, 2 = X. Use 0 with snap mode."
+  layer:
+    type: int
+    default: -1
+    description: "Layer whose deactivation resets all processor state."
+  swap-mod:
+    type: int
+    default: 0
+    description: "Modifier mask that swaps single-axis output."
+  unlock-mod:
+    type: int
+    default: 0
+    description: "Modifier mask that temporarily uses free two-axis inertia."
+  exact-magnitude:
+    type: boolean
+    description: "Use integer sqrt instead of the fast vector approximation."
+  track-remainders:
+    type: boolean
+    description: "Unused; the processor owns active and coast remainders."

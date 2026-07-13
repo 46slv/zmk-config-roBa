@@ -1,0 +1,3 @@
+tests/test_math
+tests/test_axis_lock
+tests/core

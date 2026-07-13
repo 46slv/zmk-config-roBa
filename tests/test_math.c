@@ -1,0 +1,589 @@
+/*
+ * Host-side unit tests for roba_scroll_math.h.
+ * Derived from mjmjm0101/zmk-input-processor-scroll-inertia at f7dadef.
+ *
+ * These cover the numeric invariants of the pure math helpers used
+ * by the input processor: the EMA filter, peak update rule, decay
+ * curve, and fixed-point accumulator.  The state machine and any
+ * Zephyr/ZMK-dependent code is NOT exercised here — see README.md
+ * and CONTRIBUTING.md for why.
+ *
+ * Build & run:
+ *   make -C tests test
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "../src/roba_scroll_math.h"
+
+static int total_tests = 0;
+static int failed_tests = 0;
+
+#define ASSERT_EQ(label, actual, expected) do {                         \
+    long long _a = (long long)(actual);                                 \
+    long long _e = (long long)(expected);                               \
+    total_tests++;                                                      \
+    if (_a != _e) {                                                     \
+        fprintf(stderr, "FAIL %s: got %lld, expected %lld (%s:%d)\n",   \
+                (label), _a, _e, __FILE__, __LINE__);                   \
+        failed_tests++;                                                 \
+    }                                                                   \
+} while (0)
+
+#define ASSERT_TRUE(label, cond) do {                                   \
+    total_tests++;                                                      \
+    if (!(cond)) {                                                      \
+        fprintf(stderr, "FAIL %s: expected true (%s:%d)\n",             \
+                (label), __FILE__, __LINE__);                           \
+        failed_tests++;                                                 \
+    }                                                                   \
+} while (0)
+
+#define ASSERT_FALSE(label, cond) do {                                  \
+    total_tests++;                                                      \
+    if ((cond)) {                                                       \
+        fprintf(stderr, "FAIL %s: expected false (%s:%d)\n",            \
+                (label), __FILE__, __LINE__);                           \
+        failed_tests++;                                                 \
+    }                                                                   \
+} while (0)
+
+/* Mirror of the YAML binding defaults, with friction_fp pre-scaled the
+ * same way the SCROLL_INERTIA_INST macro does. */
+static struct scroll_inertia_config default_cfg(void) {
+    struct scroll_inertia_config cfg = {0};
+    cfg.gain         = 300;
+    cfg.blend        = 700;
+    cfg.start_fp     = 40 * FP_SCALE;
+    cfg.move         = 80;
+    cfg.release_ms   = 24;
+    cfg.fast_fp      = 0;
+    cfg.decay_fast   = 990;
+    cfg.decay_slow   = 990;
+    cfg.slow_fp      = 0;
+    cfg.decay_tail   = 990;
+    cfg.friction_fp  = 35 * FP_SCALE / 1000;   /* = 8 */
+    cfg.stop_fp      = 7 * FP_SCALE;
+    cfg.scale        = 1000;
+    cfg.scale_div    = 1000;
+    cfg.limit_fp     = 600 * FP_SCALE;
+    cfg.peak_decay   = 990;
+    return cfg;
+}
+
+/* ------------------------------------------------------------------ */
+static void test_fast_magnitude(void) {
+    printf("-- fast_magnitude\n");
+    ASSERT_EQ("(0,0)",       fast_magnitude(0, 0), 0);
+    ASSERT_EQ("(5,0)",       fast_magnitude(5, 0), 5);
+    ASSERT_EQ("(0,5)",       fast_magnitude(0, 5), 5);
+    ASSERT_EQ("(-5,0)",      fast_magnitude(-5, 0), 5);
+    ASSERT_EQ("(0,-5)",      fast_magnitude(0, -5), 5);
+    /* Approximation: max + min/2.  (3,4) gives 4+1=5, matching real sqrt. */
+    ASSERT_EQ("(3,4)",       fast_magnitude(3, 4), 5);
+    ASSERT_EQ("(4,3)",       fast_magnitude(4, 3), 5);
+    /* (100,100): 100+50=150 (real ~141, ~6% over). */
+    ASSERT_EQ("(100,100)",   fast_magnitude(100, 100), 150);
+    /* Negative handling via abs32. */
+    ASSERT_EQ("(-100,-100)", fast_magnitude(-100, -100), 150);
+    ASSERT_EQ("(-1000,500)", fast_magnitude(-1000, 500), 1250);
+}
+
+/* ------------------------------------------------------------------ */
+static void test_isqrt64(void) {
+    printf("-- isqrt64\n");
+    ASSERT_EQ("0",            isqrt64(0), 0);
+    ASSERT_EQ("1",            isqrt64(1), 1);
+    ASSERT_EQ("2 (floor)",    isqrt64(2), 1);
+    ASSERT_EQ("3 (floor)",    isqrt64(3), 1);
+    ASSERT_EQ("4",            isqrt64(4), 2);
+    ASSERT_EQ("9",            isqrt64(9), 3);
+    ASSERT_EQ("25",           isqrt64(25), 5);
+    /* sqrt(200) ≈ 14.142 → floor = 14 */
+    ASSERT_EQ("200 (floor)",  isqrt64(200), 14);
+    ASSERT_EQ("10000",        isqrt64(10000), 100);
+    /* Large value well past int32 range, proves int64 domain works. */
+    ASSERT_EQ("100000²",      isqrt64((int64_t)100000 * 100000), 100000);
+    /* Negative input guarded to 0 (Newton would loop otherwise). */
+    ASSERT_EQ("neg guarded",  isqrt64(-1), 0);
+    ASSERT_EQ("neg big",      isqrt64(INT64_MIN), 0);
+}
+
+/* ------------------------------------------------------------------ */
+static void test_exact_magnitude(void) {
+    printf("-- exact_magnitude\n");
+    ASSERT_EQ("(0,0)",       exact_magnitude(0, 0), 0);
+    ASSERT_EQ("(5,0)",       exact_magnitude(5, 0), 5);
+    ASSERT_EQ("(0,5)",       exact_magnitude(0, 5), 5);
+    /* Sign handled by squaring — no abs32 needed. */
+    ASSERT_EQ("(-5,0)",      exact_magnitude(-5, 0), 5);
+    ASSERT_EQ("(0,-5)",      exact_magnitude(0, -5), 5);
+    ASSERT_EQ("(-5,-12)",    exact_magnitude(-5, -12), 13);
+    /* Pythagorean triples → exact integer answer. */
+    ASSERT_EQ("(3,4)",       exact_magnitude(3, 4), 5);
+    ASSERT_EQ("(5,12)",      exact_magnitude(5, 12), 13);
+    ASSERT_EQ("(8,15)",      exact_magnitude(8, 15), 17);
+    /* 45° diagonal: sqrt(20000) ≈ 141.42 → floor 141.
+     * Contrast fast_magnitude(100,100) = 150 (~6% over). */
+    ASSERT_EQ("(100,100)",   exact_magnitude(100, 100), 141);
+    /* Worst-case fast_magnitude angle atan(1/2): sqrt(1²+2²)=2.236.
+     * For (1000,2000): exact floor(2236.07) = 2236; fast = 2000+500 = 2500. */
+    ASSERT_EQ("(1000,2000)", exact_magnitude(1000, 2000), 2236);
+    /* Exact is never greater than fast — the approximation overestimates. */
+    ASSERT_TRUE("exact ≤ fast (100,100)",
+                exact_magnitude(100, 100) <= fast_magnitude(100, 100));
+    ASSERT_TRUE("exact ≤ fast (1000,2000)",
+                exact_magnitude(1000, 2000) <= fast_magnitude(1000, 2000));
+    /* Near int32 max input (limit_fp range): no overflow, sensible result.
+     * 150000² × 2 ≈ 4.5e10 — needs int64.  sqrt(2) * 150000 ≈ 212132. */
+    ASSERT_EQ("large (150000,150000)",
+              exact_magnitude(150000, 150000), 212132);
+}
+
+/* ------------------------------------------------------------------ */
+static void test_magnitude_dispatcher(void) {
+    printf("-- magnitude (dispatcher)\n");
+    struct scroll_inertia_config cfg = default_cfg();
+
+    /* Default path (exact_magnitude=0) routes to fast_magnitude. */
+    cfg.exact_magnitude = 0;
+    ASSERT_EQ("default (0,0)",
+              magnitude(0, 0, &cfg), fast_magnitude(0, 0));
+    ASSERT_EQ("default (3,4)",
+              magnitude(3, 4, &cfg), fast_magnitude(3, 4));
+    ASSERT_EQ("default (100,100)",
+              magnitude(100, 100, &cfg), fast_magnitude(100, 100));
+    ASSERT_EQ("default (-1000,500)",
+              magnitude(-1000, 500, &cfg), fast_magnitude(-1000, 500));
+
+    /* Opt-in path (exact_magnitude=1) routes to exact_magnitude. */
+    cfg.exact_magnitude = 1;
+    ASSERT_EQ("exact (0,0)",
+              magnitude(0, 0, &cfg), exact_magnitude(0, 0));
+    ASSERT_EQ("exact (3,4)",
+              magnitude(3, 4, &cfg), exact_magnitude(3, 4));
+    ASSERT_EQ("exact (100,100)",
+              magnitude(100, 100, &cfg), exact_magnitude(100, 100));
+    ASSERT_EQ("exact (-1000,500)",
+              magnitude(-1000, 500, &cfg), exact_magnitude(-1000, 500));
+
+    /* Dispatcher actually differs between the two paths on diagonals. */
+    cfg.exact_magnitude = 0;
+    int32_t approx = magnitude(100, 100, &cfg);
+    cfg.exact_magnitude = 1;
+    int32_t exact = magnitude(100, 100, &cfg);
+    ASSERT_TRUE("dispatcher branches differ on diagonals", approx != exact);
+}
+
+/* ------------------------------------------------------------------ */
+static void test_clamp_velocity(void) {
+    printf("-- clamp_velocity\n");
+    ASSERT_EQ("in range",     clamp_velocity(100, 200), 100);
+    ASSERT_EQ("zero",         clamp_velocity(0, 200), 0);
+    ASSERT_EQ("upper clip",   clamp_velocity(300, 200), 200);
+    ASSERT_EQ("lower clip",   clamp_velocity(-300, 200), -200);
+    ASSERT_EQ("at +limit",    clamp_velocity(200, 200), 200);
+    ASSERT_EQ("at -limit",    clamp_velocity(-200, 200), -200);
+}
+
+/* ------------------------------------------------------------------ */
+static void test_safe_guards(void) {
+    printf("-- safe_scale_div / safe_tick_ms\n");
+    ASSERT_EQ("pos scale_div", safe_scale_div(1000), 1000);
+    ASSERT_EQ("zero scale_div", safe_scale_div(0), 1);
+    ASSERT_EQ("neg scale_div", safe_scale_div(-5), 1);
+    ASSERT_EQ("pos tick_ms",   safe_tick_ms(8), 8);
+    ASSERT_EQ("zero tick_ms",  safe_tick_ms(0), 1);
+}
+
+/* ------------------------------------------------------------------ */
+static void test_update_velocity_ema(void) {
+    printf("-- update_velocity_ema\n");
+    struct scroll_inertia_config cfg = default_cfg();
+
+    /* Zero delta, zero vel: stays zero. */
+    ASSERT_EQ("0 delta 0 vel", update_velocity_ema(0, 0, &cfg), 0);
+
+    /* delta=100, vel=0, gain=300:
+     * (100*256*300 + 0) / 1000 = 7680000/1000 = 7680 */
+    ASSERT_EQ("pos delta 0 vel", update_velocity_ema(100, 0, &cfg), 7680);
+
+    /* Negative-delta path: proves `* FP_SCALE` replacement handles
+     * negatives without UB (the original `<< FP_SHIFT` was UB per C11). */
+    ASSERT_EQ("neg delta 0 vel", update_velocity_ema(-100, 0, &cfg), -7680);
+
+    /* 0 delta, vel=1000: (0 + 1000*700)/1000 = 700 */
+    ASSERT_EQ("0 delta + vel", update_velocity_ema(0, 1000, &cfg), 700);
+
+    /* delta=100, vel=1000: (7680000 + 700000)/1000 = 8380 */
+    ASSERT_EQ("pos delta + pos vel", update_velocity_ema(100, 1000, &cfg), 8380);
+
+    /* Clamp upper bound. */
+    struct scroll_inertia_config tight = cfg;
+    tight.gain  = 1000;
+    tight.blend = 0;
+    tight.limit_fp = 100;
+    ASSERT_EQ("upper clamp",  update_velocity_ema(10000, 0, &tight), 100);
+    ASSERT_EQ("lower clamp",  update_velocity_ema(-10000, 0, &tight), -100);
+}
+
+/* ------------------------------------------------------------------ */
+static void test_peak_reversed(void) {
+    printf("-- peak_reversed\n");
+    ASSERT_FALSE("peak=0",           peak_reversed(100, 0));
+    ASSERT_FALSE("vel=0",            peak_reversed(0, 100));
+    ASSERT_FALSE("both 0",           peak_reversed(0, 0));
+    ASSERT_FALSE("same pos",         peak_reversed(100, 50));
+    ASSERT_FALSE("same neg",         peak_reversed(-100, -50));
+    ASSERT_TRUE("pos vel neg peak",  peak_reversed(100, -100));
+    ASSERT_TRUE("neg vel pos peak",  peak_reversed(-100, 100));
+}
+
+/* ------------------------------------------------------------------ */
+static void test_update_peak(void) {
+    printf("-- update_peak\n");
+    struct scroll_inertia_config cfg = default_cfg();
+    cfg.peak_decay = 990;
+
+    /* Reversal: snap to new vel. */
+    ASSERT_EQ("reverse",      update_peak(-100, 100, &cfg), -100);
+    /* Grow: vel beats peak. */
+    ASSERT_EQ("grow",         update_peak(200, 100, &cfg), 200);
+    /* Hold with decay: decayed=99 beats vel=50. */
+    ASSERT_EQ("hold+decay",   update_peak(50, 100, &cfg), 99);
+    /* Decay drops below vel: vel wins. */
+    cfg.peak_decay = 900;
+    ASSERT_EQ("decay<vel",    update_peak(95, 100, &cfg), 95);
+    /* Zero peak, nonzero vel: vel wins (grow branch). */
+    cfg.peak_decay = 990;
+    ASSERT_EQ("peak=0 grow",  update_peak(50, 0, &cfg), 50);
+    /* Both zero. */
+    ASSERT_EQ("both 0",       update_peak(0, 0, &cfg), 0);
+    /* Negative same-dir decay. */
+    ASSERT_EQ("neg decay",    update_peak(-50, -100, &cfg), -99);
+}
+
+/* ------------------------------------------------------------------ */
+static void test_apply_decay(void) {
+    printf("-- apply_decay\n");
+    struct scroll_inertia_config cfg = default_cfg();
+    cfg.friction_fp = 0;   /* isolate multiplicative decay first */
+
+    /* With fast=slow=0, any nonzero av uses decay_fast=990. */
+    int32_t vel = 25600;   /* 100 scroll units */
+    apply_decay(&vel, &cfg, 1000, 0);
+    ASSERT_EQ("decay pos", vel, 25344);
+
+    vel = -25600;
+    apply_decay(&vel, &cfg, 1000, 0);
+    ASSERT_EQ("decay neg", vel, -25344);
+
+    /* Friction bites below threshold. */
+    cfg.decay_fast = 1000;
+    cfg.decay_slow = 1000;
+    cfg.decay_tail = 1000;
+    cfg.friction_fp = 8;
+    vel = 5;
+    apply_decay(&vel, &cfg, 1000, 0);
+    ASSERT_EQ("friction clamps small +", vel, 0);
+    vel = -5;
+    apply_decay(&vel, &cfg, 1000, 0);
+    ASSERT_EQ("friction clamps small -", vel, 0);
+    vel = 100;
+    apply_decay(&vel, &cfg, 1000, 0);
+    ASSERT_EQ("friction subtracts +", vel, 92);
+    vel = -100;
+    apply_decay(&vel, &cfg, 1000, 0);
+    ASSERT_EQ("friction subtracts -", vel, -92);
+
+    /* Three-stage boundaries. */
+    cfg.friction_fp = 0;
+    cfg.fast_fp     = 1000;
+    cfg.slow_fp     = 100;
+    cfg.decay_fast  = 900;
+    cfg.decay_slow  = 950;
+    cfg.decay_tail  = 990;
+    vel = 2000;
+    apply_decay(&vel, &cfg, 1000, 0);
+    ASSERT_EQ("fast zone", vel, 1800);   /* 2000*900/1000 */
+    vel = 500;
+    apply_decay(&vel, &cfg, 1000, 0);
+    ASSERT_EQ("slow zone", vel, 475);    /* 500*950/1000 */
+    vel = 50;
+    apply_decay(&vel, &cfg, 1000, 0);
+    ASSERT_EQ("tail zone", vel, 49);     /* 50*990/1000 = 49 */
+
+    /* Commit + taper: with vel == init_vel, taper = 1 (full scaling).
+     * base_loss = 10 (decay_fast=990) → full_extra = 10 * (1000-500)/500 = 10
+     * → scaled_loss = 10 + 10 = 20 → rate = 980 → vel = 10000*980/1000 */
+    cfg = default_cfg();
+    cfg.friction_fp = 0;
+    vel = 10000;
+    apply_decay(&vel, &cfg, 500, 10000);
+    ASSERT_EQ("taper 1 at commit=500", vel, 9800);
+
+    vel = 10000;
+    apply_decay(&vel, &cfg, 250, 10000);
+    ASSERT_EQ("taper 1 at commit=250", vel, 9600); /* rate 960 */
+
+    /* commit_permille == 1000 reproduces unscaled decay regardless of init. */
+    vel = 10000;
+    apply_decay(&vel, &cfg, 1000, 10000);
+    ASSERT_EQ("commit 1000 == unscaled", vel, 9900);
+
+    /* init_vel=0 also falls back to unscaled (no taper reference). */
+    vel = 10000;
+    apply_decay(&vel, &cfg, 500, 0);
+    ASSERT_EQ("init_vel=0 == unscaled", vel, 9900);
+
+    /* Taper = 0 when |vel| <= stop_fp: no extra loss regardless of commit. */
+    vel = cfg.stop_fp;
+    apply_decay(&vel, &cfg, 250, 10000);
+    ASSERT_EQ("taper 0 at stop_fp", vel, cfg.stop_fp * 990 / 1000);
+
+    /* Squared taper ≈ 0.25 midway between stop_fp and init_vel.
+     * init_above = 10000 - 1792 = 8208; pick vel so vel_above = 4104 →
+     * linear taper = 500 → squared taper = 250.
+     * full_extra = 10 * 500/500 = 10; extra = 10 * 250/1000 = 2
+     * scaled_loss = 12 → rate 988 → 5896 * 988/1000 = 5825 (int). */
+    vel = 5896;
+    apply_decay(&vel, &cfg, 500, 10000);
+    ASSERT_EQ("squared taper at mid-vel", vel, 5825);
+
+    /* Extreme-low commit should clamp (scaled_loss capped at 1000),
+     * never yielding a negative rate. */
+    vel = 10000;
+    apply_decay(&vel, &cfg, 1, 10000);
+    ASSERT_TRUE("commit clamp keeps vel in-range", vel >= 0 && vel <= 10000);
+}
+
+/* ------------------------------------------------------------------ */
+static void test_apply_decay_2d(void) {
+    printf("-- apply_decay_2d\n");
+    struct scroll_inertia_config cfg = default_cfg();
+    cfg.friction_fp = 0;   /* isolate multiplicative decay first */
+
+    int32_t vy, vx;
+
+    /* Zero magnitude stays zero (function early-returns). */
+    vy = 0; vx = 0;
+    apply_decay_2d(&vy, &vx, &cfg, 1000, 0);
+    ASSERT_EQ("zero stays zero y", vy, 0);
+    ASSERT_EQ("zero stays zero x", vx, 0);
+
+    /* Pure-axis: reduces to 1D decay.  mag=25600, new_mag=25344
+     * (990/1000), vel_y = 25600 * 25344 / 25600 = 25344. */
+    vy = 25600; vx = 0;
+    apply_decay_2d(&vy, &vx, &cfg, 1000, 0);
+    ASSERT_EQ("pure Y decay", vy, 25344);
+    ASSERT_EQ("pure Y keeps x=0", vx, 0);
+
+    /* Diagonal 45°: both axes scale by the same factor.
+     * mag = fast_magnitude(100,100) = 150.
+     * new_mag = 150 * 990 / 1000 = 148.
+     * vel_y' = 100 * 148 / 150 = 98.  Same for vel_x. */
+    vy = 100; vx = 100;
+    apply_decay_2d(&vy, &vx, &cfg, 1000, 0);
+    ASSERT_EQ("diagonal decay y", vy, 98);
+    ASSERT_EQ("diagonal decay x", vx, 98);
+
+    /* Sign is preserved on both axes. */
+    vy = -100; vx = 100;
+    apply_decay_2d(&vy, &vx, &cfg, 1000, 0);
+    ASSERT_EQ("mixed sign y", vy, -98);
+    ASSERT_EQ("mixed sign x", vx, 98);
+
+    /* Friction on the magnitude, not per-axis.
+     * mag = fast_magnitude(300,400) = 400 + 150 = 550.
+     * decay_* = 1000 (no multiplicative loss), new_mag = 550 - 8 = 542.
+     * vel_y = 300 * 542 / 550 = 295.  vel_x = 400 * 542 / 550 = 394. */
+    cfg.decay_fast = 1000;
+    cfg.decay_slow = 1000;
+    cfg.decay_tail = 1000;
+    cfg.friction_fp = 8;
+    vy = 300; vx = 400;
+    apply_decay_2d(&vy, &vx, &cfg, 1000, 0);
+    ASSERT_EQ("friction diagonal y", vy, 295);
+    ASSERT_EQ("friction diagonal x", vx, 394);
+
+    /* Friction collapses to zero when magnitude falls below friction_fp. */
+    vy = 3; vx = 4;   /* mag = 4 + 1 = 5, below friction_fp = 8 */
+    apply_decay_2d(&vy, &vx, &cfg, 1000, 0);
+    ASSERT_EQ("friction zeros y", vy, 0);
+    ASSERT_EQ("friction zeros x", vx, 0);
+
+    /* Zone selection uses magnitude, not per-axis.  With fast_fp=200,
+     * a 45° flick of (150,150) has mag=225 → fast zone (rate 900).
+     * Per-axis would only see |vel|=150 → slow zone (rate 950). */
+    cfg = default_cfg();
+    cfg.friction_fp = 0;
+    cfg.fast_fp    = 200;
+    cfg.slow_fp    = 50;
+    cfg.decay_fast = 900;
+    cfg.decay_slow = 950;
+    cfg.decay_tail = 990;
+    vy = 150; vx = 150;
+    apply_decay_2d(&vy, &vx, &cfg, 1000, 0);
+    /* mag=225, new_mag = 225*900/1000 = 202, scale = 202/225.
+     * vel_y = 150 * 202 / 225 = 134.  Same for vel_x. */
+    ASSERT_EQ("magnitude zone y", vy, 134);
+    ASSERT_EQ("magnitude zone x", vx, 134);
+
+    /* Commit taper: at vel == init_mag, taper²=1 (full extra loss).
+     * init_mag=10000, mag=10000, commit=500, decay=990 →
+     * base_loss=10, full_extra=10, extra=10, scaled_loss=20, d=980.
+     * new_mag = 10000 * 980 / 1000 = 9800. */
+    cfg = default_cfg();
+    cfg.friction_fp = 0;
+    vy = 10000; vx = 0;
+    apply_decay_2d(&vy, &vx, &cfg, 500, 10000);
+    ASSERT_EQ("2d taper 1 at commit=500", vy, 9800);
+    ASSERT_EQ("2d taper 1 keeps x=0", vx, 0);
+
+    /* commit_permille == 1000 reproduces unscaled decay. */
+    vy = 10000; vx = 0;
+    apply_decay_2d(&vy, &vx, &cfg, 1000, 10000);
+    ASSERT_EQ("2d commit 1000 unscaled", vy, 9900);
+
+    /* init_mag == 0 falls back to unscaled. */
+    vy = 10000; vx = 0;
+    apply_decay_2d(&vy, &vx, &cfg, 500, 0);
+    ASSERT_EQ("2d init_mag=0 unscaled", vy, 9900);
+
+    /* Symmetry check: diagonal (V,V) decays at the same magnitude rate
+     * as axis-aligned of the same magnitude.  For commit=1000 (no
+     * taper) and friction=0, both should lose the same 1% of their
+     * magnitude per tick. */
+    vy = 7071; vx = 7071;   /* diagonal mag ≈ 7071 + 3535 = 10606 */
+    apply_decay_2d(&vy, &vx, &cfg, 1000, 0);
+    int32_t diag_mag = fast_magnitude(vy, vx);
+    int32_t aligned_y = 10606, aligned_x = 0;
+    apply_decay_2d(&aligned_y, &aligned_x, &cfg, 1000, 0);
+    int32_t aligned_mag = fast_magnitude(aligned_y, aligned_x);
+    /* Both should land within a small rounding error of 10606 × 0.99 ≈ 10500. */
+    ASSERT_TRUE("symmetry diagonal ≈ aligned",
+                abs32(diag_mag - aligned_mag) <= 2);
+
+    /* apply_decay_2d routes through magnitude() — the easiest way to
+     * see the dispatch actually fires is a zone boundary positioned
+     * *between* the fast and exact magnitudes of the same vector.
+     * For a 45° (100,100) vector: fast=150, exact=141.  Setting
+     * fast_fp=145 places the fast-magnitude path in the fast zone
+     * (rate 900) and the exact path in the slow zone (rate 950), so
+     * the two shrink by clearly different factors.
+     *
+     * Same-rate decays can't distinguish the paths (the final
+     * vel_y = v * new_mag / mag cancels the mag difference to an
+     * integer-rounding noise level), so don't use uniform rates here. */
+    cfg = default_cfg();
+    cfg.friction_fp = 0;
+    cfg.fast_fp     = 145;
+    cfg.slow_fp     = 0;
+    cfg.decay_fast  = 900;
+    cfg.decay_slow  = 950;
+    cfg.decay_tail  = 950;
+    cfg.exact_magnitude = 1;
+    vy = 100; vx = 100;
+    apply_decay_2d(&vy, &vx, &cfg, 1000, 0);
+    int32_t ey = vy, ex = vx;
+    cfg.exact_magnitude = 0;
+    vy = 100; vx = 100;
+    apply_decay_2d(&vy, &vx, &cfg, 1000, 0);
+    ASSERT_TRUE("exact path non-zero", ey != 0 && ex != 0);
+    ASSERT_TRUE("apply_decay_2d honours exact_magnitude",
+                ey != vy || ex != vx);
+}
+
+/* ------------------------------------------------------------------ */
+static void test_accumulate_and_emit(void) {
+    printf("-- accumulate_and_emit\n");
+    struct scroll_inertia_config cfg = default_cfg();
+    cfg.scale = 1000;
+    cfg.scale_div = 1000;
+
+    int32_t accum = 0;
+
+    /* One whole unit in fixed-point → emits 1, remainder 0. */
+    int16_t e = accumulate_and_emit(FP_SCALE, &accum, &cfg, 1000);
+    ASSERT_EQ("emit 1",            e, 1);
+    ASSERT_EQ("remainder 0",       accum, 0);
+
+    /* Half a unit → emit 0, remainder = FP_SCALE/2. */
+    accum = 0;
+    e = accumulate_and_emit(FP_SCALE / 2, &accum, &cfg, 1000);
+    ASSERT_EQ("emit 0 half",       e, 0);
+    ASSERT_EQ("remainder half",    accum, FP_SCALE / 2);
+
+    /* Add another half → emit 1, remainder 0. */
+    e = accumulate_and_emit(FP_SCALE / 2, &accum, &cfg, 1000);
+    ASSERT_EQ("emit 1 cumulated",  e, 1);
+    ASSERT_EQ("remainder 0 again", accum, 0);
+
+    /* Negative path: proves `* FP_SCALE` replacement for the
+     * remainder subtraction handles negative emit without UB. */
+    accum = 0;
+    e = accumulate_and_emit(-FP_SCALE, &accum, &cfg, 1000);
+    ASSERT_EQ("emit -1",           e, -1);
+    ASSERT_EQ("remainder 0 neg",   accum, 0);
+
+    /* Scaled ratio 4:675 (the recommended pairing). */
+    cfg.scale = 4;
+    cfg.scale_div = 675;
+    accum = 0;
+    /* vel=FP_SCALE*200 → accum += FP_SCALE*200*4/675 = 51200*4/675 = 303.
+     * emit = 303>>8 = 1; remainder = 303 - 256 = 47. */
+    e = accumulate_and_emit(FP_SCALE * 200, &accum, &cfg, 675);
+    ASSERT_EQ("4:675 emit",        e, 1);
+    ASSERT_EQ("4:675 remainder",   accum, 47);
+}
+
+/* ------------------------------------------------------------------ */
+static void test_scale_active_with_remainder(void) {
+    printf("-- scale_active_with_remainder\n");
+    struct scroll_inertia_config cfg = default_cfg();
+    cfg.scale = 4;
+    cfg.scale_div = 60;
+    int64_t remainder = 0;
+
+    ASSERT_EQ("small active waits",
+              scale_active_with_remainder(14, &remainder, &cfg), 0);
+    ASSERT_EQ("small active remainder", remainder, 56);
+    ASSERT_EQ("next active flushes",
+              scale_active_with_remainder(1, &remainder, &cfg), 1);
+    ASSERT_EQ("active remainder clears", remainder, 0);
+
+    ASSERT_EQ("negative active flushes",
+              scale_active_with_remainder(-15, &remainder, &cfg), -1);
+    ASSERT_EQ("negative remainder clears", remainder, 0);
+
+    cfg.scale = INT32_MAX;
+    cfg.scale_div = 1;
+    remainder = 0;
+    ASSERT_EQ("active output clamps",
+              scale_active_with_remainder(INT32_MAX, &remainder, &cfg),
+              INT32_MAX);
+}
+
+/* ------------------------------------------------------------------ */
+int main(void) {
+    printf("scroll_inertia math unit tests\n");
+    test_fast_magnitude();
+    test_isqrt64();
+    test_exact_magnitude();
+    test_magnitude_dispatcher();
+    test_clamp_velocity();
+    test_safe_guards();
+    test_update_velocity_ema();
+    test_peak_reversed();
+    test_update_peak();
+    test_apply_decay();
+    test_apply_decay_2d();
+    test_accumulate_and_emit();
+    test_scale_active_with_remainder();
+
+    printf("\n%d/%d passed\n", total_tests - failed_tests, total_tests);
+    return failed_tests == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+}

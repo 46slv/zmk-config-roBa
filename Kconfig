@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: MIT
+
+config ZMK_INPUT_PROCESSOR_ROBA_SCROLL
+    bool "roBa unified axis-lock inertia scroll processor"
+    default y
+    depends on DT_HAS_ZMK_INPUT_PROCESSOR_ROBA_SCROLL_ENABLED
+    select ZMK_POINTING
+    help
+      Enable roBa's combined axis-selection and inertial-scroll processor.
+      The processor keeps initial gesture deltas while selecting an axis and
+      uses the same state and scale for active and coasting output.
