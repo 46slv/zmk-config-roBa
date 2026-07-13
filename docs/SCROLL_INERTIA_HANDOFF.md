@@ -21,7 +21,9 @@ Lab 23 adds angular snap sectors without changing inertia: up/down receive 120
 degrees each, left/right receive 60 degrees each, and the physical vertical
 center rotates 30 degrees toward negative X (left). The offset is evaluated
 before `invert-y`, so accepted user-facing directions stay unchanged. Hardware
-confirmation of the physical offset sign remains pending.
+confirmation of the physical offset sign remains pending. Host tests and clean
+right/left WSL builds pass; the right-hand artifact is under
+`~/zmk-workspace/firmware/zmk-config-roBa-angular-snap/`.
 
 ## Goal
 

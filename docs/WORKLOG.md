@@ -624,7 +624,16 @@ module instead.
 - Standalone fixed-point tests: `162/162`.
 - Axis-lock tests pass for sector width, offset, opposite directions, and exact
   boundary protection.
-- ZMK builds and hardware confirmation remain pending at this log point.
+- Clean WSL/Nix right and left builds pass.
+- Generated right DTS confirms `vertical-sector=120`, `offset=30`, and all
+  unchanged Lab 22 scale, low-speed, snap-lock, and inertia values.
+- Right UF2: `575488` bytes, SHA-256
+  `ea9821660334e5ae0ca03c3f2a8e836d06a1b8b2ca5a3ab672c0a96ab84df1eb`.
+- Left UF2: `363008` bytes, SHA-256
+  `31f67c7ac3f39691a97d654cb952de3f8a461a7b7d738410cbf518b5581d808e`.
+- Artifact directory:
+  `/home/shiro/zmk-workspace/firmware/zmk-config-roBa-angular-snap/`.
+- Hardware flashing and physical offset-sign confirmation remain unverified.
 
 ### Rollback
 
