@@ -259,7 +259,7 @@ Input processor interaction:
   distance-neutral low-speed eager quantization `threshold=20 / boost=0 /
   eager=500` and clears same-axis fractional state on physical reversal;
   medium/high input, velocity tracking, and coast are unchanged.
-- `zmk-input-processor-roba-scroll` is an external module pinned to `76addce` in
+- `zmk-input-processor-roba-scroll` is an external module pinned to `1e4489c` in
   `config/west.yml`. The old scroll-snap/inertia projects and downstream scaler
   are absent; one module setting scales both active and coast paths.
 - Historically, the Lab 12-18 scroller chain followed the inertia

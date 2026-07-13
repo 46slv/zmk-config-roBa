@@ -1200,7 +1200,8 @@ friction, stop, and inertia output remain unchanged from Lab 22.
 
 Pre-hardware verification:
 
-- Standalone module commit: `76addce781a65a9ac681d60856bdda4a03c5bdd6`.
+- Standalone implementation commit: `76addce781a65a9ac681d60856bdda4a03c5bdd6`.
+- Pinned merged module commit: `1e4489cd85f5ea806d7348ac4513039c1251ab36`.
 - Fixed-point checks: `162/162`.
 - Axis-lock checks include 120/60 sectors, positive 30-degree offset, opposite
   directions, and empty-component boundary protection.

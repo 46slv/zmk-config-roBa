@@ -614,7 +614,7 @@ module instead.
 
 ### Change
 
-- Pin module commit `76addce781a65a9ac681d60856bdda4a03c5bdd6`.
+- Pin merged module commit `1e4489cd85f5ea806d7348ac4513039c1251ab36`.
 - Set `snap-vertical-sector-deg=120` and `snap-angle-offset-deg=30`.
 - Keep snap timing, `4/60` scale, low-speed eager quantization, EMA, arming,
   friction, stop, and coast unchanged.

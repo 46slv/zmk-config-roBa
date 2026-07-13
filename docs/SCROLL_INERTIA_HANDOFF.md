@@ -10,7 +10,7 @@ external snap/inertia modules and downstream scaler are absent. Initial
 selected-axis input is retained, active/coast use one `4/60` scale, and layer or
 endpoint changes reset all state. Host tests and both-half builds pass, and
 right-hand feel was accepted on 2026-07-13. The reusable implementation is
-published as `46slv/zmk-input-processor-roba-scroll` and pinned to `76addce`.
+published as `46slv/zmk-input-processor-roba-scroll` and pinned to `1e4489c`.
 Lab 22 disables Lab 21's total-distance gain and uses distance-neutral eager
 quantization (`threshold=20`, `eager=500`). Per-axis input direction now clears
 stale fractional movement on reversal. Velocity tracking and coast are

@@ -10,7 +10,7 @@ in one input processor. It replaces the previous serial combination of
 
 The reusable implementation is maintained at
 <https://github.com/46slv/zmk-input-processor-roba-scroll>. This config pins
-commit `76addce781a65a9ac681d60856bdda4a03c5bdd6` in `config/west.yml`.
+commit `1e4489cd85f5ea806d7348ac4513039c1251ab36` in `config/west.yml`.
 
 ## Processing Contract
 
