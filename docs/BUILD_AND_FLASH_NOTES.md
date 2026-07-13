@@ -194,9 +194,11 @@ Expected checks:
 
 - `.west/config` points at the selected config manifest.
 - `west list` includes `zmk`.
-- `west list` includes roBa external modules such as
-  `zmk-pmw3610-driver`, `zmk-listeners`, `zmk-scroll-snap`, and
+- `west list` includes required external modules such as
+  `zmk-pmw3610-driver`, `zmk-listeners`, and
   `zmk-pointing-acceleration`.
+- On `codex/unified-scroll-inertia`, scroll snap/inertia are supplied by the
+  config repo's own Zephyr module and must not appear as external west projects.
 
 If `just init` fails, stop and capture the full output. Do not manually clone
 missing modules until checking whether `config/west.yml` was selected correctly.

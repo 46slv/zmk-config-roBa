@@ -232,6 +232,24 @@ scale-div = <150>;
 現在のmoduleはcoastを直接HID出力するため、単に下流へ加速processorを置くだけでは
 active側にしか効かない。加速対応はmodule側の出力scale拡張として実装する方が安全。
 
+## 2026-07-13 Unified Module Update
+
+The experimental path now uses the repo-local
+`zmk,input-processor-roba-scroll` module documented in
+`docs/ROBA_SCROLL_MODULE.md`.
+
+```text
+PMW3610 raw X/Y
+  -> zip_xy_to_scroll_mapper
+  -> roba_scroll
+  -> HID active output / direct-HID coast
+```
+
+Do not restore the old external snap/inertia modules or a downstream
+`zip_scroll_scaler` on this branch. The local processor owns retained axis
+selection, inversion, active remainder, velocity, and coast. The older steps
+above remain as historical instructions for reproducing Labs 10-18.
+
 ## Troubleshooting
 
 ### 慣性が出ない

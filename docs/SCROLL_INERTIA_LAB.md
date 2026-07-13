@@ -974,7 +974,55 @@ Hardware result:
 
 - Pending user flash/test.
 
-## Future Candidate: Unified Axis-Lock Inertia Processor
+## Lab 19: Unified Axis-Lock Inertia Processor
+
+Lab 19 implements the previously documented future candidate as a local ZMK
+module on branch `codex/unified-scroll-inertia`.
+
+```dts
+<&zip_xy_to_scroll_mapper>,
+<&roba_scroll>;
+```
+
+Integration changes:
+
+- The old external snap/inertia projects are removed from `config/west.yml`;
+  the repo supplies CMake, Kconfig, binding, source, and tests itself.
+- Initial X/Y values are retained during selection and chosen-axis movement is
+  flushed instead of discarded.
+- Selection, `invert-y`, active scaling, velocity, and direct-HID coast share
+  one device state and one `4/60` scale.
+- Horizontal and vertical active remainders are independent.
+- Axis changes cancel old coast before retained new-axis movement is tracked.
+- Layer 11 off and endpoint changes reset pending input, remainders, velocity,
+  timers, and coast.
+- `axis-mode=1` provides explicit free two-axis input.
+- `snap-switch` controls cross-axis movement required after lock expiry;
+  `unlock-mod` resets into free 2D while held and cleanly re-enters snap mode.
+
+Host verification:
+
+- Inherited inertia math plus active-scale tests pass: `131/131`.
+- New tests cover initial X/Y flush, immediate selection, cross-axis retention
+  and switch threshold, idle reset, and free mode; all axis-lock tests pass.
+
+Build result:
+
+- Right and left UF2 builds succeed without the old external scroll modules.
+- Generated right devicetree confirms `mapper -> roba_scroll`, accepted snap
+  values, `invert-y`, `axis=0`, layer `11`, and scale `4/60`.
+- Output directory:
+  `~/zmk-workspace/firmware/zmk-config-roBa-unified`
+- `roBa_R-seeeduino_xiao_ble.uf2`: `568320` bytes, built at
+  2026-07-13 11:31 JST.
+- `roBa_L-seeeduino_xiao_ble.uf2`: `357376` bytes, built at
+  2026-07-13 11:34 JST.
+
+Hardware result:
+
+- Pending user flash/test. Lab 17 remains the accepted rollback baseline.
+
+## Superseded Design Rationale
 
 Keep a purpose-built combined module on the development backlog. Its goal is
 automatic vertical/horizontal selection with inertia, without the behavioral
@@ -1007,10 +1055,8 @@ Reason for considering a new module:
 - A shared state machine can make axis choice, velocity estimation, active
   output, and coast handoff from the same event history.
 
-This is a future development candidate, not part of Lab 15. Before starting it,
-finish the current one-change-at-a-time hardware validation and capture a
-repeatable test matrix for slow movement, short flicks, fast flicks, horizontal
-intent, diagonal intent, reversals, and layer release.
+Lab 19 implements this candidate. The rationale remains to explain why the
+former serial processor chain was replaced.
 
 ## Build Results
 

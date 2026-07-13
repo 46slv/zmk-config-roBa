@@ -2,6 +2,16 @@
 
 Updated: 2026-07-12
 
+## 2026-07-13 Unified Module Status
+
+Branch `codex/unified-scroll-inertia` implements the combined processor locally
+in this repo. Its chain is `zip_xy_to_scroll_mapper -> roba_scroll`; the old
+external snap/inertia modules and downstream scaler are absent. Initial
+selected-axis input is retained, active/coast use one `4/60` scale, and layer or
+endpoint changes reset all state. Host tests and both-half builds pass. Hardware
+feel is pending; accepted Lab 17 remains the rollback baseline. See
+`docs/ROBA_SCROLL_MODULE.md` and Lab 19 in `docs/SCROLL_INERTIA_LAB.md`.
+
 ## Goal
 
 Make roBa's layer 11 trackball scrolling smooth and continuously responsive,

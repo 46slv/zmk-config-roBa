@@ -226,7 +226,15 @@ Input processor interaction:
 - The PMW3610 `scroll-layers` property is intentionally omitted so the driver
   emits raw X/Y on layer `11`; the input-listener owns scroll conversion.
 - `scroller` input processor override applies on layer `11`.
-- On the Lab 12 production-input branch, the scroller chain follows the inertia
+- On the unified-module branch, the complete active chain is:
+  - `&zip_xy_to_scroll_mapper`
+  - `&roba_scroll`
+- `roba_scroll` owns accepted `Y_INVERT`, snap `2/200/175/8/175`, active and
+  coast scale `4/60`, inertia `axis=0`, layer reset `11`, EMA `500/500`, arming
+  `start=12 / move=20 / min-events=4`, friction `14`, and stop `3`.
+- The old external scroll-snap/inertia manifest projects are removed. There is
+  no downstream scaler; one module setting scales both paths.
+- Historically, the Lab 12-18 scroller chain followed the inertia
   module's documented placement and reverses vertical direction:
   - `&zip_xy_transform INPUT_TRANSFORM_Y_INVERT`
   - `&zip_xy_to_scroll_mapper`
@@ -250,7 +258,7 @@ Input processor interaction:
   both outputs 25 percent faster while preserving their handoff ratio. Snap,
   directions, arming thresholds, EMA, and decay are unchanged.
   The user accepted this scale on right-hand hardware on 2026-07-13.
-- `scroll_inertia_v` binds cleanup to layer `11` and
+- In the historical chain, `scroll_inertia_v` bound cleanup to layer `11` and
   mirrors the downstream `4/60` scale. At restored `CPI=400`, `start=16`,
   `move=32`, `friction=14`, and `stop=3` preserve the approximate physical
   thresholds of the 1000 CPI defaults. Lab 13 lowers `min-events` from the
@@ -261,8 +269,8 @@ Input processor interaction:
 - Cursor pointer acceleration, AML, mouse gesture, and horizontal-wheel
   suppression are restored. Pointer acceleration is limited to the
   `DEFAULT/MOUSE` conditional path and does not precede layer 11 scrolling.
-  Scroll snap affects only the layer-11 scroll chain. Lab 16 hardware behavior
-  is not yet verified; initial low-speed response is the primary risk.
+  The unified processor also remains confined to layer 11. Lab 16b/17 were
+  accepted; Lab 19 still requires hardware comparison against that baseline.
 - Lab 18 approximates the earlier effective two-stage pointer acceleration with
   one pointer-only curve: factor `1.0..7.0`, threshold `300`, max speed `3500`,
   exponent `1`. X/Y base scalers remain `70/100` and `80/100`. This does not

@@ -211,6 +211,13 @@ scroller {
 - Lab 17実機で低速応答、通常速度、snap、active-to-coast handoff、慣性に問題なし。`4/60`を次の実験の基準scaleとして採用する。
 - Lab 18は通常pointerだけを旧二段加速の体感へ近似する。一段curveを`min=1000 / max=7000 / threshold=300 / speed-max=3500 / exponent=1`とし、X/Y scaler `70/100`, `80/100`とLab 17 scroll pathは維持する。旧base+child二段構成の最大`2.8*2.8=7.84`を安全側へ丸め、scroll経路へaccelを再導入しない。
 
+- Lab 19 implements local `zmk,input-processor-roba-scroll`. The active chain
+  is `xy_to_scroll_mapper -> roba_scroll`; external snap/inertia modules and
+  downstream scaler are removed. Initial selected-axis deltas are retained,
+  `Y_INVERT` and one `4/60` active/coast scale are internal, and layer-off or
+  endpoint change resets all state. Host tests and both-half builds pass;
+  right-hand feel remains unverified.
+
 ### `disable-scroll-x`
 
 ```dts
