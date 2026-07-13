@@ -359,7 +359,16 @@ module instead.
 
 - Standalone fixed-point tests: `162/162`.
 - All standalone axis-lock tests pass.
-- ZMK right/left builds and hardware remain pending at this log point.
+- Clean WSL/Nix builds passed for both halves.
+- Generated right-half Devicetree confirms `scale=4`, `scale-div=60`,
+  `threshold=20`, `boost=0`, and `eager=500`.
+- Right UF2: `572416` bytes, SHA-256
+  `bfc82d9ee3a5853f7acb667cd1addc1774f2a69909e7913f896febd47e624e87`.
+- Left UF2: `358400` bytes, SHA-256
+  `78bca9351193d2cbb529d472a255ca4511339b6e0608d312bd006e1562253e56`.
+- Artifact directory:
+  `/home/shiro/zmk-workspace/firmware/zmk-config-roBa-low-speed-reversal/`.
+- Hardware flashing and live USB/BLE behavior remain unverified.
 
 ### Hardware Check
 

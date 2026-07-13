@@ -1151,8 +1151,21 @@ Verification before hardware:
 - Standalone module PR: `46slv/zmk-input-processor-roba-scroll#2`.
 - Pinned merge commit: `0c7a8fe243d1182c090a138005d275795d7b206b`.
 - Host verification: `162/162` fixed-point checks and all axis-lock checks.
+- Clean WSL/Nix builds succeeded for both `roBa_R` and `roBa_L`.
+- Generated right-half Devicetree contains `scale=4`, `scale-div=60`,
+  `threshold=20`, `boost=0`, and `eager=500`.
 - Medium/high active scale, snap, EMA, arming, friction, stop, and coast are
   unchanged from Lab 20.
+
+Flash artifacts:
+
+- Right: `/home/shiro/zmk-workspace/firmware/zmk-config-roBa-low-speed-reversal/roBa_R-seeeduino_xiao_ble.uf2`
+  (`572416` bytes, SHA-256
+  `bfc82d9ee3a5853f7acb667cd1addc1774f2a69909e7913f896febd47e624e87`).
+- Left: `/home/shiro/zmk-workspace/firmware/zmk-config-roBa-low-speed-reversal/roBa_L-seeeduino_xiao_ble.uf2`
+  (`358400` bytes, SHA-256
+  `78bca9351193d2cbb529d472a255ca4511339b6e0608d312bd006e1562253e56`).
+- Hardware flashing and live USB/BLE verification remain unperformed.
 
 Hardware focus:
 
