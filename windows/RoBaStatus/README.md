@@ -8,10 +8,9 @@ quietly in the task tray. It shows three things at a glance:
 - right/central battery;
 - left/peripheral battery.
 
-The taskbar and tray icons are generated dynamically. Their upper area
-identifies the layer and the two lower battery bars represent the two halves.
-Clicking a pinned taskbar shortcut or the tray icon opens the same detailed
-status window.
+The taskbar icon is generated dynamically. The tray uses three separate dynamic
+icons: the active layer, left battery, and right battery. Clicking the pinned
+taskbar shortcut or any tray icon opens the same detailed status window.
 
 ## Requirements
 
@@ -69,9 +68,9 @@ icon.
 - `再取得`: immediately retry USB first, then Bluetooth discovery and reads.
 - `トレイへ`: hide the detail window and keep monitoring.
 - Minimize or window close: hide to the same tray icon.
-- Tray icon left click: restore and focus the detail window.
-- Tray icon right click: open, refresh, or quit.
-- `終了`: remove the tray icon, stop USB/BLE monitoring, and exit.
+- Any tray icon left click: restore and focus the detail window.
+- Any tray icon right click: open, refresh, or quit.
+- `終了`: remove all three tray icons, stop USB/BLE monitoring, and exit.
 - `Windowsログイン時に起動`: add or remove the current executable from the
   current user's Run key. It is off by default and starts directly in the tray.
 

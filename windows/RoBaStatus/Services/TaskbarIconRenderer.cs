@@ -54,7 +54,48 @@ public static class TaskbarIconRenderer
 
     public static System.Drawing.Icon RenderSystemIcon(DeviceStatus status, int size = 32)
     {
-        var source = Render(status, size);
+        return ToSystemIcon(Render(status, size));
+    }
+
+    public static System.Drawing.Icon RenderLayerSystemIcon(DeviceStatus status, int size = 32)
+    {
+        var visual = new DrawingVisual();
+        using (var dc = visual.RenderOpen())
+        {
+            var layer = LayerCatalog.Get(status.HighestLayer);
+            var color = status.IsConnected
+                ? (Color)ColorConverter.ConvertFromString(layer.ColorHex)
+                : Color.FromRgb(92, 99, 108);
+            DrawIconBackground(dc, size);
+            var rect = new Rect(3, 3, size - 6, size - 6);
+            dc.DrawRoundedRectangle(new SolidColorBrush(color), null, rect, size * 0.16, size * 0.16);
+            var shortName = status.IsConnected ? layer.ShortName : "—";
+            DrawCenteredText(dc, shortName, layer.ShortName.Length >= 3 ? size * 0.26 : size * 0.40, rect);
+        }
+
+        return ToSystemIcon(Render(visual, size));
+    }
+
+    public static System.Drawing.Icon RenderBatterySystemIcon(BatteryReading battery, string side, int size = 32)
+    {
+        var visual = new DrawingVisual();
+        using (var dc = visual.RenderOpen())
+        {
+            DrawIconBackground(dc, size);
+            DrawCenteredText(dc, side, size * 0.27, new Rect(2, 2, size - 4, size * 0.26));
+            var batteryRect = new Rect(size * 0.17, size * 0.43, size * 0.60, size * 0.30);
+            DrawBattery(dc, batteryRect, battery);
+            if (battery.IsCharging)
+            {
+                DrawCenteredText(dc, "⚡", size * 0.25, new Rect(2, size * 0.72, size - 4, size * 0.22));
+            }
+        }
+
+        return ToSystemIcon(Render(visual, size));
+    }
+
+    private static System.Drawing.Icon ToSystemIcon(BitmapSource source)
+    {
         var encoder = new PngBitmapEncoder();
         encoder.Frames.Add(BitmapFrame.Create(source));
         using var stream = new MemoryStream();
@@ -72,6 +113,24 @@ public static class TaskbarIconRenderer
         {
             DestroyIcon(handle);
         }
+    }
+
+    private static BitmapSource Render(DrawingVisual visual, int size)
+    {
+        var bitmap = new RenderTargetBitmap(size, size, 96, 96, PixelFormats.Pbgra32);
+        bitmap.Render(visual);
+        bitmap.Freeze();
+        return bitmap;
+    }
+
+    private static void DrawIconBackground(DrawingContext dc, int size)
+    {
+        dc.DrawRoundedRectangle(
+            new SolidColorBrush(Color.FromRgb(20, 25, 33)),
+            new Pen(new SolidColorBrush(Color.FromRgb(66, 76, 91)), Math.Max(1, size / 32d)),
+            new Rect(1, 1, size - 2, size - 2),
+            size * 0.16,
+            size * 0.16);
     }
 
     private static void DrawBattery(DrawingContext dc, Rect rect, BatteryReading battery)

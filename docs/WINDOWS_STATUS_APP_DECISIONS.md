@@ -160,3 +160,40 @@ minimization.
 Remove `TrayIconService`, restore minimize/close to `WindowState.Minimized`, and
 remove the single-instance activation event. Firmware and communication code
 are unaffected.
+
+## 2026-07-13: Split the Tray Presentation into Three Status Icons
+
+### Background
+
+The composite taskbar icon is compact by necessity, but the notification area
+has room for direct, independent layer and battery indicators.
+
+### Options
+
+- Keep one composite tray icon.
+- Add three indicators alongside the existing composite tray icon.
+- Replace the composite tray icon with separate layer, left-battery, and
+  right-battery icons.
+
+### Decision
+
+Use exactly three tray icons: layer, left battery, and right battery. Keep the
+taskbar's composite icon unchanged, but replace the single composite tray icon
+to avoid a redundant fourth status icon.
+
+### Reason
+
+Each status can now be recognized from its own native notification-area icon,
+while its tooltip makes the side and exact value unambiguous. This serves the
+always-visible monitoring use case without changing the accepted detail window.
+
+### Impact
+
+All three icons share the same open, refresh, and quit interactions. Windows
+may place some icons in its notification-area overflow according to the user's
+system policy; the app does not change that policy.
+
+### Rollback
+
+Restore the single `NotifyIcon` field in `TrayIconService` and call the existing
+composite `RenderSystemIcon` method for it.

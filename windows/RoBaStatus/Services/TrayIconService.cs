@@ -5,9 +5,13 @@ namespace RoBaStatus.Services;
 
 public sealed class TrayIconService : IDisposable
 {
-    private readonly Forms.NotifyIcon _notifyIcon;
+    private readonly Forms.NotifyIcon _layerIcon;
+    private readonly Forms.NotifyIcon _leftBatteryIcon;
+    private readonly Forms.NotifyIcon _rightBatteryIcon;
     private readonly Forms.ContextMenuStrip _menu;
-    private System.Drawing.Icon? _dynamicIcon;
+    private System.Drawing.Icon? _dynamicLayerIcon;
+    private System.Drawing.Icon? _dynamicLeftBatteryIcon;
+    private System.Drawing.Icon? _dynamicRightBatteryIcon;
     private bool _disposed;
 
     public TrayIconService(DeviceStatus status)
@@ -28,21 +32,14 @@ public sealed class TrayIconService : IDisposable
         _menu.Items.Add(new Forms.ToolStripSeparator());
         _menu.Items.Add(quitItem);
 
-        _notifyIcon = new Forms.NotifyIcon
-        {
-            ContextMenuStrip = _menu,
-            Visible = false
-        };
-        _notifyIcon.MouseClick += (_, e) =>
-        {
-            if (e.Button == Forms.MouseButtons.Left)
-            {
-                ShowRequested?.Invoke(this, EventArgs.Empty);
-            }
-        };
+        _layerIcon = CreateNotifyIcon();
+        _leftBatteryIcon = CreateNotifyIcon();
+        _rightBatteryIcon = CreateNotifyIcon();
 
         Update(status);
-        _notifyIcon.Visible = true;
+        _layerIcon.Visible = true;
+        _leftBatteryIcon.Visible = true;
+        _rightBatteryIcon.Visible = true;
     }
 
     public event EventHandler? ShowRequested;
@@ -56,12 +53,21 @@ public sealed class TrayIconService : IDisposable
             return;
         }
 
-        var next = TaskbarIconRenderer.RenderSystemIcon(status);
-        var previous = _dynamicIcon;
-        _dynamicIcon = next;
-        _notifyIcon.Icon = next;
-        _notifyIcon.Text = TrayStatusText.Build(status);
-        previous?.Dispose();
+        ReplaceIcon(
+            _layerIcon,
+            ref _dynamicLayerIcon,
+            TaskbarIconRenderer.RenderLayerSystemIcon(status),
+            TrayStatusText.BuildLayer(status));
+        ReplaceIcon(
+            _leftBatteryIcon,
+            ref _dynamicLeftBatteryIcon,
+            TaskbarIconRenderer.RenderBatterySystemIcon(status.LeftBattery, "L"),
+            TrayStatusText.BuildLeftBattery(status));
+        ReplaceIcon(
+            _rightBatteryIcon,
+            ref _dynamicRightBatteryIcon,
+            TaskbarIconRenderer.RenderBatterySystemIcon(status.RightBattery, "R"),
+            TrayStatusText.BuildRightBattery(status));
     }
 
     public void Dispose()
@@ -72,10 +78,51 @@ public sealed class TrayIconService : IDisposable
         }
 
         _disposed = true;
-        _notifyIcon.Visible = false;
-        _notifyIcon.Dispose();
+        DisposeNotifyIcon(_layerIcon);
+        DisposeNotifyIcon(_leftBatteryIcon);
+        DisposeNotifyIcon(_rightBatteryIcon);
         _menu.Dispose();
-        _dynamicIcon?.Dispose();
-        _dynamicIcon = null;
+        _dynamicLayerIcon?.Dispose();
+        _dynamicLeftBatteryIcon?.Dispose();
+        _dynamicRightBatteryIcon?.Dispose();
+        _dynamicLayerIcon = null;
+        _dynamicLeftBatteryIcon = null;
+        _dynamicRightBatteryIcon = null;
+    }
+
+    private Forms.NotifyIcon CreateNotifyIcon()
+    {
+        var icon = new Forms.NotifyIcon
+        {
+            ContextMenuStrip = _menu,
+            Visible = false
+        };
+        icon.MouseClick += (_, e) =>
+        {
+            if (e.Button == Forms.MouseButtons.Left)
+            {
+                ShowRequested?.Invoke(this, EventArgs.Empty);
+            }
+        };
+        return icon;
+    }
+
+    private static void ReplaceIcon(
+        Forms.NotifyIcon target,
+        ref System.Drawing.Icon? current,
+        System.Drawing.Icon next,
+        string tooltip)
+    {
+        var previous = current;
+        current = next;
+        target.Icon = next;
+        target.Text = tooltip;
+        previous?.Dispose();
+    }
+
+    private static void DisposeNotifyIcon(Forms.NotifyIcon icon)
+    {
+        icon.Visible = false;
+        icon.Dispose();
     }
 }

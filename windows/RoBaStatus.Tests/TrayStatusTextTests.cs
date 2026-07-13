@@ -6,7 +6,7 @@ namespace RoBaStatus.Tests;
 public sealed class TrayStatusTextTests
 {
     [Fact]
-    public void IncludesTransportLayerAndBothBatteries()
+    public void BuildsThreeDistinctTooltips()
     {
         var status = new DeviceStatus
         {
@@ -17,21 +17,44 @@ public sealed class TrayStatusTextTests
             LeftBattery = new BatteryReading(76)
         };
 
-        var text = TrayStatusText.Build(status);
+        var layer = TrayStatusText.BuildLayer(status);
+        var left = TrayStatusText.BuildLeftBattery(status);
+        var right = TrayStatusText.BuildRightBattery(status);
 
-        Assert.Contains("USB", text);
-        Assert.Contains("SCROLL", text);
-        Assert.Contains("R 82%", text);
-        Assert.Contains("L 76%", text);
-        Assert.True(text.Length <= TrayStatusText.MaximumLength);
+        Assert.Contains("USB", layer);
+        Assert.Contains("SCROLL", layer);
+        Assert.Contains("Left battery: 76%", left);
+        Assert.Contains("Right battery: 82%", right);
+        Assert.All(new[] { layer, left, right }, text => Assert.True(text.Length <= TrayStatusText.MaximumLength));
     }
 
     [Fact]
     public void DisconnectedTooltipStaysWithinNotifyIconLimit()
     {
-        var text = TrayStatusText.Build(new DeviceStatus());
+        var status = new DeviceStatus();
+        var text = TrayStatusText.BuildLeftBattery(status);
 
         Assert.NotEmpty(text);
         Assert.True(text.Length <= TrayStatusText.MaximumLength);
+    }
+
+    [Fact]
+    public void RendersIndependentLayerAndBatteryIcons()
+    {
+        var status = new DeviceStatus
+        {
+            IsConnected = true,
+            HighestLayer = 11,
+            LeftBattery = new BatteryReading(76, true),
+            RightBattery = new BatteryReading(82)
+        };
+
+        using var layer = TaskbarIconRenderer.RenderLayerSystemIcon(status);
+        using var left = TaskbarIconRenderer.RenderBatterySystemIcon(status.LeftBattery, "L");
+        using var right = TaskbarIconRenderer.RenderBatterySystemIcon(status.RightBattery, "R");
+
+        Assert.NotEqual(IntPtr.Zero, layer.Handle);
+        Assert.NotEqual(IntPtr.Zero, left.Handle);
+        Assert.NotEqual(IntPtr.Zero, right.Handle);
     }
 }

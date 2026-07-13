@@ -37,7 +37,7 @@ design is frozen.
 
 - Windows 11 is the first target; Windows 10 is not a v1 acceptance target.
 - The app is user-pinned to the taskbar. It does not attempt to pin itself.
-- A notification-area icon remains available while the detail window is hidden.
+- Three notification-area icons remain available while the detail window is hidden.
 - One pinned taskbar button is preferable to several independent app windows.
 - The default taskbar presentation is a composite status icon with three
   information zones: layer, right battery, and left battery.
@@ -139,15 +139,18 @@ Required interactions:
 
 - Closing or minimizing the detail window hides it from the taskbar and keeps
   monitoring in the Windows notification area.
-- Left-clicking the tray icon restores and focuses the unchanged detail window.
-- The tray context menu provides `roBa Statusを開く`, `再取得`, and `終了`.
-- The tray icon uses the same dynamic layer and dual-battery rendering as the
-  taskbar icon.
+- The notification area shows three dynamic icons in creation order: layer,
+  left battery, and right battery. Each icon has its own concise tooltip.
+- Left-clicking any tray icon restores and focuses the unchanged detail window.
+- Each tray icon provides the same context menu: `roBa Statusを開く`, `再取得`,
+  and `終了`.
+- The layer icon uses the taskbar's layer rendering; each battery icon carries
+  an `L` or `R` label, a fill bar, and a charging glyph when available.
 - Explicit `終了`, from either the window or tray menu, is the only ordinary
   action that stops monitoring.
 - `--minimized`, used by login startup, starts directly in the tray.
 - A second launch signals the existing instance to restore instead of creating
-  another monitor or tray icon.
+  another monitor or set of tray icons.
 - No new preference or keyboard data is stored. Undo is not applicable because
   tray operations only change window visibility.
 
@@ -299,7 +302,8 @@ directory. If it is missing or malformed, use defaults and keep the app usable.
 - Multiple keyboards at the same time.
 - macOS or Linux versions.
 - Several independent taskbar buttons.
-- More than one tray icon or process instance for the same user session.
+- Multiple keyboard instances or separate sets of tray icons for one user
+  session.
 - Cloud accounts, synchronization, telemetry, or external APIs.
 - Manual USB/BLE transport selection.
 - Charging-state detection in the first USB transport revision.
