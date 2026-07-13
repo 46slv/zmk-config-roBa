@@ -1,7 +1,7 @@
 # roBa Local Build Runbook
 
 Created: 2026-07-11
-Status: procedure drafted, local build not yet executed
+Status: WSL/Nix setup completed and normal left/right local builds verified
 
 This is the conservative local-build runbook for this roBa ZMK config. It uses
 `kot149/zmk-workspace` as the primary path because it resolves this repository's
@@ -59,17 +59,17 @@ The local targets come from `build.yaml`.
 
 | Target expression | Board | Shield | Snippet | Expected artifact |
 |---|---|---|---|---|
-| `roBa_R` | `seeeduino_xiao_ble` | `roBa_R` | `studio-rpc-usb-uart` | `firmware/roBa_R-seeeduino_xiao_ble.uf2` |
-| `roBa_L` | `seeeduino_xiao_ble` | `roBa_L` | none | `firmware/roBa_L-seeeduino_xiao_ble.uf2` |
-| `settings_reset` | `seeeduino_xiao_ble` | `settings_reset` | none | `firmware/settings_reset-seeeduino_xiao_ble.uf2` |
+| `roBa_R` | `seeeduino_xiao_ble` | `roBa_R` | `studio-rpc-usb-uart` | `firmware/zmk-config-roBa/roBa_R-seeeduino_xiao_ble.uf2` |
+| `roBa_L` | `seeeduino_xiao_ble` | `roBa_L` | none | `firmware/zmk-config-roBa/roBa_L-seeeduino_xiao_ble.uf2` |
+| `settings_reset` | `seeeduino_xiao_ble` | `settings_reset` | none | `firmware/zmk-config-roBa/settings_reset-seeeduino_xiao_ble.uf2` |
 
 Notes:
 
 - `roBa_R` and `roBa_L` are the normal firmware targets.
 - `settings_reset` is not normal firmware. Build or flash it only when the
   intent is to clear ZMK settings.
-- `zmk-workspace` copies build artifacts into the workspace-level `firmware/`
-  directory. It does not put them under a per-config subdirectory.
+- `zmk-workspace` copies build artifacts into a per-config directory under the
+  workspace-level `firmware/` directory.
 - If `artifact-name` is added to `build.yaml` later, the artifact names change.
 
 ## Recommended Path
@@ -240,9 +240,9 @@ just build settings_reset
 Expected artifacts:
 
 ```bash
-ls -lh firmware
-test -f firmware/roBa_R-seeeduino_xiao_ble.uf2
-test -f firmware/roBa_L-seeeduino_xiao_ble.uf2
+ls -lh firmware/zmk-config-roBa
+test -f firmware/zmk-config-roBa/roBa_R-seeeduino_xiao_ble.uf2
+test -f firmware/zmk-config-roBa/roBa_L-seeeduino_xiao_ble.uf2
 ```
 
 Expected build directories:
@@ -313,8 +313,9 @@ Rules:
 - Put only the intended half into bootloader mode.
 - Flash right with `roBa_R`; flash left with `roBa_L`.
 - Do not flash `settings_reset` unless the current task is to clear settings.
-- If automatic flashing fails, manually copy the matching UF2 from `firmware/`
-  to the bootloader drive and record that manual path in the verification log.
+- If automatic flashing fails, manually copy the matching UF2 from
+  `firmware/zmk-config-roBa/` to the bootloader drive and record that manual
+  path in the verification log.
 
 ## Keymap Drawer
 
@@ -486,9 +487,9 @@ just build roBa_L
 ```
 
 ### Artifacts
-- `firmware/roBa_R-seeeduino_xiao_ble.uf2`:
-- `firmware/roBa_L-seeeduino_xiao_ble.uf2`:
-- `firmware/settings_reset-seeeduino_xiao_ble.uf2`:
+- `firmware/zmk-config-roBa/roBa_R-seeeduino_xiao_ble.uf2`:
+- `firmware/zmk-config-roBa/roBa_L-seeeduino_xiao_ble.uf2`:
+- `firmware/zmk-config-roBa/settings_reset-seeeduino_xiao_ble.uf2`:
 
 ### Flash
 - Right half:
@@ -512,16 +513,21 @@ just build roBa_L
 
 ## Current Verification Status
 
-- Local `zmk-workspace` build has not been executed in this task yet.
-- WSL and Nix availability on this machine have not been verified in this task.
+- WSL Ubuntu 24.04 is installed.
+- Nix is installed inside WSL with `nix-command` and `flakes` enabled.
+- `~/zmk-workspace` exists in WSL-native storage.
+- `~/zmk-workspace/config/zmk-config-roBa` is cloned from
+  `https://github.com/46slv/zmk-config-roBa.git`.
+- `just init config/zmk-config-roBa` completed.
+- `just list` detected `roBa_R`, `roBa_L`, and `settings_reset`.
+- `just build roBa_R` and `just build roBa_L` completed successfully.
 - Dev Container path has not been verified.
-- Firmware artifacts have not been generated in this task.
+- `settings_reset` has not been built in this setup pass.
 - No hardware flashing has been performed in this task.
 
-## 2026-07-11: Current Machine Preflight
+## 2026-07-11: Current Machine Setup Result
 
-Checked from the Windows checkout before installing or starting new build
-infrastructure.
+Checked and set up from the Windows checkout, then from WSL Ubuntu 24.04.
 
 ### Current State
 
@@ -536,25 +542,40 @@ infrastructure.
 - Docker daemon is not currently reachable from the CLI.
 - `devcontainer` CLI is not available on Windows.
 - Windows-side `nix` is not available.
-- WSL is installed, but the only listed distro is `docker-desktop`, currently
-  stopped. No normal Linux distro such as Ubuntu is installed yet.
+- WSL Ubuntu 24.04 is installed.
+- WSL default user inside Ubuntu is `shiro`.
+- WSL Ubuntu uses `systemd`.
+- Nix is installed inside Ubuntu.
+- `nix develop` can enter the `zmk-workspace` tool shell.
+- `just`, `west`, `yq`, `git`, and Python are available inside the Nix shell.
+- The WSL build checkout is separate from this Windows editing checkout.
 
 ### Consequence
 
-The recommended Nix-on-WSL path cannot be completed until a normal WSL distro is
-installed. The Dev Container path also needs Docker Desktop to be started and a
-Dev Container-capable workflow to be available.
+The recommended Nix-on-WSL path is now available. The Windows editing checkout
+and WSL build checkout are intentionally separate, so uncommitted Windows-side
+changes are not automatically included in WSL builds.
 
 ### Safest Next Step
 
-Install a normal WSL distro first, then install Nix inside that distro and run
-the `zmk-workspace` setup there.
-
-Suggested distro:
+To build the current WSL checkout:
 
 ```powershell
-wsl.exe --install Ubuntu-24.04
+wsl.exe -d Ubuntu-24.04
 ```
 
-After the distro is installed and initialized, continue from the "One-Time
-Setup: WSL and Nix Path" section above.
+Then:
+
+```bash
+cd ~/zmk-workspace
+nix develop -c just list
+nix develop -c just build roBa_R
+nix develop -c just build roBa_L
+```
+
+Verified artifacts:
+
+```text
+/home/shiro/zmk-workspace/firmware/zmk-config-roBa/roBa_R-seeeduino_xiao_ble.uf2 559616 bytes
+/home/shiro/zmk-workspace/firmware/zmk-config-roBa/roBa_L-seeeduino_xiao_ble.uf2 358400 bytes
+```
