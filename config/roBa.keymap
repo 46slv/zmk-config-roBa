@@ -689,16 +689,16 @@
             compatible = "zmk,behavior-roba-encoder-scroll";
             #sensor-binding-cells = <0>;
             base-delta = <1>;
-            two-x-ms = <180>;
-            four-x-ms = <100>;
-            six-x-ms = <55>;
-            reset-ms = <280>;
-            fast-streak = <2>;
-            inertia-streak = <3>;
-            stop-ms = <80>;
-            coast-tick-ms = <24>;
-            coast-start-multiplier = <4>;
-            coast-ticks = <4>;
+            two-x-ms = <240>;
+            four-x-ms = <140>;
+            six-x-ms = <80>;
+            reset-ms = <320>;
+            fast-streak = <1>;
+            inertia-streak = <2>;
+            stop-ms = <70>;
+            coast-tick-ms = <28>;
+            coast-start-multiplier = <6>;
+            coast-ticks = <6>;
             inertia-enabled;
         };
 

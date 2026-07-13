@@ -55,14 +55,18 @@ Encoder scroll behavior on `codex/encoder-scroll-accel-inertia-lab`:
 
 - Sends finite one-shot wheel reports instead of queued `&msc` press/release taps.
 - Uses bounded `1x / 2x / 4x / 6x` acceleration from inter-detent timing.
-- Resets to `1x` after `280 ms` idle or any direction change.
-- Requires two consecutive fast intervals before `4x` or `6x` output.
-- Arms inertia only after three consecutive `6x` outputs.
-- After an armed gesture stops for `80 ms`, emits at most four coast reports:
-  `4x -> 3x -> 2x -> 1x`, spaced by `24 ms`.
+- Tune 2 uses `240/140/80 ms` boundaries and resets to `1x` after `320 ms`
+  idle or any direction change.
+- Allows `4x` or `6x` after one matching interval so acceleration is easier to
+  feel than the first hardware-tested build.
+- Arms inertia only after two consecutive `6x` outputs.
+- After an armed gesture stops for `70 ms`, emits at most six coast reports:
+  `6x -> 5x -> 4x -> 3x -> 2x -> 1x`, spaced by `28 ms`.
 - New encoder input, layer changes, and endpoint changes cancel pending coast.
 - `steps = 12` and `triggers-per-rotation = 10` remain unchanged in this lab so
   behavior can be evaluated separately from encoder signal calibration.
+- Windows output monitoring is documented in
+  `docs/ENCODER_SCROLL_MONITORING.md`; it does not change the firmware protocol.
 
 Special behavior notes:
 

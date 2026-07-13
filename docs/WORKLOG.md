@@ -342,3 +342,51 @@ the module's `main` branch advances.
 - USB/BLE feel and application-specific high-resolution-wheel behavior.
 - Stress behavior after repeated maximum-speed rotations.
 - Regression checks for the other encoder layers and trackball scroll.
+
+## 2026-07-13: Encoder Tune 2 and Windows Wheel Monitor
+
+### Hardware Feedback
+
+- The finite one-shot implementation prevented the previously observed endless
+  scroll condition.
+- Acceleration was not clearly perceptible.
+- Conditional inertia was not observed.
+
+### Adjustment
+
+- Kept `base-delta=1`, `steps=12`, and `triggers-per-rotation=10` unchanged.
+- Expanded acceleration boundaries from `180/100/55 ms` to `240/140/80 ms`.
+- Changed fast guard from two intervals to one and inertia arming from three
+  consecutive `6x` outputs to two.
+- Changed stop detection from `80 ms` to `70 ms` and the finite tail from
+  `4/3/2/1` at `24 ms` to `6/5/4/3/2/1` at `28 ms`.
+
+### Monitoring
+
+- Added `tools/encoder_scroll_monitor.ps1`, a dependency-free Windows
+  low-level wheel-event logger.
+- Added `docs/ENCODER_SCROLL_MONITORING.md` with slow, medium, fast, and
+  max-release capture steps.
+- JSONL output is stored under ignored `artifacts/encoder-scroll-monitor/`.
+- The monitor observes OS output from all mouse devices and does not alter the
+  firmware USB status protocol.
+
+### Initial Tool Verification
+
+- PowerShell 5.1 compiled the embedded C# hook, captured for one second with
+  zero wheel events, wrote a valid session JSONL record, and exited normally.
+
+### Pending
+
+- Flash hardware and capture the four monitoring phases.
+
+### Verification
+
+- Updated pure C host tests passed with `-Wall -Wextra -Werror -pedantic`.
+- Right and left ZMK builds passed.
+- Generated right DTS contains `240/140/80 ms`, reset `320 ms`, streaks
+  `1/2`, stop `70 ms`, `6` coast ticks at `28 ms`, and `inertia-enabled;`.
+- Both `.config` files contain `CONFIG_ROBA_ENCODER_SCROLL=y`.
+- Preserved artifacts:
+  - `roBa_R-encoder-tune2.uf2`: `573952` bytes.
+  - `roBa_L-encoder-tune2.uf2`: `363008` bytes.

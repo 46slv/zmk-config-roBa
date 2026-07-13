@@ -14,6 +14,11 @@ interface and falls back to encrypted BLE after cable removal.
 The firmware service is read-only. It reports an active-layer bitmask, highest
 active layer, and battery snapshot; it never sends keycodes or typed content.
 
+Encoder scroll tuning and Windows-side wheel-event monitoring:
+
+- [`docs/ROTARY_ENCODER_SCROLL_OPTIMIZATION.md`](docs/ROTARY_ENCODER_SCROLL_OPTIMIZATION.md)
+- [`docs/ENCODER_SCROLL_MONITORING.md`](docs/ENCODER_SCROLL_MONITORING.md)
+
 ## 大西配列とCombo
 大西配列かつコンボを多用するスタイルを目指しています。
 人差し指から小指までが極力移動しない、理想的なキー配列を模索しております…。

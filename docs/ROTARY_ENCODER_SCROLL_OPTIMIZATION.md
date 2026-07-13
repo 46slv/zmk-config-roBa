@@ -2,7 +2,8 @@
 
 調査日: 2026-07-13  
 対象: `config/west.yml` で固定している ZMK `v0.3`、roBa 左側 EC11  
-状態: `codex/encoder-scroll-accel-inertia-lab`へ実装済み。host test・左右build成功、実機未確認。
+状態: `codex/encoder-scroll-accel-inertia-lab`でTune 2をbuild済み。初回実機で永久scroll解消、
+加速は弱く、慣性は未確認。Tune 2の実機評価とOS側ログ収集待ち。
 
 ## 結論
 
@@ -492,6 +493,34 @@ pending workと加速状態をresetする。新しい手動入力はpending stop
 - **main baseline**: `main`の`zmk,behavior-sensor-rotate`＋`&msc`を使う。
 
 比較時は`steps`、`triggers-per-rotation`、base deltaを同時に変えない。
+
+### 2026-07-13 Tune 2
+
+初回実機評価では永久scroll対策が機能した。一方、加速感が弱く、条件付き慣性を
+確認できなかった。閾値またはstreak条件へ実際のencoder eventが到達していない可能性を
+優先し、base delta、`steps`、`triggers-per-rotation`は維持したまま次だけを変更する。
+
+| 項目 | 初回 | Tune 2 | 狙い |
+|---|---:|---:|---|
+| 2x境界 | `180 ms` | `240 ms` | 通常の連続回転で加速へ入りやすくする |
+| 4x境界 | `100 ms` | `140 ms` | 中速と速回しの差を感じやすくする |
+| 6x境界 | `55 ms` | `80 ms` | 分割通信を含む実eventで最大段へ届きやすくする |
+| idle reset | `280 ms` | `320 ms` | 広げた2x境界との間を確保する |
+| fast streak | `2` | `1` | 最初の一致intervalから4x/6xを許可する |
+| inertia streak | `3` | `2` | 最大速回しの短いgestureでもarm可能にする |
+| stop | `80 ms` | `70 ms` | 手を離した後の待ちを短くする |
+| tail | `4/3/2/1`, `24 ms` | `6/5/4/3/2/1`, `28 ms` | 有限のまま認識できる強さと長さにする |
+
+Windows側では`tools/encoder_scroll_monitor.ps1`を使い、低速・中速・高速・最大速から
+手を離す操作をphase付きJSONLへ記録する。最初はOSへ届いたwheel eventだけを測り、
+既存USB status protocolへ診断fieldを追加しない。詳細は
+`docs/ENCODER_SCROLL_MONITORING.md`を参照する。
+
+Tune 2のhost testと左右firmware buildは成功した。生成DTSで選択値と
+`inertia-enabled;`、左右`.config`で`CONFIG_ROBA_ENCODER_SCROLL=y`を確認した。
+
+- `~/zmk-workspace/firmware/zmk-config-roBa/roBa_R-encoder-tune2.uf2`
+- `~/zmk-workspace/firmware/zmk-config-roBa/roBa_L-encoder-tune2.uf2`
 
 ## 推奨する最小実験
 

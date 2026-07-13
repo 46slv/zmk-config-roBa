@@ -494,16 +494,20 @@ tap-dance は誤爆リスクがあるため、dangerous behavior (`BT_CLR_ALL`, 
 追加する。queueが残り1 itemの状態ではpressだけ入りreleaseが落ちる可能性があるため、
 このlabはqueueを使わず、各detentを有限のwheel reportとして直接送る。
 
-速度段階は前detentとの時間差で`1/2/4/6x`、方向反転または280 ms idleで1xへ戻る。
-最大6xが3回続いた場合だけ80 msの停止検出を予約し、停止後は`4/3/2/1x`を
-最大4 reportだけ出す。新しい入力、layer変更、endpoint変更はpending tailをcancelする。
+速度段階は前detentとの時間差で`1/2/4/6x`。初回実機確認では永久scroll対策は有効だったが、
+加速が弱く慣性を確認できなかった。Tune 2は境界を`240/140/80 ms`へ広げ、方向反転または
+`320 ms` idleで1xへ戻る。4x/6x前のguardは1 interval、慣性armは6x 2回へ緩和した。
+arm後70 ms停止すると`6/5/4/3/2/1x`を28 ms間隔で最大6 reportだけ出す。
+新しい入力、layer変更、endpoint変更はpending tailをcancelする。
 
 trackballの`zmk,input-processor-roba-scroll`とはsource、state、devicetree nodeを共有しない。
 trackballはlayer 11の連続motion、encoderはlayer 0のdetent時刻を扱うためである。
 
-2026-07-13時点でhost logic testと左右firmware buildは成功している。実機の速度感、
-USB/BLE差、速回し後の有限停止は未確認。`steps=12`と`triggers-per-rotation=10`は
-signal calibrationとbehavior評価を混ぜないためlabでは変更していない。
+初回buildのhost logic testと左右firmware buildは成功している。Tune 2ではWindowsへ届く
+wheel eventを`tools/encoder_scroll_monitor.ps1`でJSONL記録する。これは全mouse deviceの
+出力を拾うOS側診断で、既存USB status protocolやfirmware内部stateを変更しない。
+`steps=12`と`triggers-per-rotation=10`はsignal calibrationとbehavior評価を混ぜないため
+labでは変更していない。
 
 ## 外部モジュール
 

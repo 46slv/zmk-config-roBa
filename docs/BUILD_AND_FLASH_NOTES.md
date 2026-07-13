@@ -658,3 +658,19 @@ The generic `roBa_R-seeeduino_xiao_ble.uf2` and
 `roBa_L-seeeduino_xiao_ble.uf2` outputs currently match the
 acceleration-plus-inertia source state. Hardware flashing and feel testing were
 not performed.
+
+## 2026-07-13: Encoder Tune 2 artifacts
+
+After hardware feedback that the endless-scroll fix worked but acceleration
+was subtle and inertia was not observed, the lab thresholds and finite tail
+were made easier to trigger. Host tests and both-half ZMK builds passed.
+
+```text
+~/zmk-workspace/firmware/zmk-config-roBa/roBa_R-encoder-tune2.uf2  573952 bytes
+~/zmk-workspace/firmware/zmk-config-roBa/roBa_L-encoder-tune2.uf2  363008 bytes
+```
+
+The generated right DTS contains the Tune 2 values and `inertia-enabled;`.
+Hardware flashing remains manual. After flashing the matching pair, use
+`tools/encoder_scroll_monitor.ps1` and
+`docs/ENCODER_SCROLL_MONITORING.md` to capture the four test phases.
