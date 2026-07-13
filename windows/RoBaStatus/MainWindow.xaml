@@ -78,7 +78,7 @@
                   Unchecked="StartupCheckBox_Changed" />
       </StackPanel>
       <StackPanel Grid.Column="1" Orientation="Horizontal">
-        <Button Content="最小化" Click="Minimize_Click" Margin="0,0,8,0" />
+        <Button Content="トレイへ" Click="Minimize_Click" Margin="0,0,8,0" />
         <Button Content="終了" Click="Quit_Click" />
       </StackPanel>
     </Grid>

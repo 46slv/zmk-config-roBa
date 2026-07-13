@@ -1,15 +1,17 @@
 # roBa Status for Windows
 
-`roBa Status` is a Windows 11 companion for this roBa ZMK configuration. It is
-designed to stay pinned on the taskbar and show three things at a glance:
+`roBa Status` is a Windows 11 companion for this roBa ZMK configuration. Its
+detail window can stay pinned on the taskbar, while day-to-day monitoring lives
+quietly in the task tray. It shows three things at a glance:
 
 - highest active layer;
 - right/central battery;
 - left/peripheral battery.
 
-The taskbar icon is generated dynamically. Its upper area identifies the layer
-and its two lower battery bars represent the two halves. Clicking the taskbar
-button opens the detailed status window.
+The taskbar and tray icons are generated dynamically. Their upper area
+identifies the layer and the two lower battery bars represent the two halves.
+Clicking a pinned taskbar shortcut or the tray icon opens the same detailed
+status window.
 
 ## Requirements
 
@@ -58,16 +60,20 @@ powershell -ExecutionPolicy Bypass -File windows\install.ps1
 ```
 
 Then open `roBa Status` from Start, right-click its taskbar icon, and select
-`Pin to taskbar`. The application does not pin itself.
+`Pin to taskbar`. The application does not pin itself. Starting it again while
+it is hidden restores the existing window instead of creating another tray
+icon.
 
 ## Use
 
 - `再取得`: immediately retry USB first, then Bluetooth discovery and reads.
-- `最小化`: keep the taskbar monitor running.
-- Window close button: same as minimize.
-- `終了`: stop USB/BLE monitoring and exit.
+- `トレイへ`: hide the detail window and keep monitoring.
+- Minimize or window close: hide to the same tray icon.
+- Tray icon left click: restore and focus the detail window.
+- Tray icon right click: open, refresh, or quit.
+- `終了`: remove the tray icon, stop USB/BLE monitoring, and exit.
 - `Windowsログイン時に起動`: add or remove the current executable from the
-  current user's Run key. It is off by default.
+  current user's Run key. It is off by default and starts directly in the tray.
 
 ## Firmware
 

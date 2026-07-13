@@ -3,6 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>RoBaStatus</AssemblyName>
@@ -11,6 +12,7 @@
     <ApplicationIcon>Assets\roba-status.ico</ApplicationIcon>
     <Platforms>x64</Platforms>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <NoWarn>$(NoWarn);WFAC010</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="Assets\roba-status.ico" />
