@@ -447,7 +447,43 @@ the module's `main` branch advances.
   - `roBa_L-encoder-tune3.uf2`: `363008` bytes,
     sha256 `a5e9747e20cec9fa4f916e02cdfea3f2e64ee3fae24c65cee37c19974e2e446c`.
 
-### Pending
+### Hardware Retest
 
-- Flash Tune 3 and repeat the four JSONL phases: slow, medium, fast, and
-  max-release.
+- Flashed Tune 3 and repeated slow, medium, fast, and max-release JSONL phases.
+- Slow: 276 vertical events, median interval `28 ms`; medium: 253 events,
+  `27 ms`; fast: 952 events, `3 ms`.
+- Max-release recorded 50 events and ended with the expected finite
+  `45 -> 37 -> 30 -> 22 -> 15 -> 7` tail at about `28 ms` intervals.
+- The endless-scroll fix and finite inertia are working. Active acceleration,
+  however, commonly jumped from `7` directly to `45` (`1x -> 6x`), leaving
+  intermediate values mainly visible during coast.
+
+## 2026-07-13: Encoder Tune 4 Staged Acceleration
+
+### Adjustment
+
+- Kept all Tune 3 timing, batch evaluation, inertia, encoder calibration, and
+  keymap parameters unchanged.
+- Added a ramp ceiling to consecutive fast accepted events: `2x`, then `4x`,
+  then up to the timing-selected `6x` maximum.
+- Inertia still arms only after two consecutive actual `6x` results, so the
+  staged ramp cannot arm coast during its `2x` or `4x` steps.
+
+### Verification
+
+- Updated pure C tests cover `1x -> 2x -> 4x -> 6x`, delayed inertia arming,
+  the `4x` ramp, direction reset, idle reset, medium-speed disarm, and the
+  finite tail.
+- Host logic test passed with Windows LLVM `clang.exe` using
+  `-std=c11 -Wall -Wextra -Werror -pedantic`.
+- Right and left firmware builds passed in isolated build directories without
+  changing the shared WSL workspace manifest, which was being used by another
+  roBa experiment.
+- Generated right DTS retains `240/140/80 ms` and `inertia-enabled;`; both
+  `.config` files contain `CONFIG_ROBA_ENCODER_SCROLL=y`.
+- Preserved Tune 4 artifacts:
+  - `roBa_R-encoder-tune4.uf2`: `574464` bytes,
+    sha256 `6c6f28efec6505496923a56c189951c00126f89da7e2f0068a0d441f35752609`.
+  - `roBa_L-encoder-tune4.uf2`: `363008` bytes,
+    sha256 `31f67c7ac3f39691a97d654cb952de3f8a461a7b7d738410cbf518b5581d808e`.
+- Hardware feel remains pending.

@@ -44,7 +44,7 @@ properties:
   fast-streak:
     type: int
     default: 2
-    description: Consecutive fast intervals required before 4x or 6x output
+    description: Consecutive fast intervals held at each 2x and 4x ramp stage
 
   inertia-streak:
     type: int

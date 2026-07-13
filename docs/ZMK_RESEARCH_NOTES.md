@@ -509,6 +509,12 @@ wheel eventを`tools/encoder_scroll_monitor.ps1`でJSONL記録する。これは
 `steps=12`と`triggers-per-rotation=10`はsignal calibrationとbehavior評価を混ぜないため
 labでは変更していない。
 
+Tune 3の再計測ではslow 276 event（interval中央値28 ms）、medium 253 event（27 ms）、
+fast 952 event（3 ms）を記録し、max-releaseでも`45/37/30/22/15/7`の有限tailを確認した。
+慣性は動作している一方、active accelerationは多くのgestureで`7 -> 45`、つまり
+`1x -> 6x`へ直接上がっていた。Tune 4は閾値と慣性を維持し、同方向のfast eventを
+`2x -> 4x -> 6x`の上限で段階化する。最大`6x`が2 event続いた場合だけarmする条件も維持する。
+
 ## 外部モジュール
 
 `config/west.yml` で ZMK `v0.3` と複数 module を指定している。

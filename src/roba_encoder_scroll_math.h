@@ -77,7 +77,13 @@ roba_encoder_scroll_feed(struct roba_encoder_scroll_state *state,
             if (state->quick_streak < UINT8_MAX) {
                 state->quick_streak++;
             }
-            result.multiplier = state->quick_streak >= config->fast_streak ? requested : 2;
+
+            uint16_t two_x_end = config->fast_streak;
+            uint16_t four_x_end = two_x_end * 2U;
+            uint8_t ramp_limit = state->quick_streak <= two_x_end    ? 2
+                                 : state->quick_streak <= four_x_end ? 4
+                                                                    : 6;
+            result.multiplier = requested < ramp_limit ? requested : ramp_limit;
         } else {
             state->quick_streak = 0;
             result.multiplier = requested;

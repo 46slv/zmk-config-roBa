@@ -57,8 +57,9 @@ Encoder scroll behavior on `codex/encoder-scroll-accel-inertia-lab`:
 - Uses bounded `1x / 2x / 4x / 6x` acceleration from inter-detent timing.
 - Tune 2 uses `240/140/80 ms` boundaries and resets to `1x` after `320 ms`
   idle or any direction change.
-- Allows `4x` or `6x` after one matching interval so acceleration is easier to
-  feel than the first hardware-tested build.
+- Tune 2 allowed `4x` or `6x` after one matching interval. Tune 4 keeps the
+  timing thresholds but caps consecutive fast events at `2x`, then `4x`, then
+  `6x`, so acceleration is visible as a ramp instead of a `1x -> 6x` jump.
 - Tune 3 keeps the Tune 2 thresholds but evaluates acceleration once per
   accepted sensor event. If that event contains multiple encoder triggers, all
   emitted wheel reports use the same multiplier and acceleration / inertia

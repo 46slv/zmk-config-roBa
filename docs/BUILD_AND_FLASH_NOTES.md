@@ -674,3 +674,25 @@ The generated right DTS contains the Tune 2 values and `inertia-enabled;`.
 Hardware flashing remains manual. After flashing the matching pair, use
 `tools/encoder_scroll_monitor.ps1` and
 `docs/ENCODER_SCROLL_MONITORING.md` to capture the four test phases.
+
+## 2026-07-13: Encoder Tune 4 artifacts
+
+Tune 4 keeps the accepted Tune 3 timing and finite inertia, but stages fast
+accepted events through `2x`, `4x`, and `6x` instead of jumping directly from
+`1x` to `6x`. Host tests and both-half isolated ZMK builds passed.
+
+```text
+~/zmk-workspace/firmware/zmk-config-roBa/roBa_R-encoder-tune4.uf2  574464 bytes
+~/zmk-workspace/firmware/zmk-config-roBa/roBa_L-encoder-tune4.uf2  363008 bytes
+```
+
+SHA-256:
+
+```text
+roBa_R-encoder-tune4.uf2  6c6f28efec6505496923a56c189951c00126f89da7e2f0068a0d441f35752609
+roBa_L-encoder-tune4.uf2  31f67c7ac3f39691a97d654cb952de3f8a461a7b7d738410cbf518b5581d808e
+```
+
+The right generated DTS retains `240/140/80 ms` and `inertia-enabled;`, and
+both generated `.config` files contain `CONFIG_ROBA_ENCODER_SCROLL=y`.
+Hardware feel testing remains manual.
