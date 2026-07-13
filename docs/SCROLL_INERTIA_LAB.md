@@ -1113,6 +1113,54 @@ Hardware focus:
 - This exact firmware builds successfully but remains unverified on hardware
   until the right-half UF2 is flashed.
 
+## Lab 22: Distance-Neutral Low-Speed Response And Reversal Fix
+
+Hardware feedback on Lab 21 reported an over-input error sound and a pause
+when weak input reversed an existing scroll. The two symptoms have separate
+numeric causes:
+
+- Lab 21's `boost=250` increases continuous active distance by up to 25 percent.
+  It is disabled rather than reduced so the accepted `4/60` total is restored.
+- Active fractional remainders were signed but did not track physical input
+  direction. Reverse low-speed input first cancelled the old direction's
+  remainder, producing several zero-output events. The module now records the
+  direction per axis and clears only that axis's stale remainder on reversal.
+
+Lab 22 uses:
+
+```dts
+active-low-speed-threshold = <20>;
+active-low-speed-boost = <0>;
+active-low-speed-eager = <500>;
+```
+
+`eager=500` uses nearest-unit quantization below the threshold. At the accepted
+`4/60` scale, repeated raw `1` input reaches its first whole unit after about
+8 events instead of 15. That early unit is borrowed: the remainder becomes
+negative and later same-direction input repays it. Continuous total distance
+therefore remains `4/60` rather than the increased Lab 21 gain.
+
+The current ZMK `v0.3` smooth-scrolling layer also owns a host-profile-dependent
+wheel remainder after input processors. Its profile was not observable in this
+investigation, and it predates Lab 21, so no ZMK core or smooth-scroll setting
+is changed here. If the error sound remains with Lab 22, capture whether it
+occurs on USB, BLE, or both before changing that second layer.
+
+Verification before hardware:
+
+- Standalone module PR: `46slv/zmk-input-processor-roba-scroll#2`.
+- Pinned merge commit: `0c7a8fe243d1182c090a138005d275795d7b206b`.
+- Host verification: `162/162` fixed-point checks and all axis-lock checks.
+- Medium/high active scale, snap, EMA, arming, friction, stop, and coast are
+  unchanged from Lab 20.
+
+Hardware focus:
+
+- Repeated very slow same-direction rolls must not trigger the error sound.
+- A weak reverse roll must begin in the new direction without a dead interval.
+- Medium/fast active scrolling and active-to-coast handoff must match Lab 20.
+- Repeat the first two checks on both USB and BLE if possible.
+
 ## Superseded Design Rationale
 
 Keep a purpose-built combined module on the development backlog. Its goal is
