@@ -640,3 +640,21 @@ Verified artifacts:
 /home/shiro/zmk-workspace/firmware/zmk-config-roBa/roBa_R-seeeduino_xiao_ble.uf2 559616 bytes
 /home/shiro/zmk-workspace/firmware/zmk-config-roBa/roBa_L-seeeduino_xiao_ble.uf2 358400 bytes
 ```
+
+## 2026-07-13: Encoder acceleration A/B artifacts
+
+The encoder lab branch was built from the Windows worktree through the WSL
+config symlink. Both halves passed for two variants; the only variant switch
+was the `inertia-enabled;` property.
+
+```text
+~/zmk-workspace/firmware/zmk-config-roBa/roBa_R-encoder-accel-only.uf2     573952 bytes
+~/zmk-workspace/firmware/zmk-config-roBa/roBa_L-encoder-accel-only.uf2     363008 bytes
+~/zmk-workspace/firmware/zmk-config-roBa/roBa_R-encoder-accel-inertia.uf2  573952 bytes
+~/zmk-workspace/firmware/zmk-config-roBa/roBa_L-encoder-accel-inertia.uf2  363008 bytes
+```
+
+The generic `roBa_R-seeeduino_xiao_ble.uf2` and
+`roBa_L-seeeduino_xiao_ble.uf2` outputs currently match the
+acceleration-plus-inertia source state. Hardware flashing and feel testing were
+not performed.

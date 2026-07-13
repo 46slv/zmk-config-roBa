@@ -298,3 +298,47 @@ the module's `main` branch advances.
 
 - Flash the production-integrated right/left UF2 pair. The scroll behavior is
   already accepted, but this exact build also includes status transport.
+
+## 2026-07-13: Encoder Acceleration and Conditional-Inertia Lab
+
+### Scope
+
+- Created `codex/encoder-scroll-accel-inertia-lab` directly from `main`.
+- Carried over only `docs/ROTARY_ENCODER_SCROLL_OPTIMIZATION.md` from the prior
+  working branch; its unrelated Windows tray commit was not included.
+- Kept trackball `mapper -> roba_scroll`, external module revisions,
+  `steps=12`, and `triggers-per-rotation=10` unchanged.
+
+### Implementation
+
+- Added local `zmk,behavior-roba-encoder-scroll` sensor behavior.
+- Replaced only the `DEFAULT` layer's `&scroll_up_down` implementation.
+- Emits finite direct wheel reports instead of queued `&msc` press/release.
+- Added timing acceleration `1/2/4/6x`, direction/idle reset, and a fast-streak
+  guard.
+- Added optional inertia that arms only after three consecutive `6x` reports,
+  waits for `80 ms` of no input, then emits finite `4/3/2/1x` coast reports.
+- Cancels pending coast on new input, layer changes, and endpoint changes.
+- Added pure C host tests and excluded the generated test binary from Git.
+
+### Verification
+
+- Host test in the Nix environment: passed.
+- Right pristine build using the Windows lab worktree: passed.
+- Left pristine build using the Windows lab worktree: passed.
+- Generated right DTS contains the custom compatible and all selected values.
+- Both `.config` files contain `CONFIG_ROBA_ENCODER_SCROLL=y`.
+- UF2 output directory:
+  `\\wsl.localhost\Ubuntu-24.04\home\shiro\zmk-workspace\firmware\zmk-config-roBa`
+- A/B firmware pairs were preserved with only `inertia-enabled;` changed:
+  - `roBa_R-encoder-accel-only.uf2` / `roBa_L-encoder-accel-only.uf2`
+  - `roBa_R-encoder-accel-inertia.uf2` / `roBa_L-encoder-accel-inertia.uf2`
+- The final working tree and generic UF2 pair have conditional inertia enabled.
+
+### Unverified
+
+- Hardware feel of `base-delta=1` and the `180/100/55 ms` thresholds.
+- Whether the physical encoder needs `steps=48` instead of the preserved `12`.
+- USB/BLE feel and application-specific high-resolution-wheel behavior.
+- Stress behavior after repeated maximum-speed rotations.
+- Regression checks for the other encoder layers and trackball scroll.

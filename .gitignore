@@ -10,3 +10,6 @@ artifacts/
 # ZMK local output if generated in this checkout
 .build/
 firmware/
+
+# Native host-test binary
+tests/encoder_scroll/test_encoder_scroll

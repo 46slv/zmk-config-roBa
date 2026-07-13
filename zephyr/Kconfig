@@ -1,5 +1,16 @@
 menu "roBa features"
 
+config ROBA_ENCODER_SCROLL
+    bool "roBa velocity-sensitive one-shot encoder scroll"
+    default y
+    depends on DT_HAS_ZMK_BEHAVIOR_ROBA_ENCODER_SCROLL_ENABLED
+    select ZMK_POINTING
+    help
+      Replaces queued mouse-scroll press/release taps with finite wheel
+      reports. Slow detents remain precise, fast consecutive detents use
+      bounded acceleration, and an optional maximum-tier-only coast tail
+      always terminates after a fixed report count.
+
 config ROBA_STATUS
     bool "roBa read-only status service"
     depends on ZMK_BLE && ZMK_SPLIT_ROLE_CENTRAL

@@ -1,0 +1,76 @@
+# Copyright (c) 2026 roBa contributors
+# SPDX-License-Identifier: MIT
+
+description: roBa velocity-sensitive one-shot encoder scroll behavior
+
+compatible: "zmk,behavior-roba-encoder-scroll"
+
+properties:
+  label:
+    type: string
+    required: false
+    deprecated: true
+
+  "#sensor-binding-cells":
+    type: int
+    required: true
+    const: 0
+
+  base-delta:
+    type: int
+    default: 1
+    description: Finite vertical wheel units emitted at 1x
+
+  two-x-ms:
+    type: int
+    default: 180
+    description: Inter-detent interval below which 2x is requested
+
+  four-x-ms:
+    type: int
+    default: 100
+    description: Inter-detent interval below which 4x is requested
+
+  six-x-ms:
+    type: int
+    default: 55
+    description: Inter-detent interval below which 6x is requested
+
+  reset-ms:
+    type: int
+    default: 280
+    description: Idle interval that resets acceleration to 1x
+
+  fast-streak:
+    type: int
+    default: 2
+    description: Consecutive fast intervals required before 4x or 6x output
+
+  inertia-streak:
+    type: int
+    default: 3
+    description: Consecutive 6x outputs required to arm the coast tail
+
+  stop-ms:
+    type: int
+    default: 80
+    description: No-input interval after an armed gesture before coast starts
+
+  coast-tick-ms:
+    type: int
+    default: 24
+    description: Delay between finite coast reports
+
+  coast-start-multiplier:
+    type: int
+    default: 4
+    description: Multiplier used by the first coast report
+
+  coast-ticks:
+    type: int
+    default: 4
+    description: Maximum number of coast reports
+
+  inertia-enabled:
+    type: boolean
+    description: Enable the maximum-tier-only finite coast tail

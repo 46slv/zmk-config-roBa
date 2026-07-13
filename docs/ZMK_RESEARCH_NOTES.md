@@ -475,8 +475,35 @@ tap-dance は誤爆リスクがあるため、dangerous behavior (`BT_CLR_ALL`, 
 このリポジトリでは:
 
 - `&mkp_input_listener` に `zip_temp_layer` を割り当て、mouse click で AML を使う。
-- `&msc` は zoom macro や scroll sensor bindings で使われている。
+- `&msc` はzoom macroで使われている。encoder lab branchのbase scrollは、
+  queueにpress/releaseを積まず直接finite wheel reportを送る専用behaviorへ置き換えた。
 - `mkp_with_mod` は modifier と mouse click を同時 press/release する macro。
+
+### Encoder velocity scroll lab
+
+`codex/encoder-scroll-accel-inertia-lab`では、ZMK v0.3標準の
+`zmk,behavior-sensor-rotate -> &msc`経路を`DEFAULT` layerだけ置き換える。
+
+- compatible: `zmk,behavior-roba-encoder-scroll`
+- local source: `src/behavior_roba_encoder_scroll.c`
+- pure logic: `src/roba_encoder_scroll_math.h`
+- binding: `dts/bindings/behaviors/zmk,behavior-roba-encoder-scroll.yaml`
+- test: `tests/encoder_scroll/test_encoder_scroll.c`
+
+標準sensor rotateは1 triggerごとに`&msc` pressとreleaseを別々のbehavior queue itemへ
+追加する。queueが残り1 itemの状態ではpressだけ入りreleaseが落ちる可能性があるため、
+このlabはqueueを使わず、各detentを有限のwheel reportとして直接送る。
+
+速度段階は前detentとの時間差で`1/2/4/6x`、方向反転または280 ms idleで1xへ戻る。
+最大6xが3回続いた場合だけ80 msの停止検出を予約し、停止後は`4/3/2/1x`を
+最大4 reportだけ出す。新しい入力、layer変更、endpoint変更はpending tailをcancelする。
+
+trackballの`zmk,input-processor-roba-scroll`とはsource、state、devicetree nodeを共有しない。
+trackballはlayer 11の連続motion、encoderはlayer 0のdetent時刻を扱うためである。
+
+2026-07-13時点でhost logic testと左右firmware buildは成功している。実機の速度感、
+USB/BLE差、速回し後の有限停止は未確認。`steps=12`と`triggers-per-rotation=10`は
+signal calibrationとbehavior評価を混ぜないためlabでは変更していない。
 
 ## 外部モジュール
 

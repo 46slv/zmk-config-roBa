@@ -686,13 +686,20 @@
         };
 
         scroll_up_down: behavior_sensor_rotate_mouse_wheel_up_down {
-            compatible = "zmk,behavior-sensor-rotate";
+            compatible = "zmk,behavior-roba-encoder-scroll";
             #sensor-binding-cells = <0>;
-            bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
-
-            // 追加: スクロールのタップ時間を設定 (20ms)
-
-            tap-ms = <20>;
+            base-delta = <1>;
+            two-x-ms = <180>;
+            four-x-ms = <100>;
+            six-x-ms = <55>;
+            reset-ms = <280>;
+            fast-streak = <2>;
+            inertia-streak = <3>;
+            stop-ms = <80>;
+            coast-tick-ms = <24>;
+            coast-start-multiplier = <4>;
+            coast-ticks = <4>;
+            inertia-enabled;
         };
 
         sl_250: sl_250 {
