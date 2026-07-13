@@ -1,6 +1,6 @@
 # roBa Windows Status App Specification
 
-Status: v1.1 USB transport implemented; hardware validation pending
+Status: v1.2 task-tray residency implemented; hardware validation pending
 Created: 2026-07-13
 
 ## 1. Purpose
@@ -37,6 +37,7 @@ design is frozen.
 
 - Windows 11 is the first target; Windows 10 is not a v1 acceptance target.
 - The app is user-pinned to the taskbar. It does not attempt to pin itself.
+- Three notification-area icons remain available while the detail window is hidden.
 - One pinned taskbar button is preferable to several independent app windows.
 - The default taskbar presentation is a composite status icon with three
   information zones: layer, right battery, and left battery.
@@ -133,6 +134,29 @@ Required interactions:
 - Close button: close the visible window but keep monitoring if background
   monitoring is enabled.
 - Explicit Quit command: terminate monitoring and exit.
+
+### 6.1 Task-Tray Residency
+
+- Closing or minimizing the detail window hides it from the taskbar and keeps
+  monitoring in the Windows notification area.
+- The notification area shows three dynamic icons in creation order: layer,
+  left battery, and right battery. Each icon has its own concise tooltip.
+- Left-clicking any tray icon restores and focuses the unchanged detail window.
+- Each tray icon provides the same context menu: `roBa Statusを開く`, `再取得`,
+  and `終了`.
+- The layer icon shows a stable two-character label such as `DE`, `MO`, or
+  `SC`. The left and right battery icons show their integer percentage as
+  numerals; their creation order and tooltips identify the side.
+- Battery numerals use green, amber, or red backgrounds for normal, low, and
+  critical states. Charging uses a highlighted border without replacing the
+  percentage.
+- Explicit `終了`, from either the window or tray menu, is the only ordinary
+  action that stops monitoring.
+- `--minimized`, used by login startup, starts directly in the tray.
+- A second launch signals the existing instance to restore instead of creating
+  another monitor or set of tray icons.
+- No new preference or keyboard data is stored. Undo is not applicable because
+  tray operations only change window visibility.
 
 ## 7. Notifications
 
@@ -282,6 +306,8 @@ directory. If it is missing or malformed, use defaults and keep the app usable.
 - Multiple keyboards at the same time.
 - macOS or Linux versions.
 - Several independent taskbar buttons.
+- Multiple keyboard instances or separate sets of tray icons for one user
+  session.
 - Cloud accounts, synchronization, telemetry, or external APIs.
 - Manual USB/BLE transport selection.
 - Charging-state detection in the first USB transport revision.

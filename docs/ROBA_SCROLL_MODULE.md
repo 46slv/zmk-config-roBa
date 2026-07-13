@@ -10,7 +10,7 @@ in one input processor. It replaces the previous serial combination of
 
 The reusable implementation is maintained at
 <https://github.com/46slv/zmk-input-processor-roba-scroll>. This config pins
-commit `c06c4530ed382f2aed5c7f19f006517e7d88fb7d` in `config/west.yml`.
+commit `0c7a8fe243d1182c090a138005d275795d7b206b` in `config/west.yml`.
 
 ## Processing Contract
 
@@ -21,6 +21,8 @@ PMW3610 raw X/Y
        direction inversion
        retained axis selection
        active scaling with per-axis remainder
+       direction-aware active remainder
+       distance-neutral low-speed eager quantization
        velocity EMA and flick arming
        direct-HID decaying coast
 ```
@@ -37,7 +39,7 @@ informed by the MIT licensed `kot149/zmk-scroll-snap` module at `v1`
 (`dd21a0f`). The integrated retention and single-scale behavior are local roBa
 changes. Source files retain the MIT SPDX identifier.
 
-## Accepted Compatibility Preset
+## Current roBa Trial Preset
 
 ```dts
 roba_scroll: roba_scroll {
@@ -59,6 +61,9 @@ roba_scroll: roba_scroll {
     layer = <11>;
     scale = <4>;
     scale-div = <60>;
+    active-low-speed-threshold = <20>;
+    active-low-speed-boost = <0>;
+    active-low-speed-eager = <500>;
     tick = <8>;
     gain = <500>;
     blend = <500>;
@@ -72,6 +77,14 @@ roba_scroll: roba_scroll {
 
 `scale` and `scale-div` control both active and coast output. Do not add a
 downstream scroll scaler.
+
+Below raw magnitude `20`, `active-low-speed-eager=500` advances quantization by
+half a whole output unit. The early unit is retained as negative remainder and
+repaid by later same-direction input, so continuous distance stays at `4/60`.
+`active-low-speed-boost=0` disables Lab 21's 25 percent gain. Physical reversal
+clears the old remainder on that axis instead of spending weak reverse input
+to cancel it. Velocity tracking, flick arming, medium/high active input, and
+coast remain unchanged.
 
 ## Parameter Reference
 
@@ -89,6 +102,7 @@ downstream scroll scaler.
 | Coast curve | `fast`, `slow`, `decay-fast/slow/tail` | Velocity boundaries and permille/tick |
 | Coast cutoff | `friction`, `stop`, `limit`, `span`, `tick` | Loss, velocity, ms; roBa `14`, `3`, `600`, `6000`, `8` |
 | Shared output | `scale`, `scale-div` | One active/coast ratio; accepted `4/60` |
+| Low-speed active | `active-low-speed-threshold`, `active-low-speed-boost`, `active-low-speed-eager` | Raw delta and permille; trial `20`, `0`, `500` |
 | Safety | `layer`, `suppress-limit` | Layer index and absorbed-event cap |
 | Optional | `swap-mod`, `unlock-mod`, `exact-magnitude` | Modifier masks and exact-math boolean |
 
@@ -121,7 +135,7 @@ make -C tests clean
 ```
 
 The suite covers the inherited fixed-point inertia math and the new retained
-axis-selection rules. The verified result is `131/131` inertia/scale checks
+axis-selection rules. The verified result is `162/162` inertia/scale checks
 plus all axis-lock checks passing.
 
 ## Hardware Test Matrix
@@ -134,12 +148,12 @@ plus all axis-lock checks passing.
 | Horizontal/vertical | Correct axis and accepted Lab 16b direction |
 | Diagonal | Stable dominant-axis choice |
 | Continuous axis change | Old coast cancels; retained new-axis input appears |
-| Reverse direction | User regains control without stale coast |
+| Reverse direction | Old fractional movement is cleared; weak reverse input starts immediately |
 | Layer 11 release | All state and pending output reset immediately |
 | USB/BLE endpoint change | No old pending movement or coast on the new endpoint |
 
 ## Rollback
 
-Return to commit `8d2bedd` or the accepted Lab 17 commit `8dbb81a`. The unified
-module is isolated on `codex/unified-scroll-inertia`; do not merge it into the
-production branch until hardware acceptance.
+Set `active-low-speed-boost` and `active-low-speed-eager` to `0`, or pin the
+module back to `b0c2884`, to restore the accepted Lab 20/21 quantization
+behavior without changing other scroll parameters.

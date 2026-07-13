@@ -486,4 +486,110 @@ the module's `main` branch advances.
     sha256 `6c6f28efec6505496923a56c189951c00126f89da7e2f0068a0d441f35752609`.
   - `roBa_L-encoder-tune4.uf2`: `363008` bytes,
     sha256 `31f67c7ac3f39691a97d654cb952de3f8a461a7b7d738410cbf518b5581d808e`.
-- Hardware feel remains pending.
+- Hardware feel was accepted for main integration after Tune 4 testing.
+- Remaining tuning note: extremely fast sustained rotation can still feel as
+  though wheel output is briefly accumulated. It is finite and does not return
+  to the original endless-scroll failure, so further rate limiting or output
+  coalescing is deferred until it is reproducible enough to measure.
+
+## 2026-07-13: Lab 21 Active-Only Low-Speed Boost
+
+### Decision
+
+Do not raise the shared `4/60` scale because that would also speed up medium,
+high, and coast output. Add a tapered active-only boost in the standalone
+module instead.
+
+### Change
+
+- Added `active-low-speed-threshold=20` and `active-low-speed-boost=250`.
+- The boost starts near 25 percent for the smallest raw delta and reaches zero
+  at magnitude 20.
+- Kept snap, direction, EMA, arming, friction, stop, and coast scale unchanged.
+- Merged standalone module PR #1 and pinned `b0c2884`.
+
+### Verification
+
+- Standalone fixed-point tests: `142/142`.
+- All standalone axis-lock tests pass.
+- Module resolves to exact pin `b0c2884`.
+- Pristine right and left configuration builds pass.
+- Generated right DTS confirms the low-speed properties and unchanged Lab 20
+  snap/inertia values.
+- Right UF2: `571904` bytes, SHA-256
+  `ac1f007a823fb4669bb5647e48df37dbee6788f057d9e00c1a159dd38f161fe1`.
+- Left UF2: `358400` bytes, SHA-256
+  `78bca9351193d2cbb529d472a255ca4511339b6e0608d312bd006e1562253e56`.
+- Right-hand hardware feel remains to be verified.
+
+## 2026-07-13: Lab 22 Low-Speed Over-Input And Reversal Fix
+
+### Symptoms
+
+- Lab 21 could trigger an over-input error sound during low-speed scrolling.
+- Weak input opposite to the current scroll could pause before reversing.
+
+### Cause
+
+- `active-low-speed-boost=250` increased continuous active distance by up to
+  25 percent; this was a gain, not only a lower first-output threshold.
+- The active fractional remainder did not retain physical input direction.
+  Reverse input first cancelled the previous direction's remainder and could
+  produce multiple zero-output events.
+- ZMK `v0.3` has an additional host-profile-dependent smooth-scroll remainder
+  after input processors. It is a secondary risk, but its active host profile
+  was not observed and the code predates Lab 21, so it remains unchanged.
+
+### Change
+
+- Disabled active gain with `active-low-speed-boost=0`.
+- Added distance-neutral `active-low-speed-eager=500` below threshold `20`.
+- Added per-axis direction tracking and clear the old axis remainder only when
+  physical input reverses.
+- Pinned merged module PR #2 at `0c7a8fe`.
+
+### Verification
+
+- Standalone fixed-point tests: `162/162`.
+- All standalone axis-lock tests pass.
+- Clean WSL/Nix builds passed for both halves.
+- Generated right-half Devicetree confirms `scale=4`, `scale-div=60`,
+  `threshold=20`, `boost=0`, and `eager=500`.
+- Right UF2: `572416` bytes, SHA-256
+  `bfc82d9ee3a5853f7acb667cd1addc1774f2a69909e7913f896febd47e624e87`.
+- Left UF2: `358400` bytes, SHA-256
+  `78bca9351193d2cbb529d472a255ca4511339b6e0608d312bd006e1562253e56`.
+- Artifact directory:
+  `/home/shiro/zmk-workspace/firmware/zmk-config-roBa-low-speed-reversal/`.
+- Hardware flashing and live USB/BLE behavior remain unverified.
+
+### Hardware Check
+
+- Confirm no error sound during repeated very slow same-direction rolls.
+- Confirm weak reverse input starts without a dead interval.
+- Confirm medium/fast scroll and inertia still match Lab 20.
+- Compare USB and BLE if either symptom remains.
+
+## 2026-07-13: Encoder Tune 4 Main Integration
+
+### Decision
+
+- Accepted Tune 4 as the production encoder behavior and integrated it with the
+  latest `main` after Lab 22.
+- Kept the finite high-speed accumulation feel as a documented tuning note;
+  no input cutoff or additional rate limit was added during integration.
+
+### Verification
+
+- Encoder C host tests pass with strict warnings enabled.
+- Windows `RoBaStatus` tests pass: `14/14`.
+- The external unified trackball scroll module resolves to exact pin `0c7a8fe`.
+- Isolated right and left ZMK builds pass from the combined source tree.
+- Generated right DTS contains encoder `two-x-ms=240`, finite inertia, and
+  trackball `active-low-speed-eager=500` together.
+- Both generated `.config` files contain `CONFIG_ROBA_ENCODER_SCROLL=y`.
+- Main-integrated artifacts:
+  - `roBa_R-main-encoder-tune4.uf2`: `574464` bytes,
+    sha256 `a222d1182c4eb33ef1c53e68966ad2255081be28926b3119a4edc8095fb11c51`.
+  - `roBa_L-main-encoder-tune4.uf2`: `363008` bytes,
+    sha256 `31f67c7ac3f39691a97d654cb952de3f8a461a7b7d738410cbf518b5581d808e`.

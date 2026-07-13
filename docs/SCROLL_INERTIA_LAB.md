@@ -1069,6 +1069,111 @@ Hardware result:
   differences are restored production peripherals/status features, not scroll
   tuning.
 
+## Lab 21: Active-Only Low-Speed Boost
+
+Lab 21 targets only deliberate slow scrolling. It keeps the accepted Lab 20
+axis selection, direction, `4/60` base scale, EMA, flick arming, decay, and
+coast settings unchanged.
+
+```dts
+active-low-speed-threshold = <20>;
+active-low-speed-boost = <250>;
+```
+
+The maximum extra active scale is 25 percent at the smallest nonzero raw
+delta. It decreases linearly and reaches zero at magnitude 20. The processor
+applies this after axis selection and after inertia has consumed the original
+raw delta for velocity tracking, so it does not change medium/high scrolling,
+flick detection, or coast speed. Fractional boosted output remains accumulated
+per axis instead of being discarded.
+
+Module packaging:
+
+- Standalone module PR: `46slv/zmk-input-processor-roba-scroll#1`.
+- Pinned merge commit: `b0c28842c5469972bbe797065ace0e5d9104592b`.
+- Host verification: `142/142` fixed-point checks and all axis-lock checks.
+- `west list` resolves the module to the exact pinned merge commit.
+- Pristine right and left ZMK builds pass.
+- Generated right DTS confirms `threshold=20`, `boost=250`, and all accepted
+  Lab 20 snap/inertia values unchanged.
+
+Artifacts:
+
+- Output: `~/zmk-workspace/firmware/zmk-config-roBa-low-speed`
+- Right: `571904` bytes, SHA-256
+  `ac1f007a823fb4669bb5647e48df37dbee6788f057d9e00c1a159dd38f161fe1`
+- Left: `358400` bytes, SHA-256
+  `78bca9351193d2cbb529d472a255ca4511339b6e0608d312bd006e1562253e56`
+
+Hardware focus:
+
+- Very slow continuous rolling should reach the first HID unit sooner.
+- Medium/fast active speed and active-to-coast handoff should match Lab 20.
+- Inertia duration, axis selection, and direction must remain unchanged.
+- This exact firmware builds successfully but remains unverified on hardware
+  until the right-half UF2 is flashed.
+
+## Lab 22: Distance-Neutral Low-Speed Response And Reversal Fix
+
+Hardware feedback on Lab 21 reported an over-input error sound and a pause
+when weak input reversed an existing scroll. The two symptoms have separate
+numeric causes:
+
+- Lab 21's `boost=250` increases continuous active distance by up to 25 percent.
+  It is disabled rather than reduced so the accepted `4/60` total is restored.
+- Active fractional remainders were signed but did not track physical input
+  direction. Reverse low-speed input first cancelled the old direction's
+  remainder, producing several zero-output events. The module now records the
+  direction per axis and clears only that axis's stale remainder on reversal.
+
+Lab 22 uses:
+
+```dts
+active-low-speed-threshold = <20>;
+active-low-speed-boost = <0>;
+active-low-speed-eager = <500>;
+```
+
+`eager=500` uses nearest-unit quantization below the threshold. At the accepted
+`4/60` scale, repeated raw `1` input reaches its first whole unit after about
+8 events instead of 15. That early unit is borrowed: the remainder becomes
+negative and later same-direction input repays it. Continuous total distance
+therefore remains `4/60` rather than the increased Lab 21 gain.
+
+The current ZMK `v0.3` smooth-scrolling layer also owns a host-profile-dependent
+wheel remainder after input processors. Its profile was not observable in this
+investigation, and it predates Lab 21, so no ZMK core or smooth-scroll setting
+is changed here. If the error sound remains with Lab 22, capture whether it
+occurs on USB, BLE, or both before changing that second layer.
+
+Verification before hardware:
+
+- Standalone module PR: `46slv/zmk-input-processor-roba-scroll#2`.
+- Pinned merge commit: `0c7a8fe243d1182c090a138005d275795d7b206b`.
+- Host verification: `162/162` fixed-point checks and all axis-lock checks.
+- Clean WSL/Nix builds succeeded for both `roBa_R` and `roBa_L`.
+- Generated right-half Devicetree contains `scale=4`, `scale-div=60`,
+  `threshold=20`, `boost=0`, and `eager=500`.
+- Medium/high active scale, snap, EMA, arming, friction, stop, and coast are
+  unchanged from Lab 20.
+
+Flash artifacts:
+
+- Right: `/home/shiro/zmk-workspace/firmware/zmk-config-roBa-low-speed-reversal/roBa_R-seeeduino_xiao_ble.uf2`
+  (`572416` bytes, SHA-256
+  `bfc82d9ee3a5853f7acb667cd1addc1774f2a69909e7913f896febd47e624e87`).
+- Left: `/home/shiro/zmk-workspace/firmware/zmk-config-roBa-low-speed-reversal/roBa_L-seeeduino_xiao_ble.uf2`
+  (`358400` bytes, SHA-256
+  `78bca9351193d2cbb529d472a255ca4511339b6e0608d312bd006e1562253e56`).
+- Hardware flashing and live USB/BLE verification remain unperformed.
+
+Hardware focus:
+
+- Repeated very slow same-direction rolls must not trigger the error sound.
+- A weak reverse roll must begin in the new direction without a dead interval.
+- Medium/fast active scrolling and active-to-coast handoff must match Lab 20.
+- Repeat the first two checks on both USB and BLE if possible.
+
 ## Superseded Design Rationale
 
 Keep a purpose-built combined module on the development backlog. Its goal is

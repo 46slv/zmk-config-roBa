@@ -257,6 +257,17 @@ scroller {
   endpoint change resets all state. Host tests and both-half builds pass, and
   right-hand operation was accepted on 2026-07-13. The reusable implementation
   is published separately and pinned by commit in `config/west.yml`.
+- Lab 21 keeps the accepted `4/60` base scale and all snap/inertia parameters,
+  but adds `active-low-speed-threshold=20` and `active-low-speed-boost=250`.
+  The active-only boost is strongest for one-count deltas and tapers to zero at
+  raw magnitude 20; EMA velocity, arming, medium/high active output, and coast
+  use the Lab 19 behavior unchanged.
+- Lab 22 replaces that gain with `boost=0 / eager=500`. Eager quantization
+  advances the first low-speed whole unit but retains the borrowed amount as a
+  negative remainder, so continuous distance returns to the accepted `4/60`
+  total. The module also tracks active direction per axis and clears only the
+  old fractional remainder on reversal. This targets the reported over-input
+  sound and the pause when weak input reverses an existing scroll.
 
 ### `disable-scroll-x`
 

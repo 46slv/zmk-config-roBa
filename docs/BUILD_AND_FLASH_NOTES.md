@@ -198,7 +198,7 @@ Expected checks:
   `zmk-pmw3610-driver`, `zmk-listeners`, and
   `zmk-pointing-acceleration`.
 - Unified scroll is supplied by external module
-  `46slv/zmk-input-processor-roba-scroll`, pinned to commit `c06c453`.
+  `46slv/zmk-input-processor-roba-scroll`, pinned to commit `0c7a8fe`.
   The old standalone snap and inertia projects must not reappear.
 
 If `just init` fails, stop and capture the full output. Do not manually clone
@@ -696,3 +696,25 @@ roBa_L-encoder-tune4.uf2  31f67c7ac3f39691a97d654cb952de3f8a461a7b7d738410cbf518
 The right generated DTS retains `240/140/80 ms` and `inertia-enabled;`, and
 both generated `.config` files contain `CONFIG_ROBA_ENCODER_SCROLL=y`.
 Hardware feel testing remains manual.
+
+## 2026-07-13: Main-integrated Encoder Tune 4 artifacts
+
+Tune 4 was merged with the latest `main`, including the Lab 22 trackball
+low-speed reversal fix and Windows tray-status changes. Encoder host tests,
+Windows application tests, and both-half isolated firmware builds passed.
+
+```text
+~/zmk-workspace/firmware/zmk-config-roBa/roBa_R-main-encoder-tune4.uf2  574464 bytes
+~/zmk-workspace/firmware/zmk-config-roBa/roBa_L-main-encoder-tune4.uf2  363008 bytes
+```
+
+SHA-256:
+
+```text
+roBa_R-main-encoder-tune4.uf2  a222d1182c4eb33ef1c53e68966ad2255081be28926b3119a4edc8095fb11c51
+roBa_L-main-encoder-tune4.uf2  31f67c7ac3f39691a97d654cb952de3f8a461a7b7d738410cbf518b5581d808e
+```
+
+The generated right DTS includes both encoder `two-x-ms=240` and trackball
+`active-low-speed-eager=500`; the external scroll module resolves to the exact
+main pin `0c7a8fe243d1182c090a138005d275795d7b206b`.
