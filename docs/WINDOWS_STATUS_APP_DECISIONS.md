@@ -193,6 +193,10 @@ All three icons share the same open, refresh, and quit interactions. Windows
 may place some icons in its notification-area overflow according to the user's
 system policy; the app does not change that policy.
 
+The visible tray content is text-first: a stable two-character layer label and
+numeric battery percentages. Side names and full layer names remain in the
+tooltips, where they stay legible regardless of icon scaling.
+
 ### Rollback
 
 Restore the single `NotifyIcon` field in `TrayIconService` and call the existing

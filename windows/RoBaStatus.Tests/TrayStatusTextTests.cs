@@ -50,11 +50,22 @@ public sealed class TrayStatusTextTests
         };
 
         using var layer = TaskbarIconRenderer.RenderLayerSystemIcon(status);
-        using var left = TaskbarIconRenderer.RenderBatterySystemIcon(status.LeftBattery, "L");
-        using var right = TaskbarIconRenderer.RenderBatterySystemIcon(status.RightBattery, "R");
+        using var left = TaskbarIconRenderer.RenderBatterySystemIcon(status.LeftBattery);
+        using var right = TaskbarIconRenderer.RenderBatterySystemIcon(status.RightBattery);
 
         Assert.NotEqual(IntPtr.Zero, layer.Handle);
         Assert.NotEqual(IntPtr.Zero, left.Handle);
         Assert.NotEqual(IntPtr.Zero, right.Handle);
+    }
+
+    [Fact]
+    public void UsesTwoCharacterLayerAndNumericBatteryLabels()
+    {
+        var status = new DeviceStatus { IsConnected = true, HighestLayer = 11 };
+
+        Assert.Equal("SC", TrayStatusText.LayerIconLabel(status));
+        Assert.Equal("82", TrayStatusText.BatteryIconLabel(new BatteryReading(82)));
+        Assert.Equal("100", TrayStatusText.BatteryIconLabel(new BatteryReading(100)));
+        Assert.Equal("--", TrayStatusText.BatteryIconLabel(BatteryReading.Unknown));
     }
 }

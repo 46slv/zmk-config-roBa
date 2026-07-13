@@ -8,7 +8,7 @@ Status: automated and build checks passed; hardware checks pending
 dotnet test windows\RoBaStatus.Tests\RoBaStatus.Tests.csproj -c Release
 ```
 
-Current result on 2026-07-13: 13 passed, 0 failed.
+Current result on 2026-07-13: 14 passed, 0 failed.
 
 Covered:
 
@@ -19,6 +19,7 @@ Covered:
 - ordered active-layer labels;
 - three tray tooltips and the Windows 63-character limit.
 - independent layer, left-battery, and right-battery tray icon rendering.
+- two-character layer labels and numeric battery labels, including `100` and unknown state.
 
 ## Windows Build and Visual Checks
 
@@ -36,7 +37,8 @@ Covered:
 - [ ] Each tray icon's menu and window `終了` remove all three tray icons and stop the process.
 - [x] A second launch restores the existing hidden instance without duplication.
 - [x] `--minimized` starts with no taskbar window and remains one running process.
-- [ ] Layer, Left, and Right tray icons and their tooltips update with live state.
+- [ ] Layer shows a two-character label and Left/Right show live numeric percentages.
+- [ ] Layer, Left, and Right tooltips update with full live state.
 - [ ] Dynamic DEFAULT/MOUSE/SCROLL icons verified from live BLE events.
 - [ ] 125%, 150%, and 200% display scaling verified manually.
 - [ ] Secondary-monitor taskbar placement verified manually.

@@ -144,8 +144,12 @@ Required interactions:
 - Left-clicking any tray icon restores and focuses the unchanged detail window.
 - Each tray icon provides the same context menu: `roBa Statusを開く`, `再取得`,
   and `終了`.
-- The layer icon uses the taskbar's layer rendering; each battery icon carries
-  an `L` or `R` label, a fill bar, and a charging glyph when available.
+- The layer icon shows a stable two-character label such as `DE`, `MO`, or
+  `SC`. The left and right battery icons show their integer percentage as
+  numerals; their creation order and tooltips identify the side.
+- Battery numerals use green, amber, or red backgrounds for normal, low, and
+  critical states. Charging uses a highlighted border without replacing the
+  percentage.
 - Explicit `終了`, from either the window or tray menu, is the only ordinary
   action that stops monitoring.
 - `--minimized`, used by login startup, starts directly in the tray.

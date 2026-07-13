@@ -61,12 +61,12 @@ public sealed class TrayIconService : IDisposable
         ReplaceIcon(
             _leftBatteryIcon,
             ref _dynamicLeftBatteryIcon,
-            TaskbarIconRenderer.RenderBatterySystemIcon(status.LeftBattery, "L"),
+            TaskbarIconRenderer.RenderBatterySystemIcon(status.LeftBattery),
             TrayStatusText.BuildLeftBattery(status));
         ReplaceIcon(
             _rightBatteryIcon,
             ref _dynamicRightBatteryIcon,
-            TaskbarIconRenderer.RenderBatterySystemIcon(status.RightBattery, "R"),
+            TaskbarIconRenderer.RenderBatterySystemIcon(status.RightBattery),
             TrayStatusText.BuildRightBattery(status));
     }
 

@@ -9,6 +9,8 @@ public sealed class LayerCatalogTests
     {
         Assert.Equal("MOUSE", LayerCatalog.Name(7));
         Assert.Equal("SCROLL", LayerCatalog.Name(11));
+        Assert.Equal("MO", LayerCatalog.TrayLabel(7));
+        Assert.Equal("SC", LayerCatalog.TrayLabel(11));
     }
 
     [Fact]

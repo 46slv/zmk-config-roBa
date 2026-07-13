@@ -69,26 +69,34 @@ public static class TaskbarIconRenderer
             DrawIconBackground(dc, size);
             var rect = new Rect(3, 3, size - 6, size - 6);
             dc.DrawRoundedRectangle(new SolidColorBrush(color), null, rect, size * 0.16, size * 0.16);
-            var shortName = status.IsConnected ? layer.ShortName : "—";
-            DrawCenteredText(dc, shortName, layer.ShortName.Length >= 3 ? size * 0.26 : size * 0.40, rect);
+            var label = TrayStatusText.LayerIconLabel(status);
+            DrawCenteredText(dc, label, size * 0.38, rect);
         }
 
         return ToSystemIcon(Render(visual, size));
     }
 
-    public static System.Drawing.Icon RenderBatterySystemIcon(BatteryReading battery, string side, int size = 32)
+    public static System.Drawing.Icon RenderBatterySystemIcon(BatteryReading battery, int size = 32)
     {
         var visual = new DrawingVisual();
         using (var dc = visual.RenderOpen())
         {
             DrawIconBackground(dc, size);
-            DrawCenteredText(dc, side, size * 0.27, new Rect(2, 2, size - 4, size * 0.26));
-            var batteryRect = new Rect(size * 0.17, size * 0.43, size * 0.60, size * 0.30);
-            DrawBattery(dc, batteryRect, battery);
-            if (battery.IsCharging)
+            var value = battery.Percent is int percent ? Math.Clamp(percent, 0, 100) : (int?)null;
+            var color = value switch
             {
-                DrawCenteredText(dc, "⚡", size * 0.25, new Rect(2, size * 0.72, size - 4, size * 0.22));
-            }
+                null => Color.FromRgb(92, 99, 108),
+                <= 10 => Color.FromRgb(236, 77, 82),
+                <= 20 => Color.FromRgb(238, 165, 52),
+                _ => Color.FromRgb(45, 148, 101)
+            };
+            var rect = new Rect(3, 3, size - 6, size - 6);
+            var border = battery.IsCharging
+                ? new Pen(new SolidColorBrush(Color.FromRgb(255, 220, 92)), Math.Max(1.5, size / 16d))
+                : null;
+            dc.DrawRoundedRectangle(new SolidColorBrush(color), border, rect, size * 0.16, size * 0.16);
+            var label = TrayStatusText.BatteryIconLabel(battery);
+            DrawCenteredText(dc, label, label.Length >= 3 ? size * 0.29 : size * 0.40, rect);
         }
 
         return ToSystemIcon(Render(visual, size));

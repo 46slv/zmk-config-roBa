@@ -13,6 +13,12 @@ public static class TrayStatusText
 
     public static string BuildRightBattery(DeviceStatus status) => BuildBattery("Right", status.RightBattery);
 
+    public static string LayerIconLabel(DeviceStatus status) =>
+        status.IsConnected ? LayerCatalog.TrayLabel(status.HighestLayer) : "--";
+
+    public static string BatteryIconLabel(BatteryReading battery) =>
+        battery.Percent is int value ? Math.Clamp(value, 0, 100).ToString() : "--";
+
     private static string BuildBattery(string side, BatteryReading battery)
     {
         var charging = battery.IsCharging ? " · charging" : string.Empty;

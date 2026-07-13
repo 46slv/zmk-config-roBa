@@ -9,8 +9,10 @@ quietly in the task tray. It shows three things at a glance:
 - left/peripheral battery.
 
 The taskbar icon is generated dynamically. The tray uses three separate dynamic
-icons: the active layer, left battery, and right battery. Clicking the pinned
-taskbar shortcut or any tray icon opens the same detailed status window.
+indicators: a two-character active-layer label, the left battery percentage,
+and the right battery percentage. Hover tooltips identify the side and provide
+the full layer name. Clicking the pinned taskbar shortcut or any tray indicator
+opens the same detailed status window.
 
 ## Requirements
 
