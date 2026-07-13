@@ -263,3 +263,38 @@ Follow-up comparison build:
 - `docs/INPUT_PROCESSOR_EXPERIMENTS.md`
 - `docs/ROBA_KEYMAP_MAP.md`
 - `docs/ZMK_RESEARCH_NOTES.md`
+
+## 2026-07-13: Unified Scroll Main Integration
+
+### Decision
+
+Use the standalone public module instead of duplicating its C source inside the
+roBa config. Pin a tested commit so main builds remain reproducible even when
+the module's `main` branch advances.
+
+### Integration
+
+- Based `codex/main-unified-scroll` on
+  `codex/manage-existing-changes-20260713` to retain status transport and the
+  Windows companion.
+- Merged the hardware-accepted `codex/unified-scroll-inertia` behavior.
+- Replaced repo-local scroll implementation files with external
+  `46slv/zmk-input-processor-roba-scroll` at `c06c453`.
+- Restored production RGB widget, charge indicator, and EC11 settings after a
+  pre-commit diff audit showed the lab branch had removed them.
+- Kept the accepted chain `zip_xy_to_scroll_mapper -> roba_scroll` and all
+  accepted Lab 19 parameters unchanged.
+
+### Verification
+
+- Standalone host tests: `131/131` plus all axis-lock tests pass.
+- External module resolves to the exact pinned commit.
+- Right and left pristine ZMK builds pass.
+- Right generated DTS and build graph confirm the accepted node plus external
+  processor source; `roba_status.c` is also linked.
+- Right UF2: `571392` bytes; left UF2: `358400` bytes.
+
+### Remaining
+
+- Flash the production-integrated right/left UF2 pair. The scroll behavior is
+  already accepted, but this exact build also includes status transport.

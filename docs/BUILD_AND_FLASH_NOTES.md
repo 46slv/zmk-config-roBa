@@ -1,5 +1,8 @@
 # roBa Local Build Runbook
 
+For inertial-scroll integration and tuning, read
+`docs/SCROLL_INERTIA_INTEGRATION_GUIDE.md` before building.
+
 Created: 2026-07-11
 Status: WSL/Nix setup completed and normal left/right local builds verified
 
@@ -191,9 +194,12 @@ Expected checks:
 
 - `.west/config` points at the selected config manifest.
 - `west list` includes `zmk`.
-- `west list` includes roBa external modules such as
-  `zmk-pmw3610-driver`, `zmk-listeners`, `zmk-scroll-snap`, and
+- `west list` includes required external modules such as
+  `zmk-pmw3610-driver`, `zmk-listeners`, and
   `zmk-pointing-acceleration`.
+- Unified scroll is supplied by external module
+  `46slv/zmk-input-processor-roba-scroll`, pinned to commit `c06c453`.
+  The old standalone snap and inertia projects must not reappear.
 
 If `just init` fails, stop and capture the full output. Do not manually clone
 missing modules until checking whether `config/west.yml` was selected correctly.

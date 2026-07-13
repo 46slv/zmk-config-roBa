@@ -203,6 +203,23 @@ or reversible commit. The likely risky area is interaction with
 - Does the current `zmk-pmw3610-driver` fork have any built-in inertia or
   scroll smoothing behavior that must be disabled before adding a module?
 
+Resolved on 2026-07-12:
+
+- The driver does not add a six-second software coast, but its `scroll-layers`
+  mode performs scroll conversion before ZMK input processors see the data.
+- It accumulates raw X/Y up to `CONFIG_PMW3610_SCROLL_TICK`, emits a single
+  `WHEEL/HWHEEL` event with value `+1` or `-1`, then clears both accumulators.
+- This removes the magnitude-bearing event stream the inertia module expects
+  after `zip_xy_to_scroll_mapper`. The initial integration therefore had two
+  owners for scroll conversion: the driver and the listener processor chain.
+- Lab 6 worked only because its diagnostic thresholds armed from one quantized
+  event and its no-decay configuration held that velocity until the six-second
+  span cap. That result proves the software coast mechanism, not a correct
+  physical-velocity handoff.
+- The cleaner integration is to leave the PMW3610 in raw X/Y mode on layer 11
+  by omitting its optional `scroll-layers` property, then let the listener own
+  `transform -> xy_to_scroll_mapper -> inertia -> scaler`.
+
 ## Current Experiment
 
 The first implementation uses `mjmjm0101/zmk-input-processor-scroll-inertia` as

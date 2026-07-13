@@ -2,24 +2,20 @@ manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
-    - name: inorichi
-      url-base: https://github.com/inorichi
     - name: caksoylar
       url-base: https://github.com/caksoylar
-    - name: badjeff
-      url-base: https://github.com/badjeff
-    - name: ssbb
-      url-base: https://github.com/ssbb
     - name: 4mplelab
       url-base: https://github.com/4mplelab
     - name: kot149
       url-base: https://github.com/kot149
     - name: kumamuk-git
       url-base: https://github.com/kumamuk-git
+    - name: 46slv
+      url-base: https://github.com/46slv
+    - name: ssbb
+      url-base: https://github.com/ssbb
     - name: oleksandrmaslov
       url-base: https://github.com/oleksandrmaslov
-    - name: mjmjm0101
-      url-base: https://github.com/mjmjm0101
       
   projects:
     # https://github.com/zmkfirmware/zmk
@@ -33,7 +29,6 @@ manifest:
       remote: kumamuk-git
       revision: main
 
-    # https://github.com/ssbb/zmk-listeners
     - name: zmk-listeners
       remote: ssbb
       revision: v1
@@ -45,13 +40,12 @@ manifest:
       revision: v0.3-branch
       path: modules/zmk-rgbled-widget
 
-    # https://github.com/4mplelab/zmk-feature-charge-indicator.git
+    # https://github.com/4mplelab/zmk-feature-charge-indicator
     - name: zmk-feature-charge-indicator
       remote: 4mplelab
       revision: main
       path: modules/zmk-feature-charge-indicator
 
-    # https://github.com/kot149/zmk-mouse-gesture
     - name: zmk-mouse-gesture
       remote: kot149
       revision: v1
@@ -63,21 +57,16 @@ manifest:
       revision: v1
       path: modules/zmk-layout-shift
 
-    # https://github.com/kot149/zmk-scroll-snap
-    - name: zmk-scroll-snap
-      remote: kot149
-      revision: v1
-      path: modules/zmk-scroll-snap
-
     - name: zmk-pointing-acceleration
       remote: oleksandrmaslov
       revision: main
       path: modules/zmk-pointing-acceleration
 
-    - name: zmk-input-processor-scroll-inertia
-      remote: mjmjm0101
-      revision: main
-      path: modules/zmk-input-processor-scroll-inertia
+    # https://github.com/46slv/zmk-input-processor-roba-scroll
+    - name: zmk-input-processor-roba-scroll
+      remote: 46slv
+      revision: c06c4530ed382f2aed5c7f19f006517e7d88fb7d
+      path: modules/zmk-input-processor-roba-scroll
 
   self:
     path: config

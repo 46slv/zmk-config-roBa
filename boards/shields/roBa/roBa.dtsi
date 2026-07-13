@@ -118,20 +118,33 @@
         status = "disabled";
     };
 
-    scroll_inertia_v: scroll_inertia_v {
+    roba_scroll: roba_scroll {
         status = "disabled";
-        compatible = "zmk,input-processor-scroll-inertia";
+        compatible = "zmk,input-processor-roba-scroll";
         #input-processor-cells = <0>;
 
-        axis = <1>;
-        layer = <(-1)>;
-        scale = <8000>;
-        scale-div = <1000>;
+        axis = <0>;
+        layer = <11>;
+        scale = <4>;
+        scale-div = <60>;
         tick = <8>;
-        start = <1>;
-        move = <1>;
-        min-events = <1>;
-        decel-samples = <1>;
+        gain = <500>;
+        blend = <500>;
+        start = <12>;
+        move = <20>;
+        min-events = <4>;
+        friction = <14>;
+        stop = <3>;
+        axis-mode = <0>;
+        snap-x-ratio = <5 8>;
+        snap-y-ratio = <1 1>;
+        snap-events = <2>;
+        snap-immediate = <200>;
+        snap-lock-ms = <175>;
+        snap-lock-events = <8>;
+        snap-idle-ms = <175>;
+        snap-switch = <1>;
+        invert-y;
     };
 };
 
