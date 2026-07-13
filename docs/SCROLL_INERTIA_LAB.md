@@ -925,6 +925,55 @@ Hardware result:
   active-to-coast handoff, or inertia behavior.
 - Lab 17 is accepted; matched scale `4/60` becomes the new baseline.
 
+## Lab 18: Approximate Original Pointer Acceleration
+
+Lab 18 keeps the accepted Lab 17 scroll path unchanged and adjusts only the
+normal pointer acceleration used on `DEFAULT` and `MOUSE`:
+
+```dts
+&pointer_accel {
+    min-factor = <1000>;
+    max-factor = <7000>;
+    speed-threshold = <300>;
+    speed-max = <3500>;
+    acceleration-exponent = <1>;
+};
+```
+
+The older production-like source placed the same acceleration processor in the
+base listener and again in the `DEFAULT/MOUSE` child path. If both stages were
+effective, their maximum multiplier composed to `2.8 * 2.8 = 7.84`. Restoring
+that ambiguous two-stage topology would also risk accelerating layer-11 scroll
+before snap and inertia.
+
+This one-stage approximation caps at `7.0` and shifts the linear range to
+`300..3500`. It stays near 1x for deliberate slow movement while approaching
+the older composed response through medium and fast movement. The X/Y base
+scalers remain `70/100` and `80/100`.
+
+Test focus:
+
+- Slow pointer positioning should remain controllable.
+- Medium movement should cover more distance without requiring repeated rolls.
+- A fast roll should approach the remembered maximum speed without jumping or
+  becoming uncontrollable.
+- Direction reversal should not produce an unexpected lurch.
+- Scroll layer behavior must remain identical to accepted Lab 17.
+
+Build result:
+
+- `roBa_R-seeeduino_xiao_ble.uf2`: built successfully at 2026-07-13 09:44.
+- Generated devicetree confirms pointer factor `1000..7000`, threshold `300`,
+  max speed `3500`, and exponent `1`.
+- Generated devicetree also confirms the accepted Lab 17 scroll chain and
+  matched `4/60` scale are unchanged.
+- Output:
+  `~/zmk-workspace/firmware/zmk-config-roBa-inertia-lab/roBa_R-seeeduino_xiao_ble.uf2`
+
+Hardware result:
+
+- Pending user flash/test.
+
 ## Future Candidate: Unified Axis-Lock Inertia Processor
 
 Keep a purpose-built combined module on the development backlog. Its goal is

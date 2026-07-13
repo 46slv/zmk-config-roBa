@@ -209,6 +209,7 @@ scroller {
 - Lab 16b実機で縦横の軸・方向、scroll snapと慣性の併用を確認し、ユーザー評価は良好。低速悪化、coast時の軸飛び、古いsnap lockなどの重大な不具合は受入確認では見られず、次の実験の基準構成とする。
 - Lab 17は合格したLab 16bを維持し、activeとcoastのmatched scaleだけを`4/75 -> 4/60`へ変更する。同一入力の出力を25%上げ、小さい蓄積値がHID単位へ早く届くか確認する。snap、方向、arming、EMA、decayは変更しない。
 - Lab 17実機で低速応答、通常速度、snap、active-to-coast handoff、慣性に問題なし。`4/60`を次の実験の基準scaleとして採用する。
+- Lab 18は通常pointerだけを旧二段加速の体感へ近似する。一段curveを`min=1000 / max=7000 / threshold=300 / speed-max=3500 / exponent=1`とし、X/Y scaler `70/100`, `80/100`とLab 17 scroll pathは維持する。旧base+child二段構成の最大`2.8*2.8=7.84`を安全側へ丸め、scroll経路へaccelを再導入しない。
 
 ### `disable-scroll-x`
 

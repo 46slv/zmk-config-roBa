@@ -263,6 +263,10 @@ Input processor interaction:
   `DEFAULT/MOUSE` conditional path and does not precede layer 11 scrolling.
   Scroll snap affects only the layer-11 scroll chain. Lab 16 hardware behavior
   is not yet verified; initial low-speed response is the primary risk.
+- Lab 18 approximates the earlier effective two-stage pointer acceleration with
+  one pointer-only curve: factor `1.0..7.0`, threshold `300`, max speed `3500`,
+  exponent `1`. X/Y base scalers remain `70/100` and `80/100`. This does not
+  affect layer-11 snap, scroll scale, or inertia.
 - Scroll tuning notes for future Codex/AI sessions are in
   `docs/INPUT_PROCESSOR_EXPERIMENTS.md`.
 
