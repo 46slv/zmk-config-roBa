@@ -10,7 +10,7 @@ in one input processor. It replaces the previous serial combination of
 
 The reusable implementation is maintained at
 <https://github.com/46slv/zmk-input-processor-roba-scroll>. This config pins
-commit `c06c4530ed382f2aed5c7f19f006517e7d88fb7d` in `config/west.yml`.
+commit `b0c28842c5469972bbe797065ace0e5d9104592b` in `config/west.yml`.
 
 ## Processing Contract
 
@@ -21,6 +21,7 @@ PMW3610 raw X/Y
        direction inversion
        retained axis selection
        active scaling with per-axis remainder
+       active-only low-speed boost with linear taper
        velocity EMA and flick arming
        direct-HID decaying coast
 ```
@@ -59,6 +60,8 @@ roba_scroll: roba_scroll {
     layer = <11>;
     scale = <4>;
     scale-div = <60>;
+    active-low-speed-threshold = <20>;
+    active-low-speed-boost = <250>;
     tick = <8>;
     gain = <500>;
     blend = <500>;
@@ -72,6 +75,11 @@ roba_scroll: roba_scroll {
 
 `scale` and `scale-div` control both active and coast output. Do not add a
 downstream scroll scaler.
+
+`active-low-speed-threshold` and `active-low-speed-boost` affect only active
+events below raw magnitude `20`. The roBa value `250` adds at most 25 percent
+at the smallest nonzero delta and tapers to zero at the threshold. Velocity
+tracking, flick arming, medium/high active input, and coast remain unchanged.
 
 ## Parameter Reference
 
@@ -89,6 +97,7 @@ downstream scroll scaler.
 | Coast curve | `fast`, `slow`, `decay-fast/slow/tail` | Velocity boundaries and permille/tick |
 | Coast cutoff | `friction`, `stop`, `limit`, `span`, `tick` | Loss, velocity, ms; roBa `14`, `3`, `600`, `6000`, `8` |
 | Shared output | `scale`, `scale-div` | One active/coast ratio; accepted `4/60` |
+| Low-speed active | `active-low-speed-threshold`, `active-low-speed-boost` | Raw delta and permille; trial `20`, `250` |
 | Safety | `layer`, `suppress-limit` | Layer index and absorbed-event cap |
 | Optional | `swap-mod`, `unlock-mod`, `exact-magnitude` | Modifier masks and exact-math boolean |
 
@@ -121,7 +130,7 @@ make -C tests clean
 ```
 
 The suite covers the inherited fixed-point inertia math and the new retained
-axis-selection rules. The verified result is `131/131` inertia/scale checks
+axis-selection rules. The verified result is `142/142` inertia/scale checks
 plus all axis-lock checks passing.
 
 ## Hardware Test Matrix
@@ -140,6 +149,6 @@ plus all axis-lock checks passing.
 
 ## Rollback
 
-Return to commit `8d2bedd` or the accepted Lab 17 commit `8dbb81a`. The unified
-module is isolated on `codex/unified-scroll-inertia`; do not merge it into the
-production branch until hardware acceptance.
+Set both low-speed properties to `0`, or pin the module back to `c06c453`, to
+restore the accepted Lab 19/20 output behavior without changing other scroll
+parameters.

@@ -65,7 +65,7 @@ manifest:
     # https://github.com/46slv/zmk-input-processor-roba-scroll
     - name: zmk-input-processor-roba-scroll
       remote: 46slv
-      revision: c06c4530ed382f2aed5c7f19f006517e7d88fb7d
+      revision: b0c28842c5469972bbe797065ace0e5d9104592b
       path: modules/zmk-input-processor-roba-scroll
 
   self:

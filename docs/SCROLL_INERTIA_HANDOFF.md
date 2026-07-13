@@ -10,7 +10,9 @@ external snap/inertia modules and downstream scaler are absent. Initial
 selected-axis input is retained, active/coast use one `4/60` scale, and layer or
 endpoint changes reset all state. Host tests and both-half builds pass, and
 right-hand feel was accepted on 2026-07-13. The reusable implementation is
-published as `46slv/zmk-input-processor-roba-scroll` and pinned to `c06c453`. See
+published as `46slv/zmk-input-processor-roba-scroll` and pinned to `b0c2884`.
+Lab 21 adds an active-only low-speed boost (`threshold=20`, `boost=250`) while
+leaving velocity tracking and coast unchanged. See
 `docs/ROBA_SCROLL_MODULE.md` and Lab 19 in `docs/SCROLL_INERTIA_LAB.md`.
 
 ## Goal

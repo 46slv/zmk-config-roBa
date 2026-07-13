@@ -257,6 +257,11 @@ scroller {
   endpoint change resets all state. Host tests and both-half builds pass, and
   right-hand operation was accepted on 2026-07-13. The reusable implementation
   is published separately and pinned by commit in `config/west.yml`.
+- Lab 21 keeps the accepted `4/60` base scale and all snap/inertia parameters,
+  but adds `active-low-speed-threshold=20` and `active-low-speed-boost=250`.
+  The active-only boost is strongest for one-count deltas and tapers to zero at
+  raw magnitude 20; EMA velocity, arming, medium/high active output, and coast
+  use the Lab 19 behavior unchanged.
 
 ### `disable-scroll-x`
 
