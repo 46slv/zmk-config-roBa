@@ -511,6 +511,35 @@ just build roBa_L
 - Remaining risk:
 ````
 
+## 2026-07-13: Windows Status Service Build
+
+The status-enabled firmware was built from the Windows checkout without
+overwriting the separate WSL config checkout. The Windows repository was passed
+as `ZMK_EXTRA_MODULES` and used as `ZMK_CONFIG`.
+
+Verified build directories:
+
+```text
+~/zmk-workspace/.build/roba-status-roBa_R
+~/zmk-workspace/.build/roba-status-roBa_L
+```
+
+Verified outputs:
+
+```text
+~/zmk-workspace/.build/roba-status-roBa_R/zephyr/zmk.uf2  565248 bytes
+~/zmk-workspace/.build/roba-status-roBa_L/zephyr/zmk.uf2  358400 bytes
+```
+
+The right build compiled `src/roba_status.c` alongside ZMK Studio and the
+current pointing/scroll modules. The left build excluded the central-only
+status source as intended. Existing upstream/module warnings remained, but no
+new compile or link error occurred.
+
+Hardware flashing was not performed. The right-half UF2 must be flashed before
+the Windows companion can receive live layer changes. Windows may need one
+remove/re-pair cycle if its cached GATT service list predates this firmware.
+
 ## Current Verification Status
 
 - WSL Ubuntu 24.04 is installed.

@@ -1,0 +1,12 @@
+# .NET / Visual Studio
+**/bin/
+**/obj/
+.vs/
+TestResults/
+
+# Local release output
+artifacts/
+
+# ZMK local output if generated in this checkout
+.build/
+firmware/

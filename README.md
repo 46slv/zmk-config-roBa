@@ -1,5 +1,17 @@
 # zmk-config-roBa
 
+## roBa Status for Windows
+
+This repository includes a Windows 11 companion app that shows the active ZMK
+layer and both split battery levels through a dynamic taskbar icon.
+
+- App guide: [`windows/RoBaStatus/README.md`](windows/RoBaStatus/README.md)
+- UX and protocol specification: [`docs/WINDOWS_STATUS_APP_SPEC.md`](docs/WINDOWS_STATUS_APP_SPEC.md)
+- Build and implementation notes: [`docs/WINDOWS_STATUS_APP_IMPLEMENTATION_PLAN.md`](docs/WINDOWS_STATUS_APP_IMPLEMENTATION_PLAN.md)
+
+The firmware service is read-only. It reports an active-layer bitmask, highest
+active layer, and battery snapshot; it never sends keycodes or typed content.
+
 ## 大西配列とCombo
 大西配列かつコンボを多用するスタイルを目指しています。
 人差し指から小指までが極力移動しない、理想的なキー配列を模索しております…。

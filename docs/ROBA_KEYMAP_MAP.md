@@ -297,6 +297,20 @@ Combos without explicit `layers` property:
 
 ## Follow-Up Checks
 
+## Windows Status Companion
+
+The optional `CONFIG_ROBA_STATUS` firmware service observes the existing layer
+state without changing bindings, layer numbers, combo behavior, AML, SCROLL, or
+trackball processing.
+
+- The service reports the full active-layer bitmask.
+- `zmk_keymap_highest_layer_active()` supplies the prominent Windows layer.
+- Layer 7 remains `MOUSE`; layer 11 remains `SCROLL`.
+- No keycodes, positions, or typed content are transmitted.
+- Disabling `CONFIG_ROBA_STATUS` restores the previous firmware composition.
+
+## Follow-Up Checks
+
 - Confirm whether the source row lengths match the intended physical key count.
 - Confirm actual devicetree behavior for duplicate `input-processors` in `&trackball_listener`.
 - Decide whether `keymap-drawer/roBa.yaml` should be treated as generated output or maintained source.

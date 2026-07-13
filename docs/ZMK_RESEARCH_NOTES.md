@@ -1,5 +1,24 @@
 # ZMK / roBa Research Notes for Codex
 
+## 2026-07-13: Read-Only Windows Status Service
+
+The repository now acts as a Zephyr module as well as a board root. Its module
+metadata loads `zephyr/Kconfig` and `zephyr/CMakeLists.txt`.
+
+`CONFIG_ROBA_STATUS` is enabled only on the right/central half. The service:
+
+- subscribes to `zmk_layer_state_changed`;
+- reads `zmk_keymap_layer_state()` and `zmk_keymap_highest_layer_active()`;
+- listens to central and peripheral battery events;
+- exposes one encrypted BLE GATT read/notify characteristic;
+- transmits no keycode, position, or text data;
+- leaves ZMK Studio, AML, SCROLL, and trackball behavior unchanged.
+
+Protocol UUIDs and packet fields are documented in
+`docs/WINDOWS_STATUS_APP_SPEC.md`. The central and peripheral builds completed
+successfully against the repository's pinned ZMK v0.3 workspace on 2026-07-13.
+Live hardware behavior remains unverified until the right-half UF2 is flashed.
+
 作成日: 2026-07-03
 
 この資料は、`46slv/zmk-config-roBa` を今後編集するときに Codex が最初に読むための作業用ノートです。特に ZMK の input processors と behaviors を重点対象にしています。

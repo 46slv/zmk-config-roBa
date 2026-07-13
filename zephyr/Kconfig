@@ -1,0 +1,12 @@
+menu "roBa features"
+
+config ROBA_STATUS
+    bool "roBa read-only status service"
+    depends on ZMK_BLE && ZMK_SPLIT_ROLE_CENTRAL
+    default y if SHIELD_ROBA_R
+    help
+      Exposes the active ZMK layer state through a read-only encrypted BLE
+      GATT characteristic for the companion Windows status application.
+      No keycodes or typed content are transmitted.
+
+endmenu
