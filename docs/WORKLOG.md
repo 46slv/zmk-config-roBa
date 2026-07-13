@@ -298,3 +298,33 @@ the module's `main` branch advances.
 
 - Flash the production-integrated right/left UF2 pair. The scroll behavior is
   already accepted, but this exact build also includes status transport.
+
+## 2026-07-13: Lab 21 Active-Only Low-Speed Boost
+
+### Decision
+
+Do not raise the shared `4/60` scale because that would also speed up medium,
+high, and coast output. Add a tapered active-only boost in the standalone
+module instead.
+
+### Change
+
+- Added `active-low-speed-threshold=20` and `active-low-speed-boost=250`.
+- The boost starts near 25 percent for the smallest raw delta and reaches zero
+  at magnitude 20.
+- Kept snap, direction, EMA, arming, friction, stop, and coast scale unchanged.
+- Merged standalone module PR #1 and pinned `b0c2884`.
+
+### Verification
+
+- Standalone fixed-point tests: `142/142`.
+- All standalone axis-lock tests pass.
+- Module resolves to exact pin `b0c2884`.
+- Pristine right and left configuration builds pass.
+- Generated right DTS confirms the low-speed properties and unchanged Lab 20
+  snap/inertia values.
+- Right UF2: `571904` bytes, SHA-256
+  `ac1f007a823fb4669bb5647e48df37dbee6788f057d9e00c1a159dd38f161fe1`.
+- Left UF2: `358400` bytes, SHA-256
+  `78bca9351193d2cbb529d472a255ca4511339b6e0608d312bd006e1562253e56`.
+- Right-hand hardware feel remains to be verified.

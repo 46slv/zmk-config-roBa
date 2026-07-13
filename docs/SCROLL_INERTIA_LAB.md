@@ -1069,6 +1069,50 @@ Hardware result:
   differences are restored production peripherals/status features, not scroll
   tuning.
 
+## Lab 21: Active-Only Low-Speed Boost
+
+Lab 21 targets only deliberate slow scrolling. It keeps the accepted Lab 20
+axis selection, direction, `4/60` base scale, EMA, flick arming, decay, and
+coast settings unchanged.
+
+```dts
+active-low-speed-threshold = <20>;
+active-low-speed-boost = <250>;
+```
+
+The maximum extra active scale is 25 percent at the smallest nonzero raw
+delta. It decreases linearly and reaches zero at magnitude 20. The processor
+applies this after axis selection and after inertia has consumed the original
+raw delta for velocity tracking, so it does not change medium/high scrolling,
+flick detection, or coast speed. Fractional boosted output remains accumulated
+per axis instead of being discarded.
+
+Module packaging:
+
+- Standalone module PR: `46slv/zmk-input-processor-roba-scroll#1`.
+- Pinned merge commit: `b0c28842c5469972bbe797065ace0e5d9104592b`.
+- Host verification: `142/142` fixed-point checks and all axis-lock checks.
+- `west list` resolves the module to the exact pinned merge commit.
+- Pristine right and left ZMK builds pass.
+- Generated right DTS confirms `threshold=20`, `boost=250`, and all accepted
+  Lab 20 snap/inertia values unchanged.
+
+Artifacts:
+
+- Output: `~/zmk-workspace/firmware/zmk-config-roBa-low-speed`
+- Right: `571904` bytes, SHA-256
+  `ac1f007a823fb4669bb5647e48df37dbee6788f057d9e00c1a159dd38f161fe1`
+- Left: `358400` bytes, SHA-256
+  `78bca9351193d2cbb529d472a255ca4511339b6e0608d312bd006e1562253e56`
+
+Hardware focus:
+
+- Very slow continuous rolling should reach the first HID unit sooner.
+- Medium/fast active speed and active-to-coast handoff should match Lab 20.
+- Inertia duration, axis selection, and direction must remain unchanged.
+- This exact firmware builds successfully but remains unverified on hardware
+  until the right-half UF2 is flashed.
+
 ## Superseded Design Rationale
 
 Keep a purpose-built combined module on the development backlog. Its goal is

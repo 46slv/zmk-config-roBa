@@ -127,6 +127,8 @@
         layer = <11>;
         scale = <4>;
         scale-div = <60>;
+        active-low-speed-threshold = <20>;
+        active-low-speed-boost = <250>;
         tick = <8>;
         gain = <500>;
         blend = <500>;
