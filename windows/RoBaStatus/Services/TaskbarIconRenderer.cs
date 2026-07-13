@@ -1,8 +1,17 @@
 using System.Globalization;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using RoBaStatus.Models;
+using Brushes = System.Windows.Media.Brushes;
+using Color = System.Windows.Media.Color;
+using ColorConverter = System.Windows.Media.ColorConverter;
+using FlowDirection = System.Windows.FlowDirection;
+using FontFamily = System.Windows.Media.FontFamily;
+using Pen = System.Windows.Media.Pen;
+using Point = System.Windows.Point;
 
 namespace RoBaStatus.Services;
 
@@ -41,6 +50,28 @@ public static class TaskbarIconRenderer
         bitmap.Render(visual);
         bitmap.Freeze();
         return bitmap;
+    }
+
+    public static System.Drawing.Icon RenderSystemIcon(DeviceStatus status, int size = 32)
+    {
+        var source = Render(status, size);
+        var encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(source));
+        using var stream = new MemoryStream();
+        encoder.Save(stream);
+        stream.Position = 0;
+
+        using var bitmap = new System.Drawing.Bitmap(stream);
+        var handle = bitmap.GetHicon();
+        try
+        {
+            using var borrowed = System.Drawing.Icon.FromHandle(handle);
+            return (System.Drawing.Icon)borrowed.Clone();
+        }
+        finally
+        {
+            DestroyIcon(handle);
+        }
     }
 
     private static void DrawBattery(DrawingContext dc, Rect rect, BatteryReading battery)
@@ -83,4 +114,8 @@ public static class TaskbarIconRenderer
             rect.X + (rect.Width - formatted.Width) / 2,
             rect.Y + (rect.Height - formatted.Height) / 2));
     }
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool DestroyIcon(IntPtr handle);
 }

@@ -8,7 +8,7 @@ Status: automated and build checks passed; hardware checks pending
 dotnet test windows\RoBaStatus.Tests\RoBaStatus.Tests.csproj -c Release
 ```
 
-Current result on 2026-07-13: 10 passed, 0 failed.
+Current result on 2026-07-13: 12 passed, 0 failed.
 
 Covered:
 
@@ -16,7 +16,8 @@ Covered:
 - unknown battery values;
 - invalid size, version, layer, and mask rejection;
 - MOUSE and SCROLL layer mapping;
-- ordered active-layer labels.
+- ordered active-layer labels;
+- tray tooltip content and the Windows 63-character limit.
 
 ## Windows Build and Visual Checks
 
@@ -26,7 +27,15 @@ Covered:
 - [x] Dynamic disconnected icon renders.
 - [x] 520 x 390 layout shows all labels without clipping.
 - [x] Explicit Quit stops the application.
-- [x] Close behavior minimizes instead of losing monitoring state.
+- [x] Close hides the detail window without losing monitoring state.
+- [ ] Close hides the window and leaves exactly one tray icon/process running.
+- [x] Minimize hides the window to the same tray-resident process.
+- [ ] Tray left click restores and focuses the unchanged detail window.
+- [ ] Tray menu `再取得` requests an immediate refresh.
+- [ ] Tray menu and window `終了` both remove the tray icon and stop the process.
+- [x] A second launch restores the existing hidden instance without duplication.
+- [x] `--minimized` starts with no taskbar window and remains one running process.
+- [ ] Tray icon and tooltip update with layer, transport, and both batteries.
 - [ ] Dynamic DEFAULT/MOUSE/SCROLL icons verified from live BLE events.
 - [ ] 125%, 150%, and 200% display scaling verified manually.
 - [ ] Secondary-monitor taskbar placement verified manually.

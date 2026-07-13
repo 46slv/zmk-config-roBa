@@ -118,3 +118,45 @@ keycodes or typed text.
 
 Disable `CONFIG_ROBA_STATUS_USB`, restore `CONFIG_USB_HID_DEVICE_COUNT=1`, and
 rebuild. BLE monitoring continues independently.
+
+## 2026-07-13: Preserve the Detail Window and Add Task-Tray Residency
+
+### Background
+
+The existing compact status window and dynamic taskbar icon are useful, but an
+always-running monitor should not occupy taskbar space when details are not
+needed.
+
+### Options
+
+- Replace the current window with a tray-only application.
+- Keep minimizing to the taskbar and add a redundant tray icon.
+- Preserve the current window, but hide it to a dynamic tray icon on close or
+  minimize.
+
+### Decision
+
+Preserve the current detail window and taskbar rendering. Close, minimize, and
+`--minimized` startup hide the window to the notification area. A left click or
+`roBa Statusを開く` restores it. Only explicit `終了` quits.
+
+### Reason
+
+This keeps the already accepted information layout while making long-running
+monitoring unobtrusive. Single-instance activation also makes a pinned taskbar
+shortcut a valid way to restore the hidden window.
+
+### Impact
+
+The Windows project enables the built-in WinForms `NotifyIcon` component, but
+adds no third-party dependency or new persisted setting. The tray icon is
+updated from the same renderer and debounced device state as the taskbar icon.
+Restoring also issues the Windows `SW_RESTORE` command so a hidden window does
+not remain internally minimized after `--minimized` startup or title-bar
+minimization.
+
+### Rollback
+
+Remove `TrayIconService`, restore minimize/close to `WindowState.Minimized`, and
+remove the single-instance activation event. Firmware and communication code
+are unaffected.
