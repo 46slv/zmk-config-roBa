@@ -226,10 +226,18 @@ Input processor interaction:
 - `&trackball` has `scroll-layers = <11>`.
 - `scroller` input processor override applies on layer `11`.
 - The current scroller chain is:
-  - `&zip_y_scaler (-1) 1`
+  - `&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)`
   - `&zip_xy_to_scroll_mapper`
+  - `&zip_scroll_scaler 4 1`
   - `&scroll_inertia_v`
-  - `&zip_scroll_scaler 4 675`
+- `&scroll_inertia_v` is in a third A/B test after the known-working active
+  scroll scaler, with lowered trigger thresholds and `scale = <1000>`,
+  `scale-div = <1000>`.
+- The fourth A/B test sets `scroll_inertia_v.layer = <(-1)>` to check whether
+  layer-off cleanup was cancelling inertia when the scroll hold key was
+  released.
+- The fifth A/B test exaggerates inertia output and lowers arming thresholds:
+  `scale = <8000>`, `start = <1>`, `move = <1>`, `min-events = <1>`.
 - Scroll tuning notes for future Codex/AI sessions are in
   `docs/INPUT_PROCESSOR_EXPERIMENTS.md`.
 

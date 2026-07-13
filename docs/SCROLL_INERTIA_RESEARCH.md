@@ -226,3 +226,108 @@ This corrected experiment follows the article example more closely. It uses
 `zip_scroll_snap` from the inertia chain, and matches the inertia node's
 `scale` / `scale-div` to `zip_scroll_scaler 4 675`. The previous `4 1` setup
 was too aggressive and did not match the article's intended scaling model.
+
+## 2026-07-11 Hardware Result
+
+The corrected article-aligned chain built and flashed, but hardware testing
+showed that trackball scrolling stopped entirely on the `SCROLL` layer. The
+layer numbers were present (`SCROLL` is layer `11`, `&trackball` uses
+`scroll-layers = <11>`, `scroller.layers = <11>`, and `scroll_inertia_v.layer =
+<11>`), so the failure is not currently attributed to a missing layer number.
+
+The live configuration was reverted to the known-working low-speed scroll chain:
+
+```dts
+input-processors =
+    <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+    <&zip_xy_to_scroll_mapper>,
+    <&zip_scroll_scaler 4 1>,
+    <&zip_scroll_snap>;
+```
+
+For a future inertia retry, do not replace the main `SCROLL` layer directly.
+Use a separate experimental layer or a reversible branch, and verify whether the
+inertia processor expects already-mapped wheel events or consumes them before
+the downstream scaler/snap combination.
+
+## 2026-07-11 Second Hardware Test
+
+The second test intentionally puts `&scroll_inertia_v` back into the live
+`SCROLL` chain to determine whether the previous "no inertia" result was simply
+because the processor was not in the chain. This test removes `zip_scroll_snap`
+and lowers the trigger thresholds so inertia should be easy to provoke:
+
+```dts
+start = <10>;
+move = <20>;
+min-events = <3>;
+decel-samples = <1>;
+```
+
+If this still scrolls but has no inertia, the likely causes shift toward event
+handoff or scaling. If scrolling stops again, the failure is likely chain/order
+interaction rather than merely strict parameters.
+
+Hardware result: scrolling still did not occur. This points away from merely
+strict inertia trigger thresholds and toward the active scroll chain itself. In
+particular, `zip_scroll_scaler 4 675` may be too small for roBa's current
+trackball event stream even before inertia is considered.
+
+## 2026-07-11 Third Hardware Test
+
+The third test keeps the known-working active scroll amount first, then places
+inertia after it:
+
+```dts
+input-processors =
+    <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+    <&zip_xy_to_scroll_mapper>,
+    <&zip_scroll_scaler 4 1>,
+    <&scroll_inertia_v>;
+```
+
+Because the inertia processor is now at the end of the chain rather than before
+the downstream scaler, `scale = <1000>` and `scale-div = <1000>` are used for
+its own output. The trigger thresholds remain low for this test.
+
+Hardware result: scrolling works, but inertia is still absent. This narrows the
+problem: `scroll_inertia_v` at the end of the chain does not block active
+scrolling, but either does not arm from already-scaled events or its own inertia
+output is not visible/effective in this configuration.
+
+## 2026-07-11 Fourth Hardware Test
+
+The fourth test keeps the Experiment 3 chain and disables layer-off cleanup:
+
+```dts
+layer = <(-1)>;
+```
+
+Reason: the module stops inertia immediately when the configured `layer` turns
+off. roBa enters scroll with `&lt 11 J`, so releasing that hold key after a
+flick may cancel the coast before it becomes visible. This test checks whether
+the missing inertia is caused by `SCROLL` layer 11 turning off too soon.
+
+User clarification: the scroll-layer hold key is kept pressed while scrolling.
+That makes layer-off cleanup a less likely root cause. If this test still shows
+"scroll OK, inertia absent", focus next on whether the processor arms from
+already-scaled events or whether its HID output is too weak/not sent.
+
+Hardware result: no visible change. Scrolling works, inertia remains absent.
+
+## 2026-07-11 Fifth Hardware Test
+
+The fifth test makes inertia intentionally exaggerated:
+
+```dts
+scale = <8000>;
+scale-div = <1000>;
+start = <1>;
+move = <1>;
+min-events = <1>;
+decel-samples = <1>;
+```
+
+If this still produces no inertia, weak output and strict thresholds are both
+unlikely. The next likely step is a logging/instrumentation build to confirm
+whether `to_coasting()` is ever reached.

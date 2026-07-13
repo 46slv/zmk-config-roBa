@@ -15,10 +15,10 @@ settings under `boards/shields/roBa/`.
 
 ```dts
 input-processors =
-    <&zip_y_scaler (-1) 1>,
+    <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
     <&zip_xy_to_scroll_mapper>,
-    <&scroll_inertia_v>,
-    <&zip_scroll_scaler 4 675>;
+    <&zip_scroll_scaler 4 1>,
+    <&scroll_inertia_v>;
 ```
 
 - Right-hand shield config currently has:
@@ -83,13 +83,19 @@ input-processors =
 - `zip_scroll_snap.require-n-samples`: `3 -> 2`.
 - `scroller` processor order now maps XY to wheel before applying
   scroll scaling.
-- `scroll_inertia_v` is inserted between `zip_xy_to_scroll_mapper` and
-  `zip_scroll_scaler 4 675` for a vertical-only inertia experiment.
-- The inertia experiment follows the article's structure:
-  `zip_y_scaler (-1) 1` -> `zip_xy_to_scroll_mapper` ->
-  `scroll_inertia_v` -> `zip_scroll_scaler 4 675`. `zip_scroll_snap` is not in
-  this chain because the inertia processor expects explicit axis intent rather
-  than post-hoc automatic axis guessing.
+- A third inertia A/B test is active. The article-style `4 675` chain still did
+  not scroll on hardware, so this test keeps the known-working active scroll
+  scale first and puts inertia at the end:
+  `zip_xy_transform` -> `zip_xy_to_scroll_mapper` -> `zip_scroll_scaler 4 1` ->
+  `scroll_inertia_v`.
+- Hardware result: active scrolling works in this configuration, but inertia is
+  still absent.
+- Next test changes only `scroll_inertia_v.layer` from `<11>` to `<(-1)>` to
+  check whether releasing the scroll-layer hold key cancels inertia before it
+  becomes visible.
+- `layer = <(-1)>` produced no visible change. The current diagnostic test
+  exaggerates inertia with `scale = <8000>`, `start = <1>`, `move = <1>`, and
+  `min-events = <1>`.
 
 These are intentionally conservative tuning changes. The first-pass version with
 `CONFIG_PMW3610_SCROLL_TICK=4` was reported to work after the matching BT/wired
@@ -113,6 +119,12 @@ See `docs/SCROLL_INERTIA_RESEARCH.md` for the 2026-07-11 research report.
 experiment candidate. The initial setup is vertical-only (`axis = <1>`) on
 `SCROLL` layer `11`, with `scale = <4>`, `scale-div = <675>`, and `tick = <8>`
 to match the downstream `zip_scroll_scaler 4 675` and PMW3610 125 Hz polling.
+The module remains in `west.yml`, but the live `SCROLL` layer no longer routes
+events through `&scroll_inertia_v`.
+For the third hardware test this is temporarily false: `&scroll_inertia_v` is
+back in the live chain after `zip_scroll_scaler 4 1`, with `start = <10>`,
+`move = <20>`, `min-events = <3>`, `decel-samples = <1>`, and inertia output
+scale reset to `1000 / 1000`.
 
 ### Verification Notes
 

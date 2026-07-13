@@ -176,10 +176,10 @@ auto-mouse-layer {
 scroller {
     layers = <11>;
         input-processors =
-            <&zip_y_scaler (-1) 1>,
+            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
             <&zip_xy_to_scroll_mapper>,
-            <&scroll_inertia_v>,
-            <&zip_scroll_scaler 4 675>;
+            <&zip_scroll_scaler 4 1>,
+            <&scroll_inertia_v>;
     process-next;
 };
 ```
@@ -194,8 +194,8 @@ scroller {
 
 注意:
 
-- `zip_scroll_scaler` は wheel / horizontal wheel 向けの scaler。慣性スクロール実験では記事例に合わせ、`zip_y_scaler (-1) 1` -> `zip_xy_to_scroll_mapper` -> `scroll_inertia_v` -> `zip_scroll_scaler 4 675` の順にする。
-- 2026-07-11 の低速スクロール改善では、`CONFIG_PMW3610_SCROLL_TICK=4` と `zip_scroll_snap.require-n-samples=<2>` を採用した。その後の慣性スクロール実験では `scroll_inertia_v` を追加し、`zip_scroll_snap` はチェーンから外した。実機で蓄積感、慣性の尾、縦方向の向きを確認する。
+- 2026-07-11 の低速スクロール改善では、`CONFIG_PMW3610_SCROLL_TICK=4` と `zip_scroll_snap.require-n-samples=<2>` を採用した。
+- その後の慣性スクロール実験では `scroll_inertia_v` を追加し、`zip_scroll_snap` をチェーンから外したが、記事準拠の `zip_scroll_scaler 4 675` 構成では実機でスクロール不能になった。現在は 3 回目の A/B として、既知動作の `zip_scroll_scaler 4 1` 後段に `scroll_inertia_v` を置き、`scale = <1000>` / `scale-div = <1000>` で試す。
 
 ### `disable-scroll-x`
 
@@ -448,7 +448,7 @@ ZMK / roBa 設定を変更する前に必ず確認する。
 
 - `README.md` と `config/roBa.keymap` の日本語コメントに文字化けがある。修正するなら、元テキストの復元方針を決めてから行う。
 - `&trackball_listener` の base `input-processors` が2回定義されている。後勝ちで `&zip_mouse_gesture` が消えている可能性がある。
-- `scroller` は慣性スクロール記事の例に寄せ、`zip_y_scaler (-1) 1`、`zip_xy_to_scroll_mapper`、`scroll_inertia_v`、`zip_scroll_scaler 4 675` の順に変更済み。実機で慣性が出るか、向きが正しいか確認する。
+- `scroller` は慣性スクロール記事の例に寄せた構成で実機スクロール不能になった。3 回目の A/B は通常スクロール量を優先して inertia を後段に置いた結果、通常スクロールは復帰したが慣性は出ていない。4 回目の A/B は `scroll_inertia_v.layer = <(-1)>` にしても変化なし。5 回目の A/B は `scale = <8000>`、`start = <1>`、`move = <1>`、`min-events = <1>` で発火/出力を大きく見せる診断。
 - `zip_x_scaler 70 100` や `zip_y_scaler 80 100` は公式推奨の最大 16 を超える。実際に問題が出ていないなら現状維持でよいが、将来の ZMK 更新時に警戒する。
 - `EXTRA_FINCTIONS` は typo らしき名前だが、define と参照が一致しているため、単純修正は破壊的変更になり得る。
 - ZMK `v0.3` 固定なので、development docs と挙動差がある可能性がある。必要に応じて `v0.3` docs も確認する。
@@ -460,5 +460,7 @@ ZMK / roBa 設定を変更する前に必ず確認する。
 - `docs/ROBA_KEYMAP_MAP.md`: layer / combo / behavior の現行仕様一覧。
 - `docs/INPUT_PROCESSOR_EXPERIMENTS.md`: trackball, AML, scroll snap, acceleration の実験ログ。
 - `docs/SCROLL_INERTIA_RESEARCH.md`: trackball inertia scroll の外部モジュール調査と実験方針。
+- `docs/ROTARY_ENCODER_SCROLL_OPTIMIZATION.md`: encoder scroll の現状分析、最小A/B案、実機評価基準。
+- `docs/WORKLOG.md`: 実装・ビルド・実機確認の時系列ログ。
 - `docs/BUILD_AND_FLASH_NOTES.md`: GitHub Actions build、local west build、左右 firmware flash 手順。
 - `docs/NOTION_SYNC_NOTES.md`: Notion `roBa custom` と GitHub repo の同期方針。
