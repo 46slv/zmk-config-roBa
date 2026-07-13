@@ -19,6 +19,26 @@ Protocol UUIDs and packet fields are documented in
 successfully against the repository's pinned ZMK v0.3 workspace on 2026-07-13.
 Live hardware behavior remains unverified until the right-half UF2 is flashed.
 
+### USB transport extension
+
+The status packet is also exposed through a second vendor-defined USB HID
+interface on `roBa_R`:
+
+- usage page `0xFF60`, usage `0x0001`, report ID `1`;
+- HID input payload is the existing 12-byte version 1 packet;
+- control `GET_REPORT` provides an initial snapshot;
+- interrupt input reports are sent for layer, central battery, peripheral
+  battery, and USB connection events;
+- `CONFIG_USB_HID_DEVICE_COUNT=2` creates `HID_1` without changing ZMK's
+  keyboard/mouse `HID_0`;
+- the existing `studio-rpc-usb-uart` CDC transport is not reused or modified.
+
+The Windows client uses Win32 SetupAPI/HID APIs rather than WinRT `HidDevice`.
+Microsoft documents that WinRT HID access requires package DeviceCapability
+metadata; direct Win32 access preserves the current unpackaged single-EXE UX.
+The live descriptor, report flow, Studio coexistence, and USB-to-BLE handoff
+remain hardware verification items.
+
 作成日: 2026-07-03
 
 この資料は、`46slv/zmk-config-roBa` を今後編集するときに Codex が最初に読むための作業用ノートです。特に ZMK の input processors と behaviors を重点対象にしています。

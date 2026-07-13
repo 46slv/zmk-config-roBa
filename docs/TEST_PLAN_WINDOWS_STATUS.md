@@ -8,7 +8,7 @@ Status: automated and build checks passed; hardware checks pending
 dotnet test windows\RoBaStatus.Tests\RoBaStatus.Tests.csproj -c Release
 ```
 
-Current result on 2026-07-13: 8 passed, 0 failed.
+Current result on 2026-07-13: 10 passed, 0 failed.
 
 Covered:
 
@@ -31,12 +31,15 @@ Covered:
 - [ ] 125%, 150%, and 200% display scaling verified manually.
 - [ ] Secondary-monitor taskbar placement verified manually.
 - [ ] High Contrast mode verified manually.
+- [ ] Connection label changes between `USB接続` and `Bluetooth接続`.
 
 ## Firmware Build Checks
 
 - [x] `roBa_R` compiles `src/roba_status.c`.
 - [x] `roBa_R` links with ZMK Studio enabled.
-- [x] `roBa_R` produces a 565248-byte UF2.
+- [x] `roBa_R` builds with `CONFIG_USB_HID_DEVICE_COUNT=2`, ZMK Studio, and USB
+  CDC enabled.
+- [x] `roBa_R` produces a 566272-byte UF2.
 - [x] `roBa_L` excludes the central-only status source.
 - [x] `roBa_L` produces a 358400-byte UF2.
 - [ ] Right-half firmware flashed.
@@ -45,6 +48,9 @@ Covered:
 - [ ] AML MOUSE activation unchanged.
 - [ ] SCROLL behavior unchanged.
 - [ ] ZMK Studio connects after the change.
+- [ ] USB keyboard and pointing reports remain unchanged with the second HID
+  interface enabled.
+- [ ] Vendor-defined status HID returns an initial 12-byte snapshot.
 
 ## Live State Matrix
 
@@ -58,6 +64,10 @@ Covered:
 | Toggle CONFIGURATION | Layer 10 remains active until toggled off |
 | Left half off | Left battery becomes stale/unknown; app remains usable |
 | Sleep and resume | Old handles are discarded and services rediscovered |
+| Insert right-side USB cable | USB becomes active without user selection |
+| Remove USB while BLE is paired | BLE resumes automatically |
+| Bluetooth disabled while USB is present | USB monitoring continues |
+| Open ZMK Studio over USB | Studio connects without corrupt status traffic |
 
 ## Rollback
 

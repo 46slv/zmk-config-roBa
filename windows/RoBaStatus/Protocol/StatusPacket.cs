@@ -16,6 +16,8 @@ public sealed record StatusPacket(
 
 public static class StatusPacketParser
 {
+    public const byte UsbReportId = 1;
+
     public static bool TryParse(ReadOnlySpan<byte> bytes, out StatusPacket? packet)
     {
         packet = null;
@@ -36,5 +38,15 @@ public static class StatusPacketParser
             bytes[9],
             sequence);
         return packet.HighestLayer < 32 && packet.ActiveLayerMask != 0;
+    }
+
+    public static bool TryParseUsbPayload(ReadOnlySpan<byte> bytes, out StatusPacket? packet)
+    {
+        if (bytes.Length >= StatusPacket.Size + 1 && bytes[0] == UsbReportId)
+        {
+            bytes = bytes[1..];
+        }
+
+        return TryParse(bytes, out packet);
     }
 }

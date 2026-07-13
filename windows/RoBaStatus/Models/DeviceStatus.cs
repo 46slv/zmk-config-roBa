@@ -3,9 +3,17 @@ using System.Runtime.CompilerServices;
 
 namespace RoBaStatus.Models;
 
+public enum ConnectionTransport
+{
+    None,
+    Usb,
+    Bluetooth
+}
+
 public sealed class DeviceStatus : INotifyPropertyChanged
 {
     private bool _isConnected;
+    private ConnectionTransport _transport;
     private byte _highestLayer;
     private uint _activeLayerMask = 1;
     private BatteryReading _rightBattery = BatteryReading.Unknown;
@@ -20,6 +28,12 @@ public sealed class DeviceStatus : INotifyPropertyChanged
     {
         get => _isConnected;
         set => Set(ref _isConnected, value);
+    }
+
+    public ConnectionTransport Transport
+    {
+        get => _transport;
+        set => Set(ref _transport, value);
     }
 
     public byte HighestLayer
@@ -61,7 +75,21 @@ public sealed class DeviceStatus : INotifyPropertyChanged
     public string LayerName => LayerCatalog.Name(HighestLayer);
     public string LayerShortName => LayerCatalog.ShortName(HighestLayer);
     public string ActiveLayers => LayerCatalog.ActiveNames(ActiveLayerMask);
-    public string ConnectionLabel => IsConnected ? "接続中" : "未接続";
+    public string ConnectionLabel => !IsConnected
+        ? "未接続"
+        : Transport switch
+        {
+            ConnectionTransport.Usb => "USB接続",
+            ConnectionTransport.Bluetooth => "Bluetooth接続",
+            _ => "接続中"
+        };
+
+    public string TransportLabel => Transport switch
+    {
+        ConnectionTransport.Usb => "USB",
+        ConnectionTransport.Bluetooth => "Bluetooth",
+        _ => "—"
+    };
     public string LastUpdatedLabel => LastUpdated is { } time
         ? $"更新 {time.LocalDateTime:HH:mm:ss}"
         : "未取得";
@@ -88,6 +116,11 @@ public sealed class DeviceStatus : INotifyPropertyChanged
         else if (name is nameof(IsConnected))
         {
             OnPropertyChanged(nameof(ConnectionLabel));
+        }
+        else if (name is nameof(Transport))
+        {
+            OnPropertyChanged(nameof(ConnectionLabel));
+            OnPropertyChanged(nameof(TransportLabel));
         }
         else if (name is nameof(LastUpdated))
         {

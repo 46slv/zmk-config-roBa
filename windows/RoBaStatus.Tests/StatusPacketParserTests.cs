@@ -30,6 +30,30 @@ public sealed class StatusPacketParserTests
         Assert.Null(packet.LeftBattery);
     }
 
+    [Fact]
+    public void ParsesUsbReportWithLeadingReportId()
+    {
+        byte[] bytes = [1, 1, 0, 11, 0x01, 0x08, 0, 0, 82, 76, 0, 0x34, 0x12];
+
+        var success = StatusPacketParser.TryParseUsbPayload(bytes, out var packet);
+
+        Assert.True(success);
+        Assert.NotNull(packet);
+        Assert.Equal((byte)11, packet.HighestLayer);
+        Assert.Equal(0x00000801u, packet.ActiveLayerMask);
+        Assert.Equal((byte)82, packet.RightBattery);
+        Assert.Equal((byte)76, packet.LeftBattery);
+    }
+
+    [Fact]
+    public void ParsesUsbPayloadWhenWindowsOmitsReportId()
+    {
+        byte[] bytes = [1, 0, 7, 0x81, 0, 0, 0, 60, 55, 0, 1, 0];
+
+        Assert.True(StatusPacketParser.TryParseUsbPayload(bytes, out var packet));
+        Assert.Equal((byte)7, packet!.HighestLayer);
+    }
+
     [Theory]
     [InlineData(new byte[] { })]
     [InlineData(new byte[] { 2, 0, 0, 1, 0, 0, 0, 50, 50, 0, 0, 0 })]

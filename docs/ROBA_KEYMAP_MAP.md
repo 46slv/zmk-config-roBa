@@ -295,8 +295,6 @@ Combos without explicit `layers` property:
 | `td_bt_clear_all` | tap-dance | layer 10 | Bluetooth clear all after tap count |
 | `reset_bootloader` | hold-tap | layer 10 | Reset tap-dance or bootloader |
 
-## Follow-Up Checks
-
 ## Windows Status Companion
 
 The optional `CONFIG_ROBA_STATUS` firmware service observes the existing layer
@@ -308,6 +306,11 @@ trackball processing.
 - Layer 7 remains `MOUSE`; layer 11 remains `SCROLL`.
 - No keycodes, positions, or typed content are transmitted.
 - Disabling `CONFIG_ROBA_STATUS` restores the previous firmware composition.
+
+The v1.1 wired extension adds a second read-only USB HID interface on the right
+half. It sends the same state snapshot and does not change any layer definition,
+key position, combo, AML transition, scroll processor, or trackball path. ZMK
+Studio remains on its existing USB CDC/BLE transports.
 
 ## Follow-Up Checks
 

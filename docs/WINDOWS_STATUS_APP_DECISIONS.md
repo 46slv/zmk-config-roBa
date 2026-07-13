@@ -83,3 +83,38 @@ Windows may require re-pairing once to refresh its cached GATT service list.
 ### Rollback
 
 Disable `CONFIG_ROBA_STATUS` and rebuild the right half.
+
+## 2026-07-13: Dedicated USB HID with Automatic BLE Fallback
+
+### Background
+
+roBa already exposes keyboard/mouse HID and a ZMK Studio CDC interface over
+USB. Status monitoring must work over the cable without competing with Studio.
+
+### Options
+
+- Mix status frames into the Studio CDC byte stream.
+- Add another serial/COM interface.
+- Add a dedicated vendor-defined HID input collection.
+
+### Decision
+
+Use a second vendor-defined HID interface for the same versioned 12-byte status
+packet. The Windows app prefers USB and falls back to BLE automatically.
+
+### Reason
+
+Vendor HID needs no custom Windows driver, has a stable device identity, and
+keeps the existing Studio RPC framing untouched. Automatic selection avoids a
+settings burden and makes cable insertion the only user action.
+
+### Impact
+
+The right firmware uses two HID interfaces in addition to the existing Studio
+CDC interface. The status interface is input/read-only and does not carry
+keycodes or typed text.
+
+### Rollback
+
+Disable `CONFIG_ROBA_STATUS_USB`, restore `CONFIG_USB_HID_DEVICE_COUNT=1`, and
+rebuild. BLE monitoring continues independently.

@@ -9,4 +9,13 @@ config ROBA_STATUS
       GATT characteristic for the companion Windows status application.
       No keycodes or typed content are transmitted.
 
+config ROBA_STATUS_USB
+    bool "roBa read-only USB HID status transport"
+    depends on ROBA_STATUS && ZMK_USB
+    default y
+    help
+      Adds a second vendor-defined HID interface that reports the same status
+      packet over USB. It remains separate from keyboard/mouse HID and the ZMK
+      Studio CDC transport.
+
 endmenu

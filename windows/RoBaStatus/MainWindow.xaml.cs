@@ -10,7 +10,7 @@ namespace RoBaStatus;
 public partial class MainWindow : Window
 {
     private readonly DeviceStatus _status = new();
-    private readonly BleStatusMonitor _monitor;
+    private readonly StatusMonitor _monitor;
     private readonly DispatcherTimer _iconDebounce;
     private bool _allowClose;
 
@@ -18,7 +18,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = _status;
-        _monitor = new BleStatusMonitor(_status);
+        _monitor = new StatusMonitor(_status);
         _iconDebounce = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
         _iconDebounce.Tick += (_, _) =>
         {
@@ -45,7 +45,7 @@ public partial class MainWindow : Window
         var icon = TaskbarIconRenderer.Render(_status);
         Icon = icon;
         TaskbarInfo.Overlay = null;
-        TaskbarInfo.Description = $"roBa · {_status.LayerName} · R {_status.RightBattery.Display} · L {_status.LeftBattery.Display}";
+        TaskbarInfo.Description = $"roBa · {_status.TransportLabel} · {_status.LayerName} · R {_status.RightBattery.Display} · L {_status.LeftBattery.Display}";
         TaskbarInfo.ProgressState = _status.IsConnected ? TaskbarItemProgressState.None : TaskbarItemProgressState.Paused;
         TaskbarInfo.ProgressValue = _status.IsConnected ? 0 : 1;
     }

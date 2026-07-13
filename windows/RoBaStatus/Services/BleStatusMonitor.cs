@@ -14,25 +14,18 @@ public sealed class BleStatusMonitor : IAsyncDisposable
     public static readonly Guid StatusCharacteristicUuid = Guid.Parse("5a0e1001-7c7f-4b52-a8a8-3f5c726f4261");
 
     private readonly DeviceStatus _status;
-    private readonly CancellationTokenSource _shutdown = new();
-    private Task? _monitorTask;
     private BluetoothLEDevice? _device;
     private readonly List<GattCharacteristic> _subscribed = [];
 
     public BleStatusMonitor(DeviceStatus status) => _status = status;
 
-    public void Start()
-    {
-        _monitorTask ??= Task.Run(() => MonitorLoopAsync(_shutdown.Token));
-    }
-
-    public async Task RefreshNowAsync(CancellationToken cancellationToken = default)
+    public async Task<bool> RefreshNowAsync(CancellationToken cancellationToken = default)
     {
         var device = await FindRoBaAsync(cancellationToken);
         if (device is null)
         {
             UpdateDisconnected("Bluetooth接続中のroBaが見つかりません");
-            return;
+            return false;
         }
 
         ReplaceDevice(device);
@@ -43,34 +36,7 @@ public sealed class BleStatusMonitor : IAsyncDisposable
         _status.Message = hasLayerService
             ? "監視中"
             : "バッテリー監視中・レイヤー対応Firmware待ち";
-    }
-
-    private async Task MonitorLoopAsync(CancellationToken cancellationToken)
-    {
-        while (!cancellationToken.IsCancellationRequested)
-        {
-            try
-            {
-                await RefreshNowAsync(cancellationToken);
-            }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-            catch (Exception ex)
-            {
-                UpdateDisconnected($"再接続待ち: {ex.Message}");
-            }
-
-            try
-            {
-                await Task.Delay(TimeSpan.FromSeconds(_status.IsConnected ? 30 : 5), cancellationToken);
-            }
-            catch (OperationCanceledException)
-            {
-                return;
-            }
-        }
+        return true;
     }
 
     private static async Task<BluetoothLEDevice?> FindRoBaAsync(CancellationToken cancellationToken)
@@ -268,6 +234,13 @@ public sealed class BleStatusMonitor : IAsyncDisposable
         _device = next;
     }
 
+    public void Disconnect()
+    {
+        ClearSubscriptions();
+        _device?.Dispose();
+        _device = null;
+    }
+
     private void ClearSubscriptions()
     {
         foreach (var characteristic in _subscribed)
@@ -283,15 +256,9 @@ public sealed class BleStatusMonitor : IAsyncDisposable
         _status.Message = message;
     }
 
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-        _shutdown.Cancel();
-        if (_monitorTask is not null)
-        {
-            try { await _monitorTask; } catch (OperationCanceledException) { }
-        }
-        ClearSubscriptions();
-        _device?.Dispose();
-        _shutdown.Dispose();
+        Disconnect();
+        return ValueTask.CompletedTask;
     }
 }

@@ -540,6 +540,32 @@ Hardware flashing was not performed. The right-half UF2 must be flashed before
 the Windows companion can receive live layer changes. Windows may need one
 remove/re-pair cycle if its cached GATT service list predates this firmware.
 
+### USB status transport rebuild
+
+The right-half status service now includes a second vendor-defined HID interface
+for wired monitoring. The existing WSL build directory was reconfigured and
+verified with:
+
+```text
+CONFIG_ROBA_STATUS=y
+CONFIG_ROBA_STATUS_USB=y
+CONFIG_USB_HID_DEVICE_COUNT=2
+CONFIG_ZMK_STUDIO=y
+CONFIG_USB_CDC_ACM=y
+```
+
+Verified outputs after the USB extension:
+
+```text
+~/zmk-workspace/.build/roba-status-roBa_R/zephyr/zmk.uf2  566272 bytes
+~/zmk-workspace/.build/roba-status-roBa_L/zephyr/zmk.uf2  358400 bytes
+```
+
+The right build linked the status source alongside Studio RPC, the normal USB
+keyboard/mouse path, BLE, and the current pointing/scroll modules. The left
+build remains unchanged and excludes the central-only status source. Hardware
+flashing and live USB descriptor/report verification were not performed.
+
 ## Current Verification Status
 
 - WSL Ubuntu 24.04 is installed.

@@ -3,7 +3,9 @@
 ## roBa Status for Windows
 
 This repository includes a Windows 11 companion app that shows the active ZMK
-layer and both split battery levels through a dynamic taskbar icon.
+layer and both split battery levels through a dynamic taskbar icon. It
+automatically prefers the right/central half's read-only USB HID status
+interface and falls back to encrypted BLE after cable removal.
 
 - App guide: [`windows/RoBaStatus/README.md`](windows/RoBaStatus/README.md)
 - UX and protocol specification: [`docs/WINDOWS_STATUS_APP_SPEC.md`](docs/WINDOWS_STATUS_APP_SPEC.md)

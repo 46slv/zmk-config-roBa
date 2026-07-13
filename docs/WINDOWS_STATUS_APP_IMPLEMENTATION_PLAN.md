@@ -1,36 +1,30 @@
 # roBa Windows Status App Implementation Plan
 
-Status: v1 implementation completed; hardware validation pending
+Status: v1.1 USB transport implementation completed; hardware validation pending
 Created: 2026-07-13
 
 ## Project Boundary
 
 Keep firmware configuration and the Windows application separable.
 
-Proposed repository layout if implementation remains in this repository:
+Resolved repository layout:
 
 ```text
-modules/
-  roBa-status/
-    CMakeLists.txt
-    Kconfig
-    zephyr/module.yml
-    src/
-    dts/
+zephyr/
+  CMakeLists.txt
+  Kconfig
+src/
+  roba_status.c
 windows/
   RoBaStatus/
-    src/
-    tests/
-    assets/
+  RoBaStatus.Tests/
 docs/
   WINDOWS_STATUS_APP_SPEC.md
   WINDOWS_STATUS_APP_IMPLEMENTATION_PLAN.md
 ```
 
-Do not create this code structure until the reuse decision for
-`zmk-battery-center` is complete. If that project is extended or forked, the
-Windows code should live in its own child repository and this repository should
-contain only the ZMK module/configuration and integration documentation.
+The focused WPF client remains under `windows/`; the Zephyr module remains
+independently build-gated under `zephyr/` and `src/`.
 
 ## Recommended Delivery Stages
 
@@ -41,7 +35,7 @@ Produce disposable, narrowly scoped proofs:
 1. Render and replace a taskbar icon at 16, 20, 24, 32, and 48 px.
 2. Compare exact percentage text against battery-bar glyphs at normal scaling.
 3. Read both roBa battery services on Windows.
-4. Subscribe to a temporary layer-state channel over USB CDC.
+4. Subscribe to the dedicated vendor-defined USB HID layer-state channel.
 5. Confirm that ZMK Studio and status monitoring can coexist.
 
 Exit criteria:
@@ -189,3 +183,38 @@ AML, and ZMK Studio behavior remain intact.
 - Confirm live DEFAULT, MOUSE, SCROLL, and CONFIGURATION transitions.
 - Confirm central/right and peripheral/left battery labels on the real device.
 - Confirm Studio still connects over its existing transport.
+
+## v1.1 USB Transport Work
+
+1. Add a second, vendor-defined HID interface to the right/central firmware.
+2. Reuse the existing 12-byte status packet for USB input reports and control
+   reads; do not reuse or modify the Studio CDC byte stream.
+3. Add a Windows HID transport that discovers roBa by usage page, usage,
+   vendor ID, and product ID.
+4. Add a coordinator that prefers USB, releases BLE while USB is active, and
+   falls back to BLE after cable removal.
+5. Expose the selected transport in the existing connection label and tooltip.
+6. Build both halves, run Windows tests, publish, and verify that the generated
+   right firmware still contains Studio, keyboard/mouse HID, and status HID.
+
+Assumptions:
+
+- Only the right/central half is a supported USB status source.
+- Windows 11 x64 is the acceptance target.
+- The first matching roBa is selected; multiple simultaneous keyboards remain
+  outside scope.
+- USB transport is read-only and does not persist data or require Undo.
+- Charging-state detection remains outside this increment.
+
+Implementation result:
+
+- Dedicated `HID_1` vendor collection added without changing the Studio CDC
+  framing or normal keyboard/mouse reports.
+- Initial state is available through HID `GET_REPORT`; subsequent layer and
+  battery changes use interrupt input reports.
+- The Windows client uses SetupAPI and HID APIs directly, avoiding package
+  capability requirements and third-party dependencies.
+- USB-first/BLE-fallback coordination, disconnect recovery, and transport labels
+  are implemented.
+- Windows Release build and 10 automated tests passed; both firmware halves
+  built successfully. Live hardware verification remains pending.

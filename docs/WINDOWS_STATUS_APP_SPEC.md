@@ -1,6 +1,6 @@
 # roBa Windows Status App Specification
 
-Status: v1 implemented; hardware flash validation pending
+Status: v1.1 USB transport implemented; hardware validation pending
 Created: 2026-07-13
 
 ## 1. Purpose
@@ -200,11 +200,16 @@ layer. A small central-side ZMK module must therefore:
 4. send an initial snapshot after the Windows client subscribes;
 5. avoid recording or transmitting keycodes.
 
-Preferred final transport: a custom BLE GATT status characteristic with read
-and notify support.
+The wireless transport is a custom BLE GATT status characteristic with read and
+notify support.
 
-Diagnostic transport: USB CDC/ACM may be used for the first proof, but it is
-not the v1 user experience because the user expects wireless status.
+The same packet is also exposed through a dedicated vendor-defined USB HID
+collection. USB is selected automatically when the right/central half is
+connected by cable; BLE is the automatic fallback after USB removal. The user
+does not select a transport manually.
+
+USB CDC/ACM is not used for status data. The existing ZMK Studio USB UART must
+remain byte-for-byte independent so monitoring cannot interfere with Studio.
 
 ### 9.3 Proposed Status Packet
 
@@ -264,6 +269,8 @@ directory. If it is missing or malformed, use defaults and keep the app usable.
 - The firmware extension must compile conditionally and stay isolated from the
   current trackball, scroll, AML, combo, macro, and keymap paths.
 - Existing ZMK Studio behavior must continue to work.
+- The dedicated status HID collection must coexist with the keyboard/mouse HID
+  collection and the existing ZMK Studio CDC interface.
 - The Windows app must continue showing battery information if the custom layer
   service is unavailable.
 
@@ -276,6 +283,8 @@ directory. If it is missing or malformed, use defaults and keep the app usable.
 - macOS or Linux versions.
 - Several independent taskbar buttons.
 - Cloud accounts, synchronization, telemetry, or external APIs.
+- Manual USB/BLE transport selection.
+- Charging-state detection in the first USB transport revision.
 
 ## 15. Verification
 
@@ -294,6 +303,8 @@ directory. If it is missing or malformed, use defaults and keep the app usable.
 - Active layer mask and highest layer agree with ZMK behavior.
 - Left and right battery identities are not swapped.
 - Reconnection succeeds after sleep and Bluetooth interruption.
+- USB is preferred automatically when present and BLE resumes after cable
+  removal.
 - ZMK Studio still connects when the status feature is enabled.
 
 ### Failure Cases
@@ -313,8 +324,9 @@ directory. If it is missing or malformed, use defaults and keep the app usable.
   the explicit Quit button stops monitoring.
 - The implementation is a focused WPF/.NET 8 client. The battery service
   discovery model follows the proven `zmk-battery-center` approach.
-- The first production transport is encrypted BLE GATT. USB CDC is not required
-  for normal use and remains available to ZMK Studio.
+- Production transports are a dedicated vendor-defined USB HID input interface
+  and encrypted BLE GATT. USB is preferred automatically; the existing USB CDC
+  stream remains exclusive to ZMK Studio.
 - Startup at login is optional and controlled by an unchecked setting.
 
 ## 17. Implementation Result
@@ -324,8 +336,13 @@ directory. If it is missing or malformed, use defaults and keep the app usable.
 - Firmware status service: `src/roba_status.c`
 - Service UUID: `5a0e1000-7c7f-4b52-a8a8-3f5c726f4261`
 - Status characteristic UUID: `5a0e1001-7c7f-4b52-a8a8-3f5c726f4261`
-- Packet parser and layer mapping tests: 8 passed on 2026-07-13
+- Packet parser and layer mapping tests: 10 passed on 2026-07-13
 - Windows Release build: passed without warnings on 2026-07-13
 - roBa_R and roBa_L ZMK builds: passed on 2026-07-13
 - Visual QA: completed on the published executable at 520 x 390
 - Hardware flash and live BLE notification verification: not yet performed
+- USB vendor HID uses usage page `0xFF60`, usage `0x0001`, and report ID `1`.
+  The Windows client uses Win32 SetupAPI/HID APIs so the single executable does
+  not require package capabilities, a custom driver, or a third-party library.
+- Transport order is USB first, then BLE. USB removal is detected by the HID
+  read loop and the coordinator rediscovers BLE automatically.
