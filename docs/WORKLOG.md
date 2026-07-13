@@ -328,3 +328,51 @@ module instead.
 - Left UF2: `358400` bytes, SHA-256
   `78bca9351193d2cbb529d472a255ca4511339b6e0608d312bd006e1562253e56`.
 - Right-hand hardware feel remains to be verified.
+
+## 2026-07-13: Lab 22 Low-Speed Over-Input And Reversal Fix
+
+### Symptoms
+
+- Lab 21 could trigger an over-input error sound during low-speed scrolling.
+- Weak input opposite to the current scroll could pause before reversing.
+
+### Cause
+
+- `active-low-speed-boost=250` increased continuous active distance by up to
+  25 percent; this was a gain, not only a lower first-output threshold.
+- The active fractional remainder did not retain physical input direction.
+  Reverse input first cancelled the previous direction's remainder and could
+  produce multiple zero-output events.
+- ZMK `v0.3` has an additional host-profile-dependent smooth-scroll remainder
+  after input processors. It is a secondary risk, but its active host profile
+  was not observed and the code predates Lab 21, so it remains unchanged.
+
+### Change
+
+- Disabled active gain with `active-low-speed-boost=0`.
+- Added distance-neutral `active-low-speed-eager=500` below threshold `20`.
+- Added per-axis direction tracking and clear the old axis remainder only when
+  physical input reverses.
+- Pinned merged module PR #2 at `0c7a8fe`.
+
+### Verification
+
+- Standalone fixed-point tests: `162/162`.
+- All standalone axis-lock tests pass.
+- Clean WSL/Nix builds passed for both halves.
+- Generated right-half Devicetree confirms `scale=4`, `scale-div=60`,
+  `threshold=20`, `boost=0`, and `eager=500`.
+- Right UF2: `572416` bytes, SHA-256
+  `bfc82d9ee3a5853f7acb667cd1addc1774f2a69909e7913f896febd47e624e87`.
+- Left UF2: `358400` bytes, SHA-256
+  `78bca9351193d2cbb529d472a255ca4511339b6e0608d312bd006e1562253e56`.
+- Artifact directory:
+  `/home/shiro/zmk-workspace/firmware/zmk-config-roBa-low-speed-reversal/`.
+- Hardware flashing and live USB/BLE behavior remain unverified.
+
+### Hardware Check
+
+- Confirm no error sound during repeated very slow same-direction rolls.
+- Confirm weak reverse input starts without a dead interval.
+- Confirm medium/fast scroll and inertia still match Lab 20.
+- Compare USB and BLE if either symptom remains.

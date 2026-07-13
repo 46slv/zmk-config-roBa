@@ -262,6 +262,12 @@ scroller {
   The active-only boost is strongest for one-count deltas and tapers to zero at
   raw magnitude 20; EMA velocity, arming, medium/high active output, and coast
   use the Lab 19 behavior unchanged.
+- Lab 22 replaces that gain with `boost=0 / eager=500`. Eager quantization
+  advances the first low-speed whole unit but retains the borrowed amount as a
+  negative remainder, so continuous distance returns to the accepted `4/60`
+  total. The module also tracks active direction per axis and clears only the
+  old fractional remainder on reversal. This targets the reported over-input
+  sound and the pause when weak input reverses an existing scroll.
 
 ### `disable-scroll-x`
 

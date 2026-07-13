@@ -198,7 +198,7 @@ Expected checks:
   `zmk-pmw3610-driver`, `zmk-listeners`, and
   `zmk-pointing-acceleration`.
 - Unified scroll is supplied by external module
-  `46slv/zmk-input-processor-roba-scroll`, pinned to commit `b0c2884`.
+  `46slv/zmk-input-processor-roba-scroll`, pinned to commit `0c7a8fe`.
   The old standalone snap and inertia projects must not reappear.
 
 If `just init` fails, stop and capture the full output. Do not manually clone
