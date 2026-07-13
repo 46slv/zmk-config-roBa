@@ -593,3 +593,50 @@ module instead.
     sha256 `a222d1182c4eb33ef1c53e68966ad2255081be28926b3119a4edc8095fb11c51`.
   - `roBa_L-main-encoder-tune4.uf2`: `363008` bytes,
     sha256 `31f67c7ac3f39691a97d654cb952de3f8a461a7b7d738410cbf518b5581d808e`.
+
+## 2026-07-13: Lab 23 Angular Snap Sectors
+
+### Goal
+
+- Widen each vertical snap direction from 90 to 120 degrees.
+- Narrow each horizontal direction from 90 to 60 degrees.
+- Rotate the physical vertical center 30 degrees toward negative X (left) to
+  match the trackball installation angle.
+
+### Cause And Design
+
+- The legacy ratio selector always fell back to `abs(Y) >= abs(X)`, so the
+  configured ratio band did not alter the final 90-degree sector boundary.
+- Added opt-in `snap-vertical-sector-deg` and `snap-angle-offset-deg` settings.
+- Angular classification uses the retained signed physical vector. Direction
+  inversion is applied afterward, preserving the accepted scroll directions.
+- Width `0` retains legacy ratio selection for module compatibility.
+
+### Change
+
+- Pin merged module commit `1e4489cd85f5ea806d7348ac4513039c1251ab36`.
+- Set `snap-vertical-sector-deg=120` and `snap-angle-offset-deg=30`.
+- Keep snap timing, `4/60` scale, low-speed eager quantization, EMA, arming,
+  friction, stop, and coast unchanged.
+
+### Verification
+
+- Standalone fixed-point tests: `162/162`.
+- Axis-lock tests pass for sector width, offset, opposite directions, and exact
+  boundary protection.
+- Clean WSL/Nix right and left builds pass.
+- Generated right DTS confirms `vertical-sector=120`, `offset=30`, and all
+  unchanged Lab 22 scale, low-speed, snap-lock, and inertia values.
+- Right UF2: `575488` bytes, SHA-256
+  `ea9821660334e5ae0ca03c3f2a8e836d06a1b8b2ca5a3ab672c0a96ab84df1eb`.
+- Left UF2: `363008` bytes, SHA-256
+  `31f67c7ac3f39691a97d654cb952de3f8a461a7b7d738410cbf518b5581d808e`.
+- Artifact directory:
+  `/home/shiro/zmk-workspace/firmware/zmk-config-roBa-angular-snap/`.
+- Hardware flashing and physical offset-sign confirmation remain unverified.
+
+### Rollback
+
+- Set only the offset to `-30` if the physical center moved right.
+- Set sector width to `0`, remove the offset, and pin `0c7a8fe` to restore Lab
+  22 exactly.

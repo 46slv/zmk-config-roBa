@@ -1174,6 +1174,59 @@ Hardware focus:
 - Medium/fast active scrolling and active-to-coast handoff must match Lab 20.
 - Repeat the first two checks on both USB and BLE if possible.
 
+## Lab 23: Angular Snap Sectors And Physical Center Offset
+
+The legacy initial selector ultimately fell back to `abs(Y) >= abs(X)`, so the
+configured ratios did not change the final result: up, down, left, and right
+each occupied 90 degrees. Lab 23 adds an opt-in angular selector while retaining
+the ratio path for module compatibility.
+
+roBa uses:
+
+```dts
+snap-vertical-sector-deg = <120>;
+snap-angle-offset-deg = <30>;
+```
+
+Each vertical direction receives 120 degrees. Each horizontal direction
+receives `180 - 120 = 60` degrees, so the four sectors cover 360 degrees with
+no dead band. Positive offset rotates the physical vertical center toward
+negative X (left). The selector evaluates the retained signed physical vector
+before `invert-y`, preserving the accepted user-facing scroll directions.
+
+Only initial axis classification changes. Snap retention and lock timing,
+active/coast scale, low-speed quantization, velocity EMA, flick arming,
+friction, stop, and inertia output remain unchanged from Lab 22.
+
+Pre-hardware verification:
+
+- Standalone implementation commit: `76addce781a65a9ac681d60856bdda4a03c5bdd6`.
+- Pinned merged module commit: `1e4489cd85f5ea806d7348ac4513039c1251ab36`.
+- Fixed-point checks: `162/162`.
+- Axis-lock checks include 120/60 sectors, positive 30-degree offset, opposite
+  directions, and empty-component boundary protection.
+- Clean WSL/Nix builds pass for both `roBa_R` and `roBa_L`.
+- Generated right DTS confirms `vertical-sector=120`, `offset=30`, and the
+  unchanged `4/60`, low-speed, snap-lock, and inertia settings.
+
+Flash artifacts:
+
+- Right: `/home/shiro/zmk-workspace/firmware/zmk-config-roBa-angular-snap/roBa_R-seeeduino_xiao_ble.uf2`
+  (`575488` bytes, SHA-256
+  `ea9821660334e5ae0ca03c3f2a8e836d06a1b8b2ca5a3ab672c0a96ab84df1eb`).
+- Left: `/home/shiro/zmk-workspace/firmware/zmk-config-roBa-angular-snap/roBa_L-seeeduino_xiao_ble.uf2`
+  (`363008` bytes, SHA-256
+  `31f67c7ac3f39691a97d654cb952de3f8a461a7b7d738410cbf518b5581d808e`).
+- Hardware flashing and physical offset-sign confirmation remain unperformed.
+
+Hardware focus:
+
+- A natural up/down roll along the shell angle should select vertical sooner.
+- Deliberate left/right rolls should still select horizontal inside the narrower
+  60-degree sectors.
+- Existing scroll directions, low-speed response, and inertia must not change.
+- If the center moved right in physical use, change only the offset to `-30`.
+
 ## Superseded Design Rationale
 
 Keep a purpose-built combined module on the development backlog. Its goal is

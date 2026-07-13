@@ -10,12 +10,20 @@ external snap/inertia modules and downstream scaler are absent. Initial
 selected-axis input is retained, active/coast use one `4/60` scale, and layer or
 endpoint changes reset all state. Host tests and both-half builds pass, and
 right-hand feel was accepted on 2026-07-13. The reusable implementation is
-published as `46slv/zmk-input-processor-roba-scroll` and pinned to `0c7a8fe`.
+published as `46slv/zmk-input-processor-roba-scroll` and pinned to `1e4489c`.
 Lab 22 disables Lab 21's total-distance gain and uses distance-neutral eager
 quantization (`threshold=20`, `eager=500`). Per-axis input direction now clears
 stale fractional movement on reversal. Velocity tracking and coast are
 unchanged. See
 `docs/ROBA_SCROLL_MODULE.md` and Lab 19 in `docs/SCROLL_INERTIA_LAB.md`.
+
+Lab 23 adds angular snap sectors without changing inertia: up/down receive 120
+degrees each, left/right receive 60 degrees each, and the physical vertical
+center rotates 30 degrees toward negative X (left). The offset is evaluated
+before `invert-y`, so accepted user-facing directions stay unchanged. Hardware
+confirmation of the physical offset sign remains pending. Host tests and clean
+right/left WSL builds pass; the right-hand artifact is under
+`~/zmk-workspace/firmware/zmk-config-roBa-angular-snap/`.
 
 ## Goal
 

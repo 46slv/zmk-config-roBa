@@ -268,6 +268,11 @@ scroller {
   total. The module also tracks active direction per axis and clears only the
   old fractional remainder on reversal. This targets the reported over-input
   sound and the pause when weak input reverses an existing scroll.
+- Lab 23 adds opt-in angular snap sectors to the unified module. roBa uses
+  `snap-vertical-sector-deg=120`, which leaves 60 degrees for each horizontal
+  direction, and `snap-angle-offset-deg=30`, which rotates the physical
+  vertical center toward negative X (left). Classification occurs before
+  `invert-y`; inertia, scaling, lock timing, and output directions are unchanged.
 
 ### `disable-scroll-x`
 

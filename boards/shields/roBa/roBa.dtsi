@@ -141,6 +141,8 @@
         axis-mode = <0>;
         snap-x-ratio = <5 8>;
         snap-y-ratio = <1 1>;
+        snap-vertical-sector-deg = <120>;
+        snap-angle-offset-deg = <30>;
         snap-events = <2>;
         snap-immediate = <200>;
         snap-lock-ms = <175>;

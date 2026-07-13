@@ -251,13 +251,15 @@ Input processor interaction:
 - The complete accepted scroller chain is:
   - `&zip_xy_to_scroll_mapper`
   - `&roba_scroll`
-- `roba_scroll` owns accepted `Y_INVERT`, snap `2/200/175/8/175`, active and
+- `roba_scroll` owns accepted `Y_INVERT`, snap `2/200/175/8/175`, angular
+  sectors `vertical=120 degrees / horizontal=60 degrees`, and a physical
+  vertical-center offset of `30 degrees` toward negative X (left). Active and
   coast scale `4/60`, inertia `axis=0`, layer reset `11`, EMA `500/500`, arming
   `start=12 / move=20 / min-events=4`, friction `14`, and stop `3`. Lab 22 uses
   distance-neutral low-speed eager quantization `threshold=20 / boost=0 /
   eager=500` and clears same-axis fractional state on physical reversal;
   medium/high input, velocity tracking, and coast are unchanged.
-- `zmk-input-processor-roba-scroll` is an external module pinned to `0c7a8fe` in
+- `zmk-input-processor-roba-scroll` is an external module pinned to `1e4489c` in
   `config/west.yml`. The old scroll-snap/inertia projects and downstream scaler
   are absent; one module setting scales both active and coast paths.
 - Historically, the Lab 12-18 scroller chain followed the inertia
