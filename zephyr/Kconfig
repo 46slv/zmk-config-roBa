@@ -1,0 +1,21 @@
+menu "roBa features"
+
+config ROBA_STATUS
+    bool "roBa read-only status service"
+    depends on ZMK_BLE && ZMK_SPLIT_ROLE_CENTRAL
+    default y if SHIELD_ROBA_R
+    help
+      Exposes the active ZMK layer state through a read-only encrypted BLE
+      GATT characteristic for the companion Windows status application.
+      No keycodes or typed content are transmitted.
+
+config ROBA_STATUS_USB
+    bool "roBa read-only USB HID status transport"
+    depends on ROBA_STATUS && ZMK_USB
+    default y
+    help
+      Adds a second vendor-defined HID interface that reports the same status
+      packet over USB. It remains separate from keyboard/mouse HID and the ZMK
+      Studio CDC transport.
+
+endmenu

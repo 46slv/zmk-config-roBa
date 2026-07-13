@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoBaStatus", "RoBaStatus\RoBaStatus.csproj", "{BFB65093-152B-4ED5-B3F6-FD485E386865}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoBaStatus.Tests", "RoBaStatus.Tests\RoBaStatus.Tests.csproj", "{9732FCB6-9E5F-4D2F-AB6F-C3A769E7284C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFB65093-152B-4ED5-B3F6-FD485E386865}.Debug|x64.ActiveCfg = Debug|x64
+		{BFB65093-152B-4ED5-B3F6-FD485E386865}.Debug|x64.Build.0 = Debug|x64
+		{BFB65093-152B-4ED5-B3F6-FD485E386865}.Release|x64.ActiveCfg = Release|x64
+		{BFB65093-152B-4ED5-B3F6-FD485E386865}.Release|x64.Build.0 = Release|x64
+		{9732FCB6-9E5F-4D2F-AB6F-C3A769E7284C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9732FCB6-9E5F-4D2F-AB6F-C3A769E7284C}.Debug|x64.Build.0 = Debug|Any CPU
+		{9732FCB6-9E5F-4D2F-AB6F-C3A769E7284C}.Release|x64.ActiveCfg = Release|Any CPU
+		{9732FCB6-9E5F-4D2F-AB6F-C3A769E7284C}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

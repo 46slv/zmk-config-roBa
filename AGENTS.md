@@ -46,3 +46,5 @@ needs an update.
   custom behaviors, and macro references.
 - `docs/BUILD_AND_FLASH_NOTES.md`: local zmk-workspace, build, flash, and
   keymap-drawer procedure for this roBa config.
+- `docs/LOCAL_BUILD_SETUP_REPORT_2026-07-11.md`: human-readable Japanese record
+  of the first WSL/Nix local-build setup and verified roBa UF2 outputs.

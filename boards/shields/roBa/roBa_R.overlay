@@ -22,7 +22,7 @@
     };
 };
 
-&scroll_inertia_v {
+&roba_scroll {
     status = "okay";
 };
 

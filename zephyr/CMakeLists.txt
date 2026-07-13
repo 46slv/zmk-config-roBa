@@ -1,0 +1,3 @@
+if(CONFIG_ROBA_STATUS)
+  target_sources(app PRIVATE ${CMAKE_CURRENT_LIST_DIR}/../src/roba_status.c)
+endif()

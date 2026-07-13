@@ -1,5 +1,44 @@
 # ZMK / roBa Research Notes for Codex
 
+## 2026-07-13: Read-Only Windows Status Service
+
+The repository now acts as a Zephyr module as well as a board root. Its module
+metadata loads `zephyr/Kconfig` and `zephyr/CMakeLists.txt`.
+
+`CONFIG_ROBA_STATUS` is enabled only on the right/central half. The service:
+
+- subscribes to `zmk_layer_state_changed`;
+- reads `zmk_keymap_layer_state()` and `zmk_keymap_highest_layer_active()`;
+- listens to central and peripheral battery events;
+- exposes one encrypted BLE GATT read/notify characteristic;
+- transmits no keycode, position, or text data;
+- leaves ZMK Studio, AML, SCROLL, and trackball behavior unchanged.
+
+Protocol UUIDs and packet fields are documented in
+`docs/WINDOWS_STATUS_APP_SPEC.md`. The central and peripheral builds completed
+successfully against the repository's pinned ZMK v0.3 workspace on 2026-07-13.
+Live hardware behavior remains unverified until the right-half UF2 is flashed.
+
+### USB transport extension
+
+The status packet is also exposed through a second vendor-defined USB HID
+interface on `roBa_R`:
+
+- usage page `0xFF60`, usage `0x0001`, report ID `1`;
+- HID input payload is the existing 12-byte version 1 packet;
+- control `GET_REPORT` provides an initial snapshot;
+- interrupt input reports are sent for layer, central battery, peripheral
+  battery, and USB connection events;
+- `CONFIG_USB_HID_DEVICE_COUNT=2` creates `HID_1` without changing ZMK's
+  keyboard/mouse `HID_0`;
+- the existing `studio-rpc-usb-uart` CDC transport is not reused or modified.
+
+The Windows client uses Win32 SetupAPI/HID APIs rather than WinRT `HidDevice`.
+Microsoft documents that WinRT HID access requires package DeviceCapability
+metadata; direct Win32 access preserves the current unpackaged single-EXE UX.
+The live descriptor, report flow, Studio coexistence, and USB-to-BLE handoff
+remain hardware verification items.
+
 作成日: 2026-07-03
 
 この資料は、`46slv/zmk-config-roBa` を今後編集するときに Codex が最初に読むための作業用ノートです。特に ZMK の input processors と behaviors を重点対象にしています。
@@ -176,10 +215,10 @@ auto-mouse-layer {
 scroller {
     layers = <11>;
         input-processors =
-            <&zip_y_scaler (-1) 1>,
+            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
             <&zip_xy_to_scroll_mapper>,
-            <&scroll_inertia_v>,
-            <&zip_scroll_scaler 4 675>;
+            <&zip_scroll_scaler 4 1>,
+            <&scroll_inertia_v>;
     process-next;
 };
 ```
@@ -194,8 +233,30 @@ scroller {
 
 注意:
 
-- `zip_scroll_scaler` は wheel / horizontal wheel 向けの scaler。慣性スクロール実験では記事例に合わせ、`zip_y_scaler (-1) 1` -> `zip_xy_to_scroll_mapper` -> `scroll_inertia_v` -> `zip_scroll_scaler 4 675` の順にする。
-- 2026-07-11 の低速スクロール改善では、`CONFIG_PMW3610_SCROLL_TICK=4` と `zip_scroll_snap.require-n-samples=<2>` を採用した。その後の慣性スクロール実験では `scroll_inertia_v` を追加し、`zip_scroll_snap` はチェーンから外した。実機で蓄積感、慣性の尾、縦方向の向きを確認する。
+- 2026-07-11 の低速スクロール改善では、`CONFIG_PMW3610_SCROLL_TICK=4` と `zip_scroll_snap.require-n-samples=<2>` を採用した。
+- その後の慣性スクロール実験では `scroll_inertia_v` を追加し、`zip_scroll_snap` をチェーンから外したが、記事準拠の `zip_scroll_scaler 4 675` 構成では実機でスクロール不能になった。現在は 3 回目の A/B として、既知動作の `zip_scroll_scaler 4 1` 後段に `scroll_inertia_v` を置き、`scale = <1000>` / `scale-div = <1000>` で試す。
+- 2026-07-12 の Lab 9 では、Lab 8 の `CPI=3200`、smart algorithm 無効、scroll tick `4`、scaler `4/1` を維持し、active chain から `scroll_inertia_v` だけを外した。滑らかな物理操作で発生する停止が消えるかを確認し、慣性 processor 経路とその他の最小化差分を切り分ける。
+- 2026-07-12 の Lab 10 では、PMW3610 の optional `scroll-layers` を外し、layer 11 でも raw X/Y を listener へ渡す構成へ変更した。listener が `transform -> mapper -> inertia -> scaler 4/675` を単独で所有し、`CPI=1000`、`axis=1`、module defaults で作者の参照条件に合わせる。これにより、driver 内の閾値量子化と inertia の速度推定が競合しない。
+- Lab 10 実機で連続scrollと慣性tailを確認した。Lab 11 は検出条件を保ったまま、inertia node と downstream scaler を `4/225` へ揃え、active/coast出力を正確に3倍へ上げる。既存 `pointer_accel` はscroll値を慣性検出前に変形するため追加しない。
+- Lab 12 は raw X/Y ownership を維持したまま、元キーマップの cursor acceleration、AML、mouse gesture、horizontal suppression を復帰した。scroll は `4/75`、上下方向は `Y_INVERT` を外して反転。CPI 400に戻し、1000 CPI既定値から `start=16`、`move=32`、`friction=14`、`stop=3`へ物理比率を換算した。scroll snapとscroll-chain accelerationは復帰しない。
+- Lab 12 実機では中速gestureが最も強く慣性になり、高速flickは停止または一度減速して中速相当のcoastへ移った。Lab 13 は `min-events` だけを既定10から4へ下げ、125 Hzで約80 ms必要だったarming gateを約32 msへ短縮する。高速coast速度がまだ頭打ちなら、次に `gain/blend` のEMA追従を一要素として検証する。
+- Lab 13 実機で高速flickのarmingは実用範囲まで改善したが、非常に高速な操作ではcoast開始時の減速段差が残った。Lab 14 はEMAだけを `gain=500 / blend=500` へ変更し、短い高速入力をcoast seedへ早く反映する。低速の短い操作が整数HID単位へ届かず無反応になる件は別課題として残す。
+- Lab 14 実機はほぼ許容範囲。Lab 15 はEMAとscaleを維持し、小さい意図的flick向けに `start=12`、`move=20`へ下げる。低速active scrollの無反応は混同せず、必要なら次段でmatched scale `4/75 -> 4/60`を単独検証する。
+- Lab 16 はLab 15を維持し、`mapper -> zip_scroll_snap -> scroll_inertia_v(axis=0) -> scaler`を検証する。snapは過去の低遅延設定（2 samples、immediate 200、175 ms / 8 events）を使う。縦横の選択と同方向の慣性を狙うが、snap判定中のevent抑制が低速・短距離の無反応を悪化させる可能性を最優先で確認する。
+- Lab 16実機では右→上、上→右、左→下、下→左となり、`XY_SWAP`が横軸を有効化した構成では不適切と判明した。Lab 16aは`INPUT_TRANSFORM_XY_SWAP`だけを外し、`X_INVERT`、snap、axis=0 inertia、その他のLab 15設定を維持する。
+- Lab 16a実機では軸対応は直ったが左右・上下とも希望方向と逆だった。Lab 16bは`X_INVERT`を`Y_INVERT`へ置換し、横と縦を両方反転する。XY swap、snap、慣性パラメータは変更しない。
+- Lab 16b実機で縦横の軸・方向、scroll snapと慣性の併用を確認し、ユーザー評価は良好。低速悪化、coast時の軸飛び、古いsnap lockなどの重大な不具合は受入確認では見られず、次の実験の基準構成とする。
+- Lab 17は合格したLab 16bを維持し、activeとcoastのmatched scaleだけを`4/75 -> 4/60`へ変更する。同一入力の出力を25%上げ、小さい蓄積値がHID単位へ早く届くか確認する。snap、方向、arming、EMA、decayは変更しない。
+- Lab 17実機で低速応答、通常速度、snap、active-to-coast handoff、慣性に問題なし。`4/60`を次の実験の基準scaleとして採用する。
+- Lab 18は通常pointerだけを旧二段加速の体感へ近似する。一段curveを`min=1000 / max=7000 / threshold=300 / speed-max=3500 / exponent=1`とし、X/Y scaler `70/100`, `80/100`とLab 17 scroll pathは維持する。旧base+child二段構成の最大`2.8*2.8=7.84`を安全側へ丸め、scroll経路へaccelを再導入しない。
+
+- Lab 19 implements `zmk,input-processor-roba-scroll`. The active chain
+  is `xy_to_scroll_mapper -> roba_scroll`; external snap/inertia modules and
+  downstream scaler are removed. Initial selected-axis deltas are retained,
+  `Y_INVERT` and one `4/60` active/coast scale are internal, and layer-off or
+  endpoint change resets all state. Host tests and both-half builds pass, and
+  right-hand operation was accepted on 2026-07-13. The reusable implementation
+  is published separately and pinned by commit in `config/west.yml`.
 
 ### `disable-scroll-x`
 
@@ -430,6 +491,14 @@ tap-dance は誤爆リスクがあるため、dangerous behavior (`BT_CLR_ALL`, 
 - `kot149/zmk-scroll-snap`: scroll snap。
 - `oleksandrmaslov/zmk-pointing-acceleration`: pointer acceleration。
 - `mjmjm0101/zmk-input-processor-scroll-inertia`: trackball scroll inertia.
+- Future module candidate: combine axis-lock/snap and inertia in one input
+  processor state machine. It should preserve initial low-speed events, choose
+  vertical or horizontal intent, and carry the chosen axis plus measured
+  velocity into coast. A simple processor chain is insufficient because snap
+  can consume sampling events, while the current inertia timer emits direct
+  HID coast reports that bypass downstream processors. Track this separately
+  from Lab 15 parameter tuning and do not change the current firmware until the
+  active-scroll and small-flick baselines are recorded.
 
 ZMK input processor / behavior の公式仕様だけでは説明できない behavior があるため、問題調査時は該当 module の README と devicetree binding を確認する。
 
@@ -448,7 +517,8 @@ ZMK / roBa 設定を変更する前に必ず確認する。
 
 - `README.md` と `config/roBa.keymap` の日本語コメントに文字化けがある。修正するなら、元テキストの復元方針を決めてから行う。
 - `&trackball_listener` の base `input-processors` が2回定義されている。後勝ちで `&zip_mouse_gesture` が消えている可能性がある。
-- `scroller` は慣性スクロール記事の例に寄せ、`zip_y_scaler (-1) 1`、`zip_xy_to_scroll_mapper`、`scroll_inertia_v`、`zip_scroll_scaler 4 675` の順に変更済み。実機で慣性が出るか、向きが正しいか確認する。
+- 過去のA/Bでは記事準拠チェーン、後段inertia、極端な発火値を検証した。
+  現在はそれらを廃止し、実機合格済みの`mapper -> roba_scroll`を正式候補とする。
 - `zip_x_scaler 70 100` や `zip_y_scaler 80 100` は公式推奨の最大 16 を超える。実際に問題が出ていないなら現状維持でよいが、将来の ZMK 更新時に警戒する。
 - `EXTRA_FINCTIONS` は typo らしき名前だが、define と参照が一致しているため、単純修正は破壊的変更になり得る。
 - ZMK `v0.3` 固定なので、development docs と挙動差がある可能性がある。必要に応じて `v0.3` docs も確認する。
@@ -460,5 +530,7 @@ ZMK / roBa 設定を変更する前に必ず確認する。
 - `docs/ROBA_KEYMAP_MAP.md`: layer / combo / behavior の現行仕様一覧。
 - `docs/INPUT_PROCESSOR_EXPERIMENTS.md`: trackball, AML, scroll snap, acceleration の実験ログ。
 - `docs/SCROLL_INERTIA_RESEARCH.md`: trackball inertia scroll の外部モジュール調査と実験方針。
+- `docs/ROTARY_ENCODER_SCROLL_OPTIMIZATION.md`: encoder scroll の現状分析、最小A/B案、実機評価基準。
+- `docs/WORKLOG.md`: 実装・ビルド・実機確認の時系列ログ。
 - `docs/BUILD_AND_FLASH_NOTES.md`: GitHub Actions build、local west build、左右 firmware flash 手順。
 - `docs/NOTION_SYNC_NOTES.md`: Notion `roBa custom` と GitHub repo の同期方針。

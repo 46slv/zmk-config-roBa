@@ -223,13 +223,59 @@ Sensor binding:
 
 Input processor interaction:
 
-- `&trackball` has `scroll-layers = <11>`.
+- The PMW3610 `scroll-layers` property is intentionally omitted so the driver
+  emits raw X/Y on layer `11`; the input-listener owns scroll conversion.
 - `scroller` input processor override applies on layer `11`.
-- The current scroller chain is:
-  - `&zip_y_scaler (-1) 1`
+- The complete accepted scroller chain is:
   - `&zip_xy_to_scroll_mapper`
+  - `&roba_scroll`
+- `roba_scroll` owns accepted `Y_INVERT`, snap `2/200/175/8/175`, active and
+  coast scale `4/60`, inertia `axis=0`, layer reset `11`, EMA `500/500`, arming
+  `start=12 / move=20 / min-events=4`, friction `14`, and stop `3`.
+- `zmk-input-processor-roba-scroll` is an external module pinned to `c06c453` in
+  `config/west.yml`. The old scroll-snap/inertia projects and downstream scaler
+  are absent; one module setting scales both active and coast paths.
+- Historically, the Lab 12-18 scroller chain followed the inertia
+  module's documented placement and reverses vertical direction:
+  - `&zip_xy_transform INPUT_TRANSFORM_Y_INVERT`
+  - `&zip_xy_to_scroll_mapper`
+  - `&zip_scroll_snap`
   - `&scroll_inertia_v`
-  - `&zip_scroll_scaler 4 675`
+  - `&zip_scroll_scaler 4 60`
+- Lab 16 restores scroll snap before inertia and changes inertia to `axis=0`.
+  Snap uses the earlier low-latency settings (`require-n-samples=2`, immediate
+  threshold `200`, lock `175 ms` / `8` events, idle reset `175 ms`) so vertical
+  or horizontal intent is selected before inertia measures the gesture.
+- Lab 16a removes only `INPUT_TRANSFORM_XY_SWAP` after hardware testing showed
+  right mapped to up, up to right, left to down, and down to left. Keeping
+  `X_INVERT` preserves the established direction convention while routing
+  physical horizontal movement to HWHEEL and vertical movement to WHEEL.
+- Lab 16b reverses both user-facing directions after Lab 16a hardware testing.
+  Reversing both relative to the `X_INVERT` state requires replacing it with
+  `Y_INVERT`: horizontal loses its inversion and vertical gains one.
+  The user accepted this direction mapping and the combined snap/inertia
+  behavior on right-hand hardware on 2026-07-12.
+- Lab 17 changes the matched active/coast scale from `4/75` to `4/60`, making
+  both outputs 25 percent faster while preserving their handoff ratio. Snap,
+  directions, arming thresholds, EMA, and decay are unchanged.
+  The user accepted this scale on right-hand hardware on 2026-07-13.
+- In the historical chain, `scroll_inertia_v` bound cleanup to layer `11` and
+  mirrors the downstream `4/60` scale. At restored `CPI=400`, `start=16`,
+  `move=32`, `friction=14`, and `stop=3` preserve the approximate physical
+  thresholds of the 1000 CPI defaults. Lab 13 lowers `min-events` from the
+  default 10 to 4 so short fast flicks can arm within about 32 ms. Lab 14 uses
+  `gain=500` and `blend=500` so short high-speed input affects the coast seed
+  more quickly. Lab 15 lowers the small-flick arming pair to `start=12` and
+  `move=20` without changing active scroll scale.
+- Cursor pointer acceleration, AML, mouse gesture, and horizontal-wheel
+  suppression are restored. Pointer acceleration is limited to the
+  `DEFAULT/MOUSE` conditional path and does not precede layer 11 scrolling.
+  The unified processor also remains confined to layer 11. Lab 19 was accepted
+  on right-hand hardware on 2026-07-13.
+- Lab 18 approximates the earlier effective two-stage pointer acceleration with
+  one pointer-only curve: factor `1.0..7.0`, threshold `300`, max speed `3500`,
+  exponent `1`. X/Y base scalers remain `70/100` and `80/100`. This does not
+  affect layer-11 snap, scroll scale, or inertia.
 - Scroll tuning notes for future Codex/AI sessions are in
   `docs/INPUT_PROCESSOR_EXPERIMENTS.md`.
 
@@ -286,6 +332,23 @@ Combos without explicit `layers` property:
 | `td_bt_clear` | tap-dance | layer 10 | Bluetooth clear after tap count |
 | `td_bt_clear_all` | tap-dance | layer 10 | Bluetooth clear all after tap count |
 | `reset_bootloader` | hold-tap | layer 10 | Reset tap-dance or bootloader |
+
+## Windows Status Companion
+
+The optional `CONFIG_ROBA_STATUS` firmware service observes the existing layer
+state without changing bindings, layer numbers, combo behavior, AML, SCROLL, or
+trackball processing.
+
+- The service reports the full active-layer bitmask.
+- `zmk_keymap_highest_layer_active()` supplies the prominent Windows layer.
+- Layer 7 remains `MOUSE`; layer 11 remains `SCROLL`.
+- No keycodes, positions, or typed content are transmitted.
+- Disabling `CONFIG_ROBA_STATUS` restores the previous firmware composition.
+
+The v1.1 wired extension adds a second read-only USB HID interface on the right
+half. It sends the same state snapshot and does not change any layer definition,
+key position, combo, AML transition, scroll processor, or trackball path. ZMK
+Studio remains on its existing USB CDC/BLE transports.
 
 ## Follow-Up Checks
 
